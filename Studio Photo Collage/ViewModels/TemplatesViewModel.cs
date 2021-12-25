@@ -12,6 +12,7 @@ namespace Studio_Photo_Collage.ViewModels
     {
         public TemplatesViewModel(INavigationService navigationService)
         {
+
         }
     }
 }

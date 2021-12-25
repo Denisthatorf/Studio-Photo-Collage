@@ -2,12 +2,15 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Views;
+using Studio_Photo_Collage.ViewModels.SidePanels;
 using Studio_Photo_Collage.Views;
+using Studio_Photo_Collage.Views.SidePanels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
 
 namespace Studio_Photo_Collage.ViewModels
 {
@@ -31,8 +34,8 @@ namespace Studio_Photo_Collage.ViewModels
             nav.Configure(StartPageKey, typeof(StartPage));
             nav.Configure(TemplatesPageKey, typeof(TemplatesPage));
             nav.Configure(MainPageKey, typeof(MainPage));
-
             //nav.Configure(SecondPageKey, typeof(SecondPage));
+
             if (ViewModelBase.IsInDesignModeStatic)
             {
                 // Create design time view services and models

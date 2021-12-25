@@ -5,6 +5,13 @@
     xmlns:local="using:Studio_Photo_Collage"
      xmlns:vm="using:Studio_Photo_Collage.ViewModels">
     <Application.Resources>
-        <vm:ViewModelLocator xmlns:vm="using:Studio_Photo_Collage.ViewModels" x:Key="Locator" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <vm:ViewModelLocator xmlns:vm="using:Studio_Photo_Collage.ViewModels" x:Key="Locator" />
+                </ResourceDictionary>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

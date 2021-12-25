@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Studio_Photo_Collage.ViewModels
@@ -21,7 +22,7 @@ namespace Studio_Photo_Collage.ViewModels
 
         private void NavigateCommandAction()
         {
-            _navigationService.NavigateTo("TemplatesPage");
+            _navigationService.NavigateTo("MainPage");
         }
     }
 }
