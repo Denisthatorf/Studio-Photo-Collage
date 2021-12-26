@@ -11,6 +11,6 @@
     DataContext="{Binding FiltersPageInstance, Source={StaticResource Locator}}">
 
     <Grid>
-        <TextBlock>dsfsdfsdfsssssssss</TextBlock>
+        <TextBlock></TextBlock>
     </Grid>
 </Page>

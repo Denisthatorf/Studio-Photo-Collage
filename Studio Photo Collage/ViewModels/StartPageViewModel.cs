@@ -22,7 +22,7 @@ namespace Studio_Photo_Collage.ViewModels
 
         private void NavigateCommandAction()
         {
-            _navigationService.NavigateTo("MainPage");
+            _navigationService.NavigateTo("TemplatesPage");
         }
     }
 }

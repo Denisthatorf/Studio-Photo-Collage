@@ -23,6 +23,7 @@ namespace Studio_Photo_Collage.ViewModels
         public const string StartPageKey = "StartPage";
         public const string TemplatesPageKey = "TemplatesPage";
         public const string MainPageKey = "MainPage";
+        public const string FiltersPageKey = "FiltersPage";
 
         /// <summary>
         /// Initializes a new instance of the ViewModelLocator class.
@@ -34,6 +35,7 @@ namespace Studio_Photo_Collage.ViewModels
             nav.Configure(StartPageKey, typeof(StartPage));
             nav.Configure(TemplatesPageKey, typeof(TemplatesPage));
             nav.Configure(MainPageKey, typeof(MainPage));
+            nav.Configure(FiltersPageKey, typeof(FiltersPage));
             //nav.Configure(SecondPageKey, typeof(SecondPage));
 
             if (ViewModelBase.IsInDesignModeStatic)
@@ -50,6 +52,7 @@ namespace Studio_Photo_Collage.ViewModels
             SimpleIoc.Default.Register<StartPageViewModel>();
             SimpleIoc.Default.Register<TemplatesViewModel>();
             SimpleIoc.Default.Register<MainPageViewModel>();
+            SimpleIoc.Default.Register<FiltersPageViewModel>();
 
         }
 
@@ -79,6 +82,13 @@ namespace Studio_Photo_Collage.ViewModels
             get
             {
                 return ServiceLocator.Current.GetInstance<MainPageViewModel>();
+            }
+        }
+        public FiltersPageViewModel FiltersPageInstance
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<FiltersPageViewModel>();
             }
         }
 
