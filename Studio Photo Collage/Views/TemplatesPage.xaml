@@ -13,7 +13,7 @@
         <Style TargetType="Button">
             <Setter Property="Width" Value="80"/>
             <Setter Property="Height" Value="80"/>
-            <Setter Property="Margin" Value="25"/>
+            <Setter Property="Margin" Value="10"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Padding" Value="0"/>
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -24,103 +24,98 @@
         </Style>
     </Page.Resources>
 
-        <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition Height="2*"/>
-        </Grid.RowDefinitions>
-        
-        <StackPanel Grid.Row="0">
-            <TextBlock Text="Picture: 1" 
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Padding="10, 0">
+            <StackPanel>
+                <TextBlock Text="Picture: 1" 
                        Margin="15, 15, 0, 0" FontSize="40"/>
-            <Button Background="White"/>
-        </StackPanel>
+                <Button Background="White"/>
+            </StackPanel>
 
-        <StackPanel Grid.Row="1">
-            <TextBlock Text="Picture: 2" 
+            <StackPanel>
+                <TextBlock Text="Picture: 2" 
                        Margin="15, 15, 0, 0" FontSize="40"/>
-            
-            <controle:WrapPanel Orientation="Horizontal">
-                <Button>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        
-                        <Rectangle Grid.Column="0"/>
-                        <Rectangle Grid.Column="1" Margin="5,0,0,0"/>
-                    </Grid>
-                </Button>
-                
-                <Button>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
 
-                        <Rectangle Grid.Row="0"/>
-                        <Rectangle Grid.Row="1" Margin="0,5,0,0"/>
-                    </Grid>
-                </Button>
-                
-                <Button>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="2*"/>
-                        </Grid.ColumnDefinitions>
+                <controle:WrapPanel Orientation="Horizontal">
+                    <Button>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
 
-                        <Rectangle Grid.Column="0"/>
-                        <Rectangle Grid.Column="1" Margin="5,0,0,0"/>
-                    </Grid>
-                </Button>
+                            <Rectangle Grid.Column="0"/>
+                            <Rectangle Grid.Column="1" Margin="5,0,0,0"/>
+                        </Grid>
+                    </Button>
 
-                <Button>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition Height="2*"/>
-                        </Grid.RowDefinitions>
+                    <Button>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
 
-                        <Rectangle Grid.Row="0"/>
-                        <Rectangle Grid.Row="1" Margin="0,5,0,0"/>
-                    </Grid>
-                </Button>
+                            <Rectangle Grid.Row="0"/>
+                            <Rectangle Grid.Row="1" Margin="0,5,0,0"/>
+                        </Grid>
+                    </Button>
 
-                <Button>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
+                    <Button>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
 
-                        <Rectangle Grid.Column="0"/>
-                        <Rectangle Grid.Column="1" Margin="5,0,0,0"/>
-                    </Grid>
-                </Button>
-                
-                <Button>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="2*"/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
+                            <Rectangle Grid.Column="0"/>
+                            <Rectangle Grid.Column="1" Margin="5,0,0,0"/>
+                        </Grid>
+                    </Button>
 
-                        <Rectangle Grid.Row="0"/>
-                        <Rectangle Grid.Row="1" Margin="0,5,0,0"/>
-                    </Grid>
-                </Button>
-                
-            </controle:WrapPanel>
-        </StackPanel>
+                    <Button>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="2*"/>
+                            </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="2">
-            <TextBlock Text="Picture: 3" 
+                            <Rectangle Grid.Row="0"/>
+                            <Rectangle Grid.Row="1" Margin="0,5,0,0"/>
+                        </Grid>
+                    </Button>
+
+                    <Button>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <Rectangle Grid.Column="0"/>
+                            <Rectangle Grid.Column="1" Margin="5,0,0,0"/>
+                        </Grid>
+                    </Button>
+
+                    <Button>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="2*"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <Rectangle Grid.Row="0"/>
+                            <Rectangle Grid.Row="1" Margin="0,5,0,0"/>
+                        </Grid>
+                    </Button>
+
+                </controle:WrapPanel>
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock Text="Picture: 3" 
                        Margin="15, 15, 0, 0" FontSize="40"/>
-            <ScrollViewer>
                 <controle:WrapPanel Orientation="Horizontal">
                     <Button>
                         <Grid>
@@ -313,7 +308,7 @@
                         </Grid>
                     </Button>
                 </controle:WrapPanel>
-            </ScrollViewer>
+            </StackPanel>
         </StackPanel>
-    </Grid>
+    </ScrollViewer>
 </Page>
