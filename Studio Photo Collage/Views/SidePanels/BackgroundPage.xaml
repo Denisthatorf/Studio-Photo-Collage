@@ -10,7 +10,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
       DataContext="{Binding BackgroundPageInstance, Source={StaticResource Locator}}">
     <StackPanel Padding="15">
-        <TextBlock Text="{StaticResource Background}" 
+        <TextBlock Text="Background"  x:Uid="BackgroudHeader"
                    Foreground="Red"
                    Style="{StaticResource Header}"/>
         <Button Content="Upload image" Command="{Binding UploadBtnCommand}"
