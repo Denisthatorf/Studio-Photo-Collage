@@ -1,4 +1,5 @@
-﻿using Studio_Photo_Collage.Views.SidePanels;
+﻿using Studio_Photo_Collage.Views.PopUps.Settings;
+using Studio_Photo_Collage.Views.SidePanels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,8 +18,29 @@ namespace Studio_Photo_Collage.Infrastructure
             var tag = (value as Microsoft.UI.Xaml.Controls.NavigationViewItem)?.Tag?.ToString();
             switch (tag)
             {
-                case "FiltersPage":
+                case "Filters":
                     frame.Navigate(typeof(FiltersPage));
+                    return frame;
+                    break;
+                case "Background":
+                    frame.Navigate(typeof(BackgroundPage));
+                    return frame;
+                    break;
+                case "Transform":
+                    frame.Navigate(typeof(TransformPage));
+                    return frame;
+                    break;
+                case "Frames":
+                    frame.Navigate(typeof(FramesPage));
+                    return frame;
+                    break;
+
+                case "SettingsFrame":
+                    frame.Navigate(typeof(SettingsFramePage));
+                    return frame;
+                    break;
+                case "AboutFrame":
+                    frame.Navigate(typeof(AboutFramePage));
                     return frame;
                     break;
             }

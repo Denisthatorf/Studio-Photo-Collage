@@ -18,12 +18,17 @@ namespace Studio_Photo_Collage.ViewModels
     /// This class contains static references to all the view models in the
     /// application and provides an entry point for the bindings.
     /// </summary> 
+    /// 
     public class ViewModelLocator
     {
+        private static ViewModelLocator _current;
+        public static ViewModelLocator Current => _current ?? (_current = new ViewModelLocator());
+
         public const string StartPageKey = "StartPage";
         public const string TemplatesPageKey = "TemplatesPage";
         public const string MainPageKey = "MainPage";
         public const string FiltersPageKey = "FiltersPage";
+        public const string BackgroundPageKey = "BackgroundPage";
 
         /// <summary>
         /// Initializes a new instance of the ViewModelLocator class.
@@ -36,7 +41,7 @@ namespace Studio_Photo_Collage.ViewModels
             nav.Configure(TemplatesPageKey, typeof(TemplatesPage));
             nav.Configure(MainPageKey, typeof(MainPage));
             nav.Configure(FiltersPageKey, typeof(FiltersPage));
-            //nav.Configure(SecondPageKey, typeof(SecondPage));
+            nav.Configure(BackgroundPageKey, typeof(BackgroundPage));
 
             if (ViewModelBase.IsInDesignModeStatic)
             {
@@ -50,9 +55,11 @@ namespace Studio_Photo_Collage.ViewModels
             //Register your services used here
             SimpleIoc.Default.Register<INavigationService>(() => nav);
             SimpleIoc.Default.Register<StartPageViewModel>();
-            SimpleIoc.Default.Register<TemplatesViewModel>();
+            SimpleIoc.Default.Register<TemplatesPageViewModel>();
             SimpleIoc.Default.Register<MainPageViewModel>();
+
             SimpleIoc.Default.Register<FiltersPageViewModel>();
+            SimpleIoc.Default.Register<BackgroundPageViewModel>();
 
         }
 
@@ -63,34 +70,13 @@ namespace Studio_Photo_Collage.ViewModels
         // <value>
         // The StartPage view model.
         // </value>
-        public StartPageViewModel StartPageInstance
-        {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<StartPageViewModel>();
-            }
-        }
-        public TemplatesViewModel TemplatesPageInstance
-        {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<TemplatesViewModel>();
-            }
-        }
-        public MainPageViewModel MainPageInstance
-        {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<MainPageViewModel>();
-            }
-        }
-        public FiltersPageViewModel FiltersPageInstance
-        {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<FiltersPageViewModel>();
-            }
-        }
+        public StartPageViewModel StartPageInstance => ServiceLocator.Current.GetInstance<StartPageViewModel>();
+        public TemplatesPageViewModel TemplatesPageInstance => ServiceLocator.Current.GetInstance<TemplatesPageViewModel>();
+        public MainPageViewModel MainPageInstance => ServiceLocator.Current.GetInstance<MainPageViewModel>();
+
+        public FiltersPageViewModel FiltersPageInstance => ServiceLocator.Current.GetInstance<FiltersPageViewModel>();
+        public BackgroundPageViewModel BackgroundPageInstance => ServiceLocator.Current.GetInstance<BackgroundPageViewModel>();
+
 
         // <summary>
         // The cleanup.

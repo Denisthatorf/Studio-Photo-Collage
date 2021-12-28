@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using System;
 using System.Collections.Generic;
@@ -8,11 +9,15 @@ using System.Threading.Tasks;
 
 namespace Studio_Photo_Collage.ViewModels
 {
-    public class TemplatesViewModel : ViewModelBase
+    public class TemplatesPageViewModel : ViewModelBase
     {
-        public TemplatesViewModel(INavigationService navigationService)
-        {
+        private readonly INavigationService _navigationService;
+        public RelayCommand TemplateClickCommand { get; private set; }
 
+        public TemplatesPageViewModel(INavigationService navigationService)
+        {
+            _navigationService = navigationService;
+            TemplateClickCommand = new RelayCommand(()=> _navigationService.NavigateTo("MainPage"));
         }
     }
 }

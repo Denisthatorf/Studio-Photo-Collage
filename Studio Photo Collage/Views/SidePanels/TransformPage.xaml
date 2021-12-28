@@ -1,0 +1,62 @@
+﻿<Page
+    x:Class="Studio_Photo_Collage.Views.SidePanels.TransformPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Studio_Photo_Collage.Views.SidePanels"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Width="245">
+    <Page.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="8,0"/>
+        </Style>
+    </Page.Resources>
+    <StackPanel Padding="10">
+        <TextBlock Text="Transform" Style="{StaticResource Header}"/>
+
+        <ListView>
+            <StackPanel Orientation="Horizontal">
+                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;"
+                          x:Name="RotateLeftIcon">
+                    <FontIcon.RenderTransform>
+                        <TransformGroup>
+                            <CompositeTransform ScaleX="-1"/>
+                            <TranslateTransform X="20"/>
+                        </TransformGroup>
+                    </FontIcon.RenderTransform>
+                </FontIcon>
+                <TextBlock Text="Rotate Left"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;"/>
+                <TextBlock Text="Rotate Right"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <muxc:ImageIcon Source="/Assets/HorizontalFlip.png"
+                                Width="{Binding ElementName=RotateLeftIcon, Path=ActualWidth}"/>
+                <TextBlock Text="Zoom in"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <muxc:ImageIcon Source="/Assets/VerticalFlip.png"
+                                Width="{Binding ElementName=RotateLeftIcon, Path=ActualWidth}"/>
+                <TextBlock Text="Zoom in"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71E;"/>
+                <TextBlock Text="Zoom in"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71E;"/>
+                <TextBlock Text="Zoom in"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71F;"/>
+                <TextBlock Text="Zoom in"/>
+            </StackPanel>
+        </ListView>
+    </StackPanel>
+</Page> 

@@ -9,13 +9,21 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    DataContext="{Binding MainPageInstance, Source={StaticResource Locator}}">
+    DataContext="{Binding MainPageInstance, Source={StaticResource Locator}}"
+    MinHeight="400" RequestedTheme="Light">
     <Page.Resources>
         <infstruct:StringToTypeOfPageConverter x:Key="StringToTypeOfPageConverter"/>
+        <Style TargetType="AppBarButton">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Width" Value="36"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
     </Page.Resources>
     
     <Grid>
-
+        <!--ExpandedModeThresholdWidth="200000"
+        IsPaneToggleButtonVisible="False"-->
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition/>
@@ -23,10 +31,8 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition/>
-            <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
-
-        <StackPanel Grid.Row="1">
+        <StackPanel Grid.Row="1" Background="#EDF1F2">
             <AppBarButton>
                 <AppBarButton.Icon>
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF61B;"/>
@@ -53,56 +59,86 @@
                 </AppBarButton.Icon>
             </AppBarButton>
         </StackPanel>
+        <AppBarButton Icon="Setting" Grid.Row="1" VerticalAlignment="Bottom"
+                          Command="{Binding SettingsCommand}"/>
 
-        <!--SelectedItem="{Binding NavSelectedItm, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"--> 
-        <muxc:NavigationView x:Name="TopNavigation"
-            IsBackButtonVisible="Collapsed" PaneDisplayMode="Top" 
-        Grid.Column="1" HorizontalAlignment="Center">
-            <muxc:NavigationView.MenuItems>
-                <muxc:NavigationViewItem Tag="FiltersPage">
-                    <muxc:NavigationViewItem.Icon>
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEB9F;"/>
-                    </muxc:NavigationViewItem.Icon>
-                </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem>
-                    <muxc:NavigationViewItem.Icon>
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8B3;"/>
-                    </muxc:NavigationViewItem.Icon>
-                </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem Tag="Filters">
-                    <muxc:NavigationViewItem.Icon>
-                        <muxc:ImageIcon Source="/Assets/wand.png"/>
-                    </muxc:NavigationViewItem.Icon>
-                </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem>
-                    <muxc:NavigationViewItem.Icon>
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE722;"/>
-                    </muxc:NavigationViewItem.Icon>
-                </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem>
-                    <muxc:NavigationViewItem.Icon>
-                        <muxc:ImageIcon Source="/Assets/wand.png"/>
-                    </muxc:NavigationViewItem.Icon>
-                </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem>
-                    <muxc:NavigationViewItem.Icon>
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;"/>
-                    </muxc:NavigationViewItem.Icon>
-                </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem>
-                    <muxc:NavigationViewItem.Icon>
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;"/>
-                    </muxc:NavigationViewItem.Icon>
+        <Grid Grid.ColumnSpan="2" Background="#EDF1F2">
+            <muxc:NavigationView x:Name="TopNavigation" IsSettingsVisible="False" 
+            IsBackButtonVisible="Collapsed" PaneDisplayMode="Top" HorizontalAlignment="Center">
+                <muxc:NavigationView.MenuItems>
+                    <muxc:NavigationViewItem Tag="Templates">
+                        <muxc:NavigationViewItem.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE80A;"/>
+                        </muxc:NavigationViewItem.Icon>
+                    </muxc:NavigationViewItem>
+                    <muxc:NavigationViewItem Tag="Transform">
+                        <muxc:NavigationViewItem.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEB9F;"/>
+                        </muxc:NavigationViewItem.Icon>
+                    </muxc:NavigationViewItem>
+                    <muxc:NavigationViewItem Tag="Frames">
+                        <muxc:NavigationViewItem.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8B3;"/>
+                        </muxc:NavigationViewItem.Icon>
+                    </muxc:NavigationViewItem>
+                    <muxc:NavigationViewItem Tag="Filters">
+                        <muxc:NavigationViewItem.Icon>
+                            <muxc:ImageIcon Source="/Assets/wand.png"/>
+                        </muxc:NavigationViewItem.Icon>
+                    </muxc:NavigationViewItem>
+                    <muxc:NavigationViewItem Tag="Background">
+                        <muxc:NavigationViewItem.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8B9;"/>
+                        </muxc:NavigationViewItem.Icon>
+                    </muxc:NavigationViewItem>
+                    <muxc:NavigationViewItem>
+                        <muxc:NavigationViewItem.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE722;"/>
+                        </muxc:NavigationViewItem.Icon>
+                    </muxc:NavigationViewItem>
+                    <muxc:NavigationViewItem>
+                        <muxc:NavigationViewItem.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;"/>
+                        </muxc:NavigationViewItem.Icon>
+                    </muxc:NavigationViewItem>
+                    <muxc:NavigationViewItem x:Name="PaintNavItem">
+                        <muxc:NavigationViewItem.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;"/>
+                        </muxc:NavigationViewItem.Icon>
+                    </muxc:NavigationViewItem>
                     <muxc:NavigationViewItem>
                         <muxc:NavigationViewItem.Icon>
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74D;"/>
                         </muxc:NavigationViewItem.Icon>
                     </muxc:NavigationViewItem>
-                </muxc:NavigationViewItem>
-            </muxc:NavigationView.MenuItems>
-        </muxc:NavigationView>
+                </muxc:NavigationView.MenuItems>
+            </muxc:NavigationView>
 
-        <Frame Content="{Binding ElementName=TopNavigation, Path=SelectedItem, Converter={StaticResource StringToTypeOfPageConverter}}"
-               Grid.Row="1" Grid.Column="2" />
+        </Grid>
+        
+        <Grid Grid.Row="1" Grid.Column="1" x:Name="MainGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Popup  Grid.Column="1" IsOpen="True" 
+                    Width="250"
+                    Height="{Binding ElementName=MainGrid, Path=Height}">
+                <Frame Content="{Binding ElementName=TopNavigation, Path=SelectedItem, 
+                    Converter={StaticResource StringToTypeOfPageConverter}}"/>
+            </Popup>
+
+            <Popup Grid.ColumnSpan="2" IsOpen="{Binding IsSettingsOpen}" 
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Width="280" Height="350">
+                <Frame BorderBrush="Black" BorderThickness="1" Content="{Binding SettingsFrame}"/>
+            </Popup>
+            <Popup Grid.ColumnSpan="2" IsOpen="{Binding ElementName=PaintNavItem, Path=IsSelected}" Margin="10"
+                   Width="280" Height="50"
+                   VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                
+            </Popup>
+        </Grid>
     </Grid>
 </Page>
