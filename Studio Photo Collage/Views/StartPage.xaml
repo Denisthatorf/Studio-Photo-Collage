@@ -2,27 +2,137 @@
     x:Class="Studio_Photo_Collage.Views.StartPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Studio_Photo_Collage.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     DataContext="{Binding StartPageInstance, Source={StaticResource Locator}}">
+
     <Grid>
-        <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-            <Image Stretch="Fill" Source="/Assets/BackgroungStartPage.jpg"
-                   />
+        <!--<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <Image Stretch="Fill" Source="/Assets/BackgroungStartPage.jpg"/>
+        </Grid>-->
+        
+        <Grid x:Name="TitleBar" Margin="20,10" Height="32" VerticalAlignment="Top">
+            <TextBlock FontSize="12">Studio Collages</TextBlock>
         </Grid>
+
+        <AppBarButton Width="45" Height="45" 
+                HorizontalAlignment="Right" VerticalAlignment="Top"
+                LabelPosition="Collapsed" 
+                Margin="35" Icon="Setting"/>
+
         <Grid>
-            <Button HorizontalAlignment="Center" VerticalAlignment="Center" 
-                    Command="{Binding ImageClickCommand}" Margin="200">
-                <Image Source="/Assets/StartPageCentral.jpg"></Image>
+            <Button x:Name="ClassicTemplate"
+                    HorizontalAlignment="Center" VerticalAlignment="Center" 
+                    Background="Transparent" BorderBrush="Transparent" 
+                    Padding="0"
+                    Command="{Binding ImageClickCommand}">
+                
+                <Interactivity:Interaction.Behaviors>
+                    <Core:EventTriggerBehavior EventName="PointerEntered">
+                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=ClassicTempaleBorder}" 
+                                                   PropertyName="StrokeDashArray" Value="1 0"/>
+                    </Core:EventTriggerBehavior>
+                </Interactivity:Interaction.Behaviors>
+
+                <Button.Resources>
+                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Opacity="0.1">#b8b8b8</SolidColorBrush>
+                    <SolidColorBrush x:Key="ButtonBorderBrushPointerOver">#0000</SolidColorBrush>
+                </Button.Resources>
+                <Grid>
+                    <Rectangle x:Name="ClassicTempaleBorder"
+                        StrokeThickness="1" Stroke="Black" 
+                               StrokeDashArray="6 6"/>
+                    <StackPanel Margin="26">
+                        <Grid Width="200" Height="254">
+                            <Grid.Resources>
+                                <Style TargetType="Rectangle">
+                                    <Setter Property="Fill" Value="Aquamarine"/>
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <Rectangle Grid.Column="0" Margin="0,0,0,5"/>
+                            <Rectangle Grid.Column="0" Grid.Row="1"/>
+                            <Rectangle Grid.Column="1" Grid.RowSpan="2" Margin="5,0,0,0"/>
+                        </Grid>
+                        <TextBlock Text="Classic Template" HorizontalAlignment="Center"
+                                   Margin="0,24,0,0" FontSize="24"/>
+                    </StackPanel>
+                </Grid>
             </Button>
 
-            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="50"
-                       FontSize="30"
-                       Foreground="White" 
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" 
+                       Margin="50" Visibility="{Binding IsGreetingTextVisible}"
+                       FontSize="24" Foreground="{ThemeResource AppBarItemForegroundThemeBrush}" 
                        Text=" Welcome to Studio Photo Collages"/>
         </Grid>
+
+        <Popup HorizontalAlignment="Left" VerticalAlignment="Bottom"
+               Height="200" IsOpen="{Binding IsRecentCollagesOpen}">
+            <StackPanel Orientation="Vertical">
+
+                <StackPanel Orientation="Horizontal" Margin="36,0">
+                    <TextBlock Text="Recent Collages" />
+                    <Button Background="Transparent" Style="{StaticResource CloseButton}"
+                            Command="{Binding RecentCollCloseCommand}">
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8BB;"
+                                  FontSize="10"/>
+                    </Button>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="36,0,0,0">
+                    <Button Width="120" Height="120" Background="Transparent" Padding="0"
+                            HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <Rectangle Grid.Column="0" Fill="White" Margin="2.5"/>
+                            <Rectangle Grid.Column="1" Fill="White" Margin="2.5"/>
+                        </Grid>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </Popup>
+
+        <Popup IsOpen="{Binding IsConfirmPopUpOpen, Mode=TwoWay}" x:Name="ConfirmPopUp"
+               Width="360" Height="145">
+            <StackPanel Background="White" Padding="26,26,26,24"
+                        BorderBrush="{StaticResource MainBorderBrush}" BorderThickness="1">
+                
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Confirmation" FontSize="20"/>
+                    <Button Style="{StaticResource CloseButton}" Command="{Binding PopUpCloseBtnCommand}">
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8BB;" FontSize="10"/>
+                    </Button>
+                </StackPanel>
+                <TextBlock Text="Do you really want to remove this collage?" Margin="0,14,0,0"/>
+                
+                <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                    <StackPanel.Resources>
+                        <Style TargetType="Button">
+                            <Setter Property="Width" Value="154"/>
+                            <Setter Property="Height" Value="32"/>
+                        </Style>
+                    </StackPanel.Resources>
+                    <Button Content="Yes"/>
+                    <Button Content="No" Margin="4,0"/>
+                </StackPanel>
+            </StackPanel>
+        </Popup>
+        
     </Grid>
 </Page>

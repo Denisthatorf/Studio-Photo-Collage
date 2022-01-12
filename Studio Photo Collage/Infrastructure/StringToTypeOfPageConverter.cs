@@ -21,28 +21,18 @@ namespace Studio_Photo_Collage.Infrastructure
                 case "Filters":
                     frame.Navigate(typeof(FiltersPage));
                     return frame;
-                    break;
                 case "Background":
                     frame.Navigate(typeof(BackgroundPage));
                     return frame;
-                    break;
                 case "Transform":
                     frame.Navigate(typeof(TransformPage));
                     return frame;
-                    break;
                 case "Frames":
                     frame.Navigate(typeof(FramesPage));
                     return frame;
-                    break;
-
-                case "SettingsFrame":
-                    frame.Navigate(typeof(SettingsFramePage));
+                case "Recent":
+                    frame.Navigate(typeof(RecentPage));
                     return frame;
-                    break;
-                case "AboutFrame":
-                    frame.Navigate(typeof(AboutFramePage));
-                    return frame;
-                    break;
             }
             return null;
         }

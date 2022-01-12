@@ -5,31 +5,32 @@
     xmlns:local="using:Studio_Photo_Collage.Views.SidePanels"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Width="245"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-      DataContext="{Binding BackgroundPageInstance, Source={StaticResource Locator}}">
-    <StackPanel Padding="15">
-        <TextBlock Text="Background"  x:Uid="BackgroudHeader"
-                   Foreground="Red"
-                   Style="{StaticResource Header}"/>
-        <Button Content="Upload image" Command="{Binding UploadBtnCommand}"
+    mc:Ignorable="d" 
+    DataContext="{Binding BackgroundPageInstance, Source={StaticResource Locator}}">
+
+    <ScrollViewer>
+        <StackPanel Padding="15" Style="{StaticResource SidePanelStackPanel}">
+
+            <TextBlock Text="Background"  x:Uid="BackgroudHeader"
+                       Style="{StaticResource Header}"/>
+            <Button Content="Upload image" Command="{Binding UploadBtnCommand}"
                 Background="Transparent" BorderBrush="Black"
                 Margin="0,15,0,0"/>
-        
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Picture size: " Margin="0,0,5,0"/>
-            <TextBlock Text="{Binding ElementName=PictureSizeSlider, 
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Picture size: " Margin="0,0,5,0"/>
+                <TextBlock Text="{Binding ElementName=PictureSizeSlider, 
                                       Path=Value}"/>
-        </StackPanel>
-        <Slider x:Name="PictureSizeSlider"/>
-        
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Opacity: " Margin="0,0,5,0"/>
-            <TextBlock Text="{Binding ElementName=OpacitySlider, 
+            </StackPanel>
+            <Slider x:Name="PictureSizeSlider"/>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Opacity: " Margin="0,0,5,0"/>
+                <TextBlock Text="{Binding ElementName=OpacitySlider, 
                                       Path=Value}"/>
+            </StackPanel>
+            <Slider x:Name="OpacitySlider"/>
         </StackPanel>
-        <Slider x:Name="OpacitySlider"/>
-        
-    </StackPanel>
+    </ScrollViewer>
+    
 </Page>

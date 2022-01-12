@@ -15,14 +15,14 @@ using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace Studio_Photo_Collage.Views.PopUps.Settings
+namespace Studio_Photo_Collage.Views.SidePanels
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class SettingsFramePage : Page
+    public sealed partial class RecentPage : Page
     {
-        public SettingsFramePage()
+        public RecentPage()
         {
             this.InitializeComponent();
         }

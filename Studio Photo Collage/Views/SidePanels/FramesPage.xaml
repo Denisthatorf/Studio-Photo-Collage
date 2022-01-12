@@ -5,17 +5,15 @@
     xmlns:local="using:Studio_Photo_Collage.Views.SidePanels"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    Width="245">
+    mc:Ignorable="d">
     <Page.Resources>
         <Style TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
         </Style>
     </Page.Resources>
-    
-    <StackPanel Padding="10">
+
+    <StackPanel Padding="10" Style="{StaticResource SidePanelStackPanel}">
         <TextBlock Text="Frame" Style="{StaticResource Header}"/>
         <Grid>
             <Grid.RowDefinitions>

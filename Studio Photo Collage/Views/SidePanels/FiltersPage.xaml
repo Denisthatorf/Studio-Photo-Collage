@@ -3,14 +3,13 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Studio_Photo_Collage.Views.SidePanels"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Width="245"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d" 
     DataContext="{Binding FiltersPageInstance, Source={StaticResource Locator}}">
 
-    <StackPanel Padding="10">
+    <StackPanel Padding="10" Style="{StaticResource SidePanelStackPanel}">
         <TextBlock Text="Filters" Style="{StaticResource Header}"/>
 
         <StackPanel Orientation="Horizontal">
@@ -21,5 +20,8 @@
         <Slider x:Name="OpacitySlider" 
                 Foreground="#FF524D4D" Background="#FFB6B6B6"/>
         <CheckBox Content="apply to all"/>
+        <muxc:TreeView AutomationProperties.Name="Effects">
+            
+        </muxc:TreeView>
     </StackPanel>
 </Page>

@@ -1,0 +1,112 @@
+﻿<Page
+    x:Class="Studio_Photo_Collage.Views.PopUps.Settings.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Studio_Photo_Collage.Views.PopUps.Settings"
+    xmlns:infstruct="using:Studio_Photo_Collage.Infrastructure"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    DataContext="{Binding SettingsPageInstance, Source={StaticResource Locator}}"
+    Width="343" Height="467">
+    <Page.Resources>
+        <infstruct:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <infstruct:CultureInfoToFullStringNameConverter x:Key="CultureConverter"/>
+        <infstruct:FromThemeToStringConverter x:Key="ThemeConverter"/>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="0,8,0,0"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+    </Page.Resources>
+
+    <StackPanel Padding="22,0,34,0" Background="{StaticResource NavigateBackgroundColor}">
+        <muxc:NavigationView x:Name="NavView" PaneDisplayMode="Top" 
+                             IsBackButtonVisible="Collapsed" IsBackEnabled="False" IsSettingsVisible="False"
+                             FontSize="20"
+                             Margin="0,0,0,8">
+            <muxc:NavigationView.MenuItems>
+                <muxc:NavigationViewItem x:Name="Settings" Content="Settings" IsSelected="True"/>
+                <muxc:NavigationViewItem x:Name="About" Content="About"/>
+            </muxc:NavigationView.MenuItems>
+            <muxc:NavigationView.FooterMenuItems>
+                <muxc:NavigationViewItem>
+                    <Button Background="Transparent" BorderBrush="Transparent">
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8BB;" FontSize="16"/>
+                    </Button>
+                </muxc:NavigationViewItem>
+            </muxc:NavigationView.FooterMenuItems>
+        </muxc:NavigationView>
+
+        <Frame  Visibility="{Binding ElementName=About, Path=IsSelected,
+            Converter={StaticResource BooleanToVisibilityConverter}}">
+            <StackPanel>
+                <TextBlock Margin="0">
+                    <Bold>
+                        Control header
+                    </Bold>
+                </TextBlock>
+                <TextBlock>
+                    Version 1.1.0.1
+                    <LineBreak/>
+                    Published by Company name
+                    <LineBreak/>
+                    Published by Company name
+                    <LineBreak/>
+                    Disributed by Some Store
+                </TextBlock>
+                
+                <TextBlock AllowDrop="True" TextWrapping="Wrap" >
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus euismod, urna non vehicula dignissim, nulla sem consequat quam, id dictum nisl ligula a nulla. Nunc a nisl iaculis, commodo ligula id, dignissim orci. Donec pellentesque sagittis neque, vitae sollicitudin sapien tincidunt et. Mauris mi leo, ultricies sit amet pulvinar in, malesuada in magna.
+                </TextBlock>
+                <StackPanel>
+                    <StackPanel.Resources>
+                        <Style TargetType="Button">
+                            <Setter Property="Width" Value="153"/>
+                            <Setter Property="Height" Value="32"/>
+                            <Setter Property="Margin" Value="0,8,0,0"/>
+                        </Style>
+                    </StackPanel.Resources>
+                    <Button Content="Feedback"/>
+                    <Button Content="Our apps"/>
+                    <Button Content="Share"/>
+                </StackPanel>
+            </StackPanel>
+        </Frame>
+
+        <Frame Visibility="{Binding ElementName=Settings, Path=IsSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <StackPanel Padding="16,0">
+                <ComboBox Header="Language" 
+                          SelectedItem="{Binding LanguageComBox_SelectedItm, Mode=TwoWay, Converter={StaticResource CultureConverter}}">
+                    <x:String>English</x:String>
+                    <x:String>Russian</x:String>
+                </ComboBox>
+                <ComboBox Header="Application theme" 
+                          SelectedItem="{Binding ThemeComBox_SelectedItem ,Mode=TwoWay,
+                          Converter={StaticResource ThemeConverter}, UpdateSourceTrigger=PropertyChanged}">
+                    <x:String>Light theme</x:String>
+                    <x:String>Dark theme</x:String>
+                    <x:String>Custom theme</x:String>
+                </ComboBox>
+
+                <TextBlock Text="Choose your color"/>
+                
+                <TextBlock Text="Photos on this PC"/>
+                <HyperlinkButton Padding="0">
+                    <TextBlock Text="Choose where we will look for photos" 
+                               Foreground="Red"/>
+                </HyperlinkButton>
+                
+                <TextBlock Text="Collages on this PC"/>
+                <HyperlinkButton Padding="0">
+                    <TextBlock Text="Choose where we will look for photos" 
+                               Foreground="Red"/>
+                </HyperlinkButton>
+                
+            </StackPanel>
+        </Frame>
+    </StackPanel>
+</Page>

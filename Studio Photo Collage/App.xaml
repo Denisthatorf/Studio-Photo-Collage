@@ -10,16 +10,23 @@
                 <ResourceDictionary>
                     <vm:ViewModelLocator xmlns:vm="using:Studio_Photo_Collage.ViewModels" x:Key="Locator" />
                 </ResourceDictionary>
+                <ResourceDictionary Source="Styles/Colors.xaml"/>
                 <ResourceDictionary Source="Styles/StaticStyles.xaml"/>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>
             </ResourceDictionary.MergedDictionaries>
-             <!--
             <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary Source="Styles/ThemeStyles.xaml" x:Key="ThemeDictionarie"/>
+                <ResourceDictionary Source="Styles/ThemeResources.xaml" x:Key="ThemeResources"/>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="NavigateBackgroundColor">#ffffff</SolidColorBrush>
+                    <SolidColorBrush x:Key="MainBackgroundColor">#ffffff</SolidColorBrush>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="NavigateBackgroundColor">#1f1f1f</SolidColorBrush>
+                    <SolidColorBrush x:Key="MainBackgroundColor">#1f1f1f</SolidColorBrush>
+                </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
-            -->
-            
-            
+
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -6,25 +6,34 @@
      xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    Width="280" Height="50">
-
-    <Grid>
-        <StackPanel Orientation="Horizontal">
+    mc:Ignorable="d" Height="64" Width="380" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+    <Page.Resources>
+        <Style TargetType="AppBarToggleButton">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Width" Value="36"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </Page.Resources>
+    
+    <StackPanel Orientation="Horizontal" 
+                Background="{StaticResource MainBackgroundColor}">
             <AppBarToggleButton>
                 <AppBarToggleButton.Icon>
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;"/>
                 </AppBarToggleButton.Icon>
             </AppBarToggleButton>
-            <ColorPickerSlider Width="50" Height="5"/>
-            <AppBarToggleButton>
-                <AppBarToggleButton.Icon>
-                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xED60;"/>
-                </AppBarToggleButton.Icon>
-                <muxc:ColorPicker>
-                </muxc:ColorPicker>
-            </AppBarToggleButton>
-        </StackPanel>
-    </Grid>
+        <AppBarToggleButton>
+            <AppBarToggleButton.Icon>
+                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xED60;"/>
+            </AppBarToggleButton.Icon>
+        </AppBarToggleButton>
+
+        <Grid VerticalAlignment="Center">
+            <ColorPicker Height="6" Width="300" VerticalAlignment="Center"/>
+            <ColorPickerSlider Background="Transparent"  Width="350"/>
+        </Grid>
+        
+        
+    </StackPanel>
 </Page>

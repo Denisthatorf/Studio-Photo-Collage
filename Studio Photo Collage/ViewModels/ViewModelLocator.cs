@@ -2,14 +2,19 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Views;
+using Studio_Photo_Collage.ViewModels.PopUps;
 using Studio_Photo_Collage.ViewModels.SidePanels;
 using Studio_Photo_Collage.Views;
+using Studio_Photo_Collage.Views.PopUps.Settings;
 using Studio_Photo_Collage.Views.SidePanels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace Studio_Photo_Collage.ViewModels
@@ -21,14 +26,13 @@ namespace Studio_Photo_Collage.ViewModels
     /// 
     public class ViewModelLocator
     {
-        private static ViewModelLocator _current;
-        public static ViewModelLocator Current => _current ?? (_current = new ViewModelLocator());
-
         public const string StartPageKey = "StartPage";
         public const string TemplatesPageKey = "TemplatesPage";
         public const string MainPageKey = "MainPage";
         public const string FiltersPageKey = "FiltersPage";
         public const string BackgroundPageKey = "BackgroundPage";
+        public const string SettingsPageKey = "SettingsPage";
+        public const string RecentPageKey = "RecentPage";
 
         /// <summary>
         /// Initializes a new instance of the ViewModelLocator class.
@@ -42,6 +46,8 @@ namespace Studio_Photo_Collage.ViewModels
             nav.Configure(MainPageKey, typeof(MainPage));
             nav.Configure(FiltersPageKey, typeof(FiltersPage));
             nav.Configure(BackgroundPageKey, typeof(BackgroundPage));
+            nav.Configure(SettingsPageKey, typeof(SettingsPage));
+            nav.Configure(RecentPageKey, typeof(RecentPage));
 
             if (ViewModelBase.IsInDesignModeStatic)
             {
@@ -60,6 +66,10 @@ namespace Studio_Photo_Collage.ViewModels
 
             SimpleIoc.Default.Register<FiltersPageViewModel>();
             SimpleIoc.Default.Register<BackgroundPageViewModel>();
+            SimpleIoc.Default.Register<SettingsPageViewModel>();
+            SimpleIoc.Default.Register<RecentPageViewModel>();
+
+            // SimpleIoc.Default.Register<SettingsPageViewModel>();
 
         }
 
@@ -76,6 +86,25 @@ namespace Studio_Photo_Collage.ViewModels
 
         public FiltersPageViewModel FiltersPageInstance => ServiceLocator.Current.GetInstance<FiltersPageViewModel>();
         public BackgroundPageViewModel BackgroundPageInstance => ServiceLocator.Current.GetInstance<BackgroundPageViewModel>();
+        public SettingsPageViewModel SettingsPageInstance => ServiceLocator.Current.GetInstance<SettingsPageViewModel>();
+        public RecentPageViewModel ReccentPageInstance => ServiceLocator.Current.GetInstance<RecentPageViewModel>();
+
+        // public BackgroundPageViewModel SettingsPageInstance => ServiceLocator.Current.GetInstance<SettingsPageViewModel>();
+        public static async Task ReloadAll()
+        {
+            foreach (var view in CoreApplication.Views)
+            {
+                await view.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    if (Window.Current.Content is FrameworkElement frameworkElement)
+                    {
+                        var frame = frameworkElement as Frame;
+                        frame.Navigate(frame.SourcePageType);
+                    }
+                });
+            }
+        }
+
 
 
         // <summary>

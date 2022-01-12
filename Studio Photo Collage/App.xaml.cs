@@ -1,7 +1,12 @@
 ﻿using Studio_Photo_Collage.Views;
 using System;
+using System.Globalization;
+using System.Threading;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Core;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -21,6 +26,7 @@ namespace Studio_Photo_Collage
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            CultureInfo.CurrentCulture = new CultureInfo("en-US");
         }
 
         /// <summary>
@@ -31,6 +37,10 @@ namespace Studio_Photo_Collage
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             Frame rootFrame = Window.Current.Content as Frame;
+
+            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.ButtonBackgroundColor = Colors.Transparent;
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
