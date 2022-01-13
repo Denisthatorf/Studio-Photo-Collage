@@ -33,17 +33,25 @@ namespace Studio_Photo_Collage.ViewModels
             get => _selectedItem;
             set
             {
-                Set(ref _selectedItem, value);
+                var setvalue = new Task(async () =>
+                await Window.Current.Content.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
 
-                var item = _selectedItem as NavigationViewItem;
-                if (item != null)
+                () =>
                 {
-                    var tag = item.Tag.ToString();
-                    if (tag == "Settings")
-                        IsSettingsOpen = true;
-                    else
-                        IsSettingsOpen = false;
+                    Set(ref _selectedItem, value);
+                    var item = _selectedItem as NavigationViewItem;
+                    if (item != null)
+                    {
+                        var tag = item.Tag.ToString();
+                        if (tag == "Settings")
+                            IsSettingsOpen = true;
+                        else
+                            IsSettingsOpen = false;
+                    }
                 }
+
+                ));
+                setvalue.RunSynchronously();
 
             }
         }
