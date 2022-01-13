@@ -26,6 +26,9 @@ namespace Studio_Photo_Collage.ViewModels
     /// 
     public class ViewModelLocator
     {
+       // private static ViewModelLocator _current;
+      //  public static ViewModelLocator Current => _current ?? (_current = new ViewModelLocator());
+
         public const string StartPageKey = "StartPage";
         public const string TemplatesPageKey = "TemplatesPage";
         public const string MainPageKey = "MainPage";
@@ -37,10 +40,13 @@ namespace Studio_Photo_Collage.ViewModels
         /// <summary>
         /// Initializes a new instance of the ViewModelLocator class.
         /// </summary>
+        /// 
+
+        private static NavigationService nav = new NavigationService();
+
         public ViewModelLocator()
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
-            var nav = new NavigationService();
             nav.Configure(StartPageKey, typeof(StartPage));
             nav.Configure(TemplatesPageKey, typeof(TemplatesPage));
             nav.Configure(MainPageKey, typeof(MainPage));
@@ -89,23 +95,32 @@ namespace Studio_Photo_Collage.ViewModels
         public SettingsPageViewModel SettingsPageInstance => ServiceLocator.Current.GetInstance<SettingsPageViewModel>();
         public RecentPageViewModel ReccentPageInstance => ServiceLocator.Current.GetInstance<RecentPageViewModel>();
 
+
         // public BackgroundPageViewModel SettingsPageInstance => ServiceLocator.Current.GetInstance<SettingsPageViewModel>();
-        public static async Task ReloadAll()
+        public static async Task ReloadCurrentPage()
         {
             foreach (var view in CoreApplication.Views)
             {
                 await view.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    if (Window.Current.Content is FrameworkElement frameworkElement)
-                    {
-                        var frame = frameworkElement as Frame;
-                        frame.Navigate(frame.SourcePageType);
-                    }
+                    var navigation = ServiceLocator.Current.GetInstance<INavigationService>();
+                    navigation.NavigateTo(navigation.CurrentPageKey);
+
+                    Frame rootFrame = Window.Current.Content as Frame;
+                    rootFrame?.Navigate(typeof(MainPage));
                 });
             }
         }
+        public static void GoBack()
+        {
+             var navigation = ServiceLocator.Current.GetInstance<INavigationService>();
+             navigation.GoBack();
 
 
+            //Frame rootFrame = Window.Current.Content as Frame;
+            //rootFrame?.Navigate(typeof());
+           // rootFrame.GoBack();
+        }
 
         // <summary>
         // The cleanup.

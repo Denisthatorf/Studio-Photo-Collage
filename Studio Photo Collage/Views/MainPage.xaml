@@ -5,6 +5,7 @@
     xmlns:local="using:Studio_Photo_Collage.Views"
     xmlns:infstruct="using:Studio_Photo_Collage.Infrastructure"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -16,6 +17,8 @@
 
     </Page.Resources>
     <Grid>
+        
+        
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
@@ -121,7 +124,7 @@
                         </muxc:NavigationViewItem>
                         <muxc:NavigationViewItem Tag="Filters">
                             <muxc:NavigationViewItem.Icon>
-                                <muxc:ImageIcon Source="/Assets/wand.png"/>
+                                <muxc:ImageIcon Source="/Assets/Icons/Wand-256.png"/>
                             </muxc:NavigationViewItem.Icon>
                         </muxc:NavigationViewItem>
                         <muxc:NavigationViewItem Tag="Background">
@@ -189,15 +192,5 @@
             </Grid>
         </Grid>
 
-        <!--Visibility Changed in MainPage.xaml.cs-->
-        <StackPanel x:Name="Title" VerticalAlignment="Top"
-                    Orientation="Horizontal"
-              Height="32" Visibility="Collapsed">
-            <Button Background="Transparent" BorderBrush="Transparent" Command="{Binding BackButtonCommand}">
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72B;"/>
-            </Button>
-            <TextBlock Text="Studio Photo Collage" VerticalAlignment="Center"
-                       Foreground="Black" FontSize="12"/>
-        </StackPanel>
     </Grid>
 </Page>

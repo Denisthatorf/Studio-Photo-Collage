@@ -19,6 +19,7 @@
                 <ResourceDictionary x:Key="Light">
                     <SolidColorBrush x:Key="NavigateBackgroundColor">#ffffff</SolidColorBrush>
                     <SolidColorBrush x:Key="MainBackgroundColor">#ffffff</SolidColorBrush>
+
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
                     <SolidColorBrush x:Key="NavigateBackgroundColor">#1f1f1f</SolidColorBrush>

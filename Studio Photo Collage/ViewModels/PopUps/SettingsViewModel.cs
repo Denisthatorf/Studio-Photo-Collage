@@ -32,7 +32,7 @@ namespace Studio_Photo_Collage.ViewModels.PopUps
                 ApplicationLanguages.PrimaryLanguageOverride = (value as CultureInfo).ToString();
                 ResourceContext.GetForCurrentView().Reset();
                 ResourceContext.GetForViewIndependentUse().Reset();
-                ViewModelLocator.ReloadAll();
+                _ = ViewModelLocator.ReloadCurrentPage();
             }
         }
 

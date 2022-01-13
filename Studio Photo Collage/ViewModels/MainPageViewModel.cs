@@ -19,6 +19,7 @@ using Windows.UI.Xaml;
 using System.Globalization;
 using Windows.ApplicationModel.Core;
 using GalaSoft.MvvmLight.Messaging;
+using Windows.UI.Core;
 
 namespace Studio_Photo_Collage.ViewModels
 {
@@ -30,7 +31,7 @@ namespace Studio_Photo_Collage.ViewModels
         public object SelectedItem
         {
             get => _selectedItem;
-            set 
+            set
             {
                 Set(ref _selectedItem, value);
 
@@ -43,6 +44,7 @@ namespace Studio_Photo_Collage.ViewModels
                     else
                         IsSettingsOpen = false;
                 }
+
             }
         }
 

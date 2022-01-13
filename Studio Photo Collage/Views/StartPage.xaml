@@ -6,7 +6,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     mc:Ignorable="d"
+    ui:ApplicationViewExtensions.ExtendViewIntoTitleBar="True"
+    ui:ApplicationViewExtensions.BackButtonVisibility="Collapsed"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     DataContext="{Binding StartPageInstance, Source={StaticResource Locator}}">
 
