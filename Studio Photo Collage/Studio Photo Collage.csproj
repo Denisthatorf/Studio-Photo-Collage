@@ -127,12 +127,13 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Infrastructure\EnumValueConverter.cs" />
     <Compile Include="Infrastructure\CultureInfoToFullStringNameConverter.cs" />
-    <Compile Include="Infrastructure\EnumToBooleanConverter.cs" />
     <Compile Include="Infrastructure\FromThemeToStringConverter.cs" />
+    <Compile Include="Infrastructure\Helpers\BtnNameEnum.cs" />
     <Compile Include="Infrastructure\Json.cs" />
     <Compile Include="Infrastructure\SettingsStorageExtensions.cs" />
-    <Compile Include="Infrastructure\StringToTypeOfPageConverter.cs" />
+    <Compile Include="Infrastructure\Helpers\StringToTypeOfPageConverter.cs" />
     <Compile Include="Infrastructure\ThemeSelectorService.cs" />
     <Compile Include="Models\Template.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -239,7 +240,9 @@
       <Version>13.0.1</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Infrastructure\Converters\" />
+  </ItemGroup>
   <ItemGroup>
     <Page Include="Styles\Colors.xaml">
       <SubType>Designer</SubType>

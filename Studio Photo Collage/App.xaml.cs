@@ -39,13 +39,13 @@ namespace Studio_Photo_Collage
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            // customize Title Bar
             var titleBar = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TitleBar;
             titleBar.BackgroundColor = (Application.Current.Resources["MainBackgroundColor"] as SolidColorBrush).Color;
             titleBar.ButtonForegroundColor = (Application.Current.Resources["AppBarItemForegroundThemeBrush"] as SolidColorBrush).Color;
             titleBar.ButtonBackgroundColor = Colors.Transparent;
             var currentView = SystemNavigationManager.GetForCurrentView();
             currentView.BackRequested += (object s, BackRequestedEventArgs ev) => ViewModelLocator.GoBack();
-
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,

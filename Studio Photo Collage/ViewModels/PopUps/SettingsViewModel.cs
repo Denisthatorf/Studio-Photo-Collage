@@ -28,8 +28,8 @@ namespace Studio_Photo_Collage.ViewModels.PopUps
             set
             { 
                 Set(ref _languageComBox_SelectedItm, value);
-                Thread.CurrentThread.CurrentCulture = value as CultureInfo;
-                ApplicationLanguages.PrimaryLanguageOverride = (value as CultureInfo).ToString();
+                Thread.CurrentThread.CurrentCulture = value;
+                ApplicationLanguages.PrimaryLanguageOverride = value.ToString();
                 ResourceContext.GetForCurrentView().Reset();
                 ResourceContext.GetForViewIndependentUse().Reset();
                 _ = ViewModelLocator.ReloadCurrentPage();
