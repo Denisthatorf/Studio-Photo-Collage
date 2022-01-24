@@ -3,7 +3,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Studio_Photo_Collage.Views"
-    xmlns:infstruct="using:Studio_Photo_Collage.Infrastructure"
+    xmlns:converters="using:Studio_Photo_Collage.Infrastructure.Converters"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:usercontrole="using:Studio_Photo_Collage.UserControles"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -13,8 +16,9 @@
     DataContext="{Binding MainPageInstance, Source={StaticResource Locator}}" 
     x:Name="Page">
     <Page.Resources>
-        <infstruct:EnumValueConverter x:Key="EnumValueConverter"/>
-        <Style TargetType="AppBarButton">
+        <converters:EnumValueConverter x:Key="EnumValueConverter"/>
+        <converters:StringToFrameConverter x:Key="ToFrameConverter"/>
+        <Style TargetType="AppBarToggleButton">
             <Setter Property="Width" Value="48"/>
             <Setter Property="Height" Value="48"/>
         </Style>
@@ -29,7 +33,6 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-
             <!-- 
             <Grid Grid.Row="1" Grid.Column="0">
                 <muxc:NavigationView  x:Name="SideNavigation" 
@@ -72,7 +75,7 @@
         -->
 
             <Grid  Grid.Row="1">
-                <StackPanel >
+                <StackPanel Background="{ThemeResource MainBackgroundColor}">
                     <AppBarToggleButton x:Name="AddFile" 
                                         IsChecked="{Binding CheckBoxesEnum, 
                                         Converter={StaticResource EnumValueConverter},
@@ -81,10 +84,10 @@
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF61B;"/>
                         </AppBarToggleButton.Icon>
                     </AppBarToggleButton>
-                    <AppBarToggleButton  x:Name="Reset" 
+                    <AppBarToggleButton  x:Name="Resents" 
                                         IsChecked="{Binding CheckBoxesEnum, 
                                         Converter={StaticResource EnumValueConverter},
-                                        ConverterParameter=Reset , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                        ConverterParameter=Resents , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <AppBarToggleButton.Icon>
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72C;"/>
                         </AppBarToggleButton.Icon>
@@ -98,12 +101,19 @@
                         </AppBarToggleButton.Icon>
                     </AppBarToggleButton>
                     <AppBarToggleButton  x:Name="Save" 
+                                        PointerEntered="Save_PointerEntered"
                                         IsChecked="{Binding CheckBoxesEnum, 
                                         Converter={StaticResource EnumValueConverter},
                                         ConverterParameter=Save, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <AppBarToggleButton.Icon>
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74E;"/>
                         </AppBarToggleButton.Icon>
+                        <FlyoutBase.AttachedFlyout>
+                            <MenuFlyout Placement="Right">
+                                <MenuFlyoutItem Text="Save image" Command="{Binding SaveImageCommand}"/>
+                                <MenuFlyoutItem Text="Save project" Command="{Binding SaveProjectCommand}"/>
+                            </MenuFlyout>
+                        </FlyoutBase.AttachedFlyout>
                     </AppBarToggleButton>
                 </StackPanel>
 
@@ -113,12 +123,12 @@
                                      ConverterParameter=Settings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           Icon="Setting" Grid.Row="1" VerticalAlignment="Bottom"/>
             </Grid>
-                
-                
-            <Grid  Grid.ColumnSpan="2"  Background="{StaticResource NavigateBackgroundColor}">
+
+
+            <Grid  Grid.ColumnSpan="2"  Background="{ThemeResource MainBackgroundColor}">
                 <CommandBar HorizontalAlignment="Center" DefaultLabelPosition="Collapsed">
                     <CommandBar.PrimaryCommands>
-                        <AppBarToggleButton x:Name="Templates" 
+                        <AppBarToggleButton x:Name="Templates"
                                             IsChecked="{Binding CheckBoxesEnum, 
                                             Converter={StaticResource EnumValueConverter},
                                             ConverterParameter=Templates , Mode=TwoWay}" >
@@ -194,9 +204,8 @@
                 </CommandBar>
             </Grid>
 
-            <Rectangle Width="480" Height="480" Margin="25"
-                   Grid.Column="1" Grid.Row="1" 
-                   Fill="Azure" Stroke="Black" StrokeThickness="1"/>
+
+
 
             <Grid Grid.Row="1" Grid.Column="1" x:Name="MainGrid">
                 <Grid.RowDefinitions>
@@ -210,16 +219,16 @@
 
                 <Popup  Grid.Column="1" IsOpen="True" Width="245" Grid.RowSpan="2">
                     <Frame x:Name="SidePanel" Height="{Binding ElementName=Page, Path=ActualHeight}"
-                    Content="{Binding SideFrame}"/>
+                    Content="{Binding CheckBoxesEnum, Converter={StaticResource ToFrameConverter}}"/>
                 </Popup>
 
-                <Popup IsOpen="{Binding ElementName=Settings, Path=IsChecked}" 
+                <!--<Popup IsOpen="{Binding ElementName=Settings, Path=IsChecked}" 
                    HorizontalAlignment="Center" VerticalAlignment="Center"
                    Width="343" Height="467" 
                    Grid.Row="1" Grid.ColumnSpan="2">
                     <Frame BorderBrush="Black" BorderThickness="1" 
                        Content="{Binding SettingsFrame}"/>
-                </Popup>
+                </Popup>-->
                 <Popup IsOpen="{Binding ElementName=Paint, Path=IsChecked}"
                    Width="380" Height="64"
                    VerticalAlignment="Bottom" HorizontalAlignment="Center" 
@@ -228,6 +237,5 @@
                 </Popup>
             </Grid>
         </Grid>
-
     </Grid>
 </Page>

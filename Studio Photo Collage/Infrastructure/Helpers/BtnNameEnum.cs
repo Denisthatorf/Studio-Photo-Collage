@@ -16,7 +16,7 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
 		Transform,
 		Photo,
 		Add,
-		Reset,
+		Resents,
 		Save,
 		Settings,
 		AddFile,

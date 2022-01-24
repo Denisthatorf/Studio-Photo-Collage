@@ -15,16 +15,8 @@
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>
             </ResourceDictionary.MergedDictionaries>
             <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary Source="Styles/ThemeResources.xaml" x:Key="ThemeResources"/>
-                <ResourceDictionary x:Key="Light">
-                    <SolidColorBrush x:Key="NavigateBackgroundColor">#ffffff</SolidColorBrush>
-                    <SolidColorBrush x:Key="MainBackgroundColor">#ffffff</SolidColorBrush>
-
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Dark">
-                    <SolidColorBrush x:Key="NavigateBackgroundColor">#1f1f1f</SolidColorBrush>
-                    <SolidColorBrush x:Key="MainBackgroundColor">#1f1f1f</SolidColorBrush>
-                </ResourceDictionary>
+                <ResourceDictionary Source="Styles/LightTheme.xaml" x:Key="Light"/>
+                <ResourceDictionary Source="Styles/DarkTheme.xaml" x:Key="Dark"/>
             </ResourceDictionary.ThemeDictionaries>
 
 

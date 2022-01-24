@@ -1,0 +1,66 @@
+﻿<ContentDialog
+    x:Class="Studio_Photo_Collage.Views.PopUps.SaveImageDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Studio_Photo_Collage.Views.PopUps"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    PrimaryButtonText="Save" 
+    SecondaryButtonText="Save as"
+    Background="{Binding Source={ThemeResource PopUpsBackground}}">
+    <ContentDialog.PrimaryButtonStyle>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{ThemeResource MainBorderBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+    </ContentDialog.PrimaryButtonStyle>
+    <ContentDialog.SecondaryButtonStyle>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{ThemeResource MainBorderBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+    </ContentDialog.SecondaryButtonStyle>
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Save" FontSize="20"/>
+            <Button Style="{StaticResource CloseButton}" Margin="259,0,0,0" 
+                    Click="CloseBtnClicked" >
+                <SymbolIcon Symbol="Cancel"/>
+            </Button>
+        </StackPanel>
+        <TextBlock Margin="0,8,0,0">
+                Do you want to save image?
+        </TextBlock>
+        <TextBlock Text="Enter name, please" Margin="0,12,0,8"/>
+        <TextBox CornerRadius="0" 
+                 Foreground="Gray"
+                 Background="Transparent" BorderBrush="{ThemeResource BlackAndWhite}" BorderThickness="1"
+                 DragEnter="TextBox_DragEnter"/>
+        <TextBlock Text="Format" Margin="0,16,0,8"/>
+        <ComboBox HorizontalAlignment="Stretch" 
+                  SelectedItem="{x:Bind }"
+                  SelectedIndex="0" 
+                  CornerRadius="0"
+                  BorderBrush="{ThemeResource BlackAndWhite}"
+                  Foreground="Gray" BorderThickness="1">
+            <x:String>JPG</x:String>
+            <x:String>PNG</x:String>
+            <x:String>BMP</x:String>
+            <x:String>TIFF</x:String>
+        </ComboBox>
+        <TextBlock Text="Quality" Margin="0,16,0,8"/>
+        <ComboBox HorizontalAlignment="Stretch" SelectedIndex="0" 
+                  CornerRadius="0"
+                  BorderBrush="{ThemeResource BlackAndWhite}"
+                  Foreground="Gray" BorderThickness="1">
+            <x:String>Maximum</x:String>
+        </ComboBox>
+        <TextBlock Margin="0,16,0,0" Foreground="Gray">
+            <Run>
+                Photo size : 
+            </Run>
+            <Run x:Name="PhotoSize" />
+        </TextBlock>
+    </StackPanel>
+</ContentDialog>

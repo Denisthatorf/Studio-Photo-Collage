@@ -21,6 +21,8 @@
         <Style TargetType="ComboBox">
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
         </Style>
+        <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground"
+                 Color="Red" />
     </Page.Resources>
 
     <StackPanel Padding="22,0,34,0" Background="{StaticResource NavigateBackgroundColor}">

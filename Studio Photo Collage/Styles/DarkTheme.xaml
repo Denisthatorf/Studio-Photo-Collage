@@ -1,0 +1,15 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
+        <SolidColorBrush x:Key="MainBackgroundColor" Opacity="0.4">#1f1f1f</SolidColorBrush>
+        <SolidColorBrush x:Key="PopUpsBackground" Opacity="0.5">#1f1f1f</SolidColorBrush>
+
+        <SolidColorBrush x:Key="ContentDialogDimmingThemeBrush" Color="Transparent" />
+        <SolidColorBrush x:Key="SystemControlPageBackgroundMediumAltMediumBrush" Color="Transparent" />
+        <StaticResource x:Key="ContentDialogLightDismissOverlayBackground" ResourceKey="SystemControlPageBackgroundMediumAltMediumBrush" />
+
+        <SolidColorBrush x:Key="BlackAndWhite" Color="White"/>
+    <SolidColorBrush x:Key="NoBtnPopUpBtnBrush" Color="#535250"/>
+</ResourceDictionary>

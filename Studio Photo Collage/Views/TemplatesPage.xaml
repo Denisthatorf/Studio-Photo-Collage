@@ -4,7 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Studio_Photo_Collage.Views"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
-    xmlns:controle="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:models="using:Studio_Photo_Collage.Models"
+    xmlns:converter="using:Studio_Photo_Collage.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -81,10 +82,47 @@
             <Setter Property="Fill" Value="White"/>
             <Setter Property="Margin" Value="2.5"/>
         </Style>
+        <converter:FromArrToGridConverter x:Key="FromArrToGridConverter"/>
+
+        <CollectionViewSource
+                   x:Name="GroupedProjectList"
+                   Source="{Binding TemplateCollection}"
+                   IsSourceGrouped="True"
+                   ItemsPath="Projects"/>
     </Page.Resources>
 
+    <GridView x:Name="Template3"
+              ItemsSource = "{Binding Source={StaticResource GroupedProjectList}}"
+              SelectionMode="None"
+              IsItemClickEnabled="True">
+        
+        <GridView.GroupStyle >
+            <GroupStyle>
+                <GroupStyle.HeaderTemplate >
+                    <DataTemplate x:DataType="models:GroupedTemplates" >
+                        <TextBlock>
+                            <Run x:Uid="CountOfPicturesRun">
+                                Pictures:
+                            </Run>
+                            <Run Text="{Binding CountOfPhotos}"/>
+                        </TextBlock>
+                    </DataTemplate >
+                </GroupStyle.HeaderTemplate >
+            </GroupStyle >
+        </GridView.GroupStyle >
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <GridView.ItemTemplate >
+            <DataTemplate x:DataType="models:Project" >
+                <Button Command="{Binding ElementName=Template3, 
+                                    Path=DataContext.TemplateClickCommand}"
+                                    CommandParameter="{Binding}"
+                                    Content="{Binding PhotoArray, Converter={StaticResource FromArrToGridConverter}}"
+                                    Style="{StaticResource ProjectBtn}"/>
+            </DataTemplate>
+        </GridView.ItemTemplate>
+    </GridView>
+
+    <!--<ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Padding="10, 0" VerticalAlignment="Top">
             <StackPanel>
                 <TextBlock Text="Picture: 1" 
@@ -367,17 +405,25 @@
                         </Grid>
                     </Button>
                 </controle:WrapPanel>
-                <!--              
-                <ItemsControl ItemsSource="{Binding Path=TemplateCollection}">
+                
+                <ItemsControl x:Name="Template3" ItemsSource="{Binding TemplateCollection}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <controle:WrapPanel />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding ElementName=Template3, 
+                                    Path=DataContext.TemplateClickCommand}"
+                                    CommandParameter="{Binding}"
+                                    Content="{Binding PhotoArray, Converter={StaticResource FromArrToGridConverter}}"
+                                    Style="{StaticResource ProjectBtn}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                -->
-                
+
             </StackPanel>
         </StackPanel>
-    </ScrollViewer>
+    </ScrollViewer>-->
 </Page>

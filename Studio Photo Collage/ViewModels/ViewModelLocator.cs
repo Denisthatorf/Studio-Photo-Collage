@@ -5,7 +5,7 @@ using GalaSoft.MvvmLight.Views;
 using Studio_Photo_Collage.ViewModels.PopUps;
 using Studio_Photo_Collage.ViewModels.SidePanels;
 using Studio_Photo_Collage.Views;
-using Studio_Photo_Collage.Views.PopUps.Settings;
+using Studio_Photo_Collage.Views.PopUps;
 using Studio_Photo_Collage.Views.SidePanels;
 using System;
 using System.Collections.Generic;
@@ -34,8 +34,13 @@ namespace Studio_Photo_Collage.ViewModels
         public const string MainPageKey = "MainPage";
         public const string FiltersPageKey = "FiltersPage";
         public const string BackgroundPageKey = "BackgroundPage";
-        public const string SettingsPageKey = "SettingsPage";
+
+       // public const string SettingsPageKey = "SettingsPage";
+        public const string SettingstDialogKey = "SettingsContentDialog";
+
         public const string RecentPageKey = "RecentPage";
+        public const string FramesPadeKey = "FramesPage";
+        public const string TemplatesSidePanelPageKey = "TemplatesSidePagePage";
 
         /// <summary>
         /// Initializes a new instance of the ViewModelLocator class.
@@ -52,8 +57,13 @@ namespace Studio_Photo_Collage.ViewModels
             nav.Configure(MainPageKey, typeof(MainPage));
             nav.Configure(FiltersPageKey, typeof(FiltersPage));
             nav.Configure(BackgroundPageKey, typeof(BackgroundPage));
-            nav.Configure(SettingsPageKey, typeof(SettingsPage));
-            nav.Configure(RecentPageKey, typeof(RecentPage));
+
+          //  nav.Configure(SettingsPageKey, typeof(SettingsPage));
+            nav.Configure(SettingstDialogKey, typeof(SettingsDialog));
+
+            nav.Configure(RecentPageKey, typeof(ResentsPage));
+            nav.Configure(FramesPadeKey, typeof(FramesPage));
+           // nav.Configure(TemplatesSidePanelPageKey, typeof(TemplatesSidePanelPage));
 
             if (ViewModelBase.IsInDesignModeStatic)
             {
@@ -72,9 +82,13 @@ namespace Studio_Photo_Collage.ViewModels
 
             SimpleIoc.Default.Register<FiltersPageViewModel>();
             SimpleIoc.Default.Register<BackgroundPageViewModel>();
-            SimpleIoc.Default.Register<SettingsPageViewModel>();
-            SimpleIoc.Default.Register<RecentPageViewModel>();
 
+           // SimpleIoc.Default.Register<SettingsPageViewModel>();
+            SimpleIoc.Default.Register<SettingsDialogViewModel>();
+
+            SimpleIoc.Default.Register<RecentPageViewModel>();
+            SimpleIoc.Default.Register<FramesPageViewModel>();
+            SimpleIoc.Default.Register<TemplatesSidePanelPageViewModel>();
             // SimpleIoc.Default.Register<SettingsPageViewModel>();
 
         }
@@ -92,14 +106,19 @@ namespace Studio_Photo_Collage.ViewModels
 
         public FiltersPageViewModel FiltersPageInstance => ServiceLocator.Current.GetInstance<FiltersPageViewModel>();
         public BackgroundPageViewModel BackgroundPageInstance => ServiceLocator.Current.GetInstance<BackgroundPageViewModel>();
-        public SettingsPageViewModel SettingsPageInstance => ServiceLocator.Current.GetInstance<SettingsPageViewModel>();
-        public RecentPageViewModel ReccentPageInstance => ServiceLocator.Current.GetInstance<RecentPageViewModel>();
+
+        //public SettingsPageViewModel SettingsPageInstance => ServiceLocator.Current.GetInstance<SettingsPageViewModel>();
+        public SettingsDialogViewModel SettingsDialogInstance => ServiceLocator.Current.GetInstance<SettingsDialogViewModel>();
+
+        public RecentPageViewModel RecentPageInstance => ServiceLocator.Current.GetInstance<RecentPageViewModel>();
+        public FramesPageViewModel FramesPageInstanse => ServiceLocator.Current.GetInstance<FramesPageViewModel>();
+        public TemplatesSidePanelPageViewModel TemplatesSidePanelPageInstance => ServiceLocator.Current.GetInstance<TemplatesSidePanelPageViewModel>();
 
 
         // public BackgroundPageViewModel SettingsPageInstance => ServiceLocator.Current.GetInstance<SettingsPageViewModel>();
         public static async Task ReloadCurrentPage()
         {
-            foreach (var view in CoreApplication.Views)
+           /* foreach (var view in CoreApplication.Views)
             {
                 await view.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
@@ -109,17 +128,12 @@ namespace Studio_Photo_Collage.ViewModels
                     Frame rootFrame = Window.Current.Content as Frame;
                     rootFrame?.Navigate(typeof(MainPage));
                 });
-            }
+            }*/
         }
         public static void GoBack()
         {
              var navigation = ServiceLocator.Current.GetInstance<INavigationService>();
              navigation.GoBack();
-
-
-            //Frame rootFrame = Window.Current.Content as Frame;
-            //rootFrame?.Navigate(typeof());
-           // rootFrame.GoBack();
         }
 
         // <summary>

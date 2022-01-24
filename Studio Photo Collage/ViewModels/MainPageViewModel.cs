@@ -1,26 +1,14 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
-using Studio_Photo_Collage.Views;
-using Studio_Photo_Collage.Views.SidePanels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.UI.Xaml.Controls;
 using Studio_Photo_Collage.Views.PopUps;
-using Studio_Photo_Collage.Views.PopUps.Settings;
 using Windows.UI.Xaml.Controls;
-using NavigationViewItem = Microsoft.UI.Xaml.Controls.NavigationViewItem;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml;
-using System.Globalization;
-using Windows.ApplicationModel.Core;
 using GalaSoft.MvvmLight.Messaging;
-using Windows.UI.Core;
 using System.Windows.Input;
 using Studio_Photo_Collage.Infrastructure.Helpers;
+using Studio_Photo_Collage.Models;
+using System.Threading.Tasks;
+using System;
 
 namespace Studio_Photo_Collage.ViewModels
 {
@@ -28,62 +16,73 @@ namespace Studio_Photo_Collage.ViewModels
     {
         private readonly INavigationService NavigationService;
 
-        private ICommand _backBtnCommand;
-        public ICommand BackBtncommand
+        #region Save Commands
+        private ICommand _saveImageCommand;
+        public ICommand SaveImageCommand
         {
             get
             {
-                if (_backBtnCommand == null)
-                    _backBtnCommand = new RelayCommand(() => { NavigationService.NavigateTo("TemplatesPage"); });
-                return _backBtnCommand;
+                if (_saveImageCommand == null)
+                    _saveImageCommand = new RelayCommand<object>((parametr) => {});
+                return _saveImageCommand;
             }
         }
 
-        private BtnNameEnum _checkBoxesEnum;
-        public BtnNameEnum CheckBoxesEnum
+        private ICommand _saveProjectCommand;
+        public ICommand SaveProjectCommand
+        {
+            get
+            {
+                if (_saveProjectCommand == null)
+                    _saveProjectCommand = new RelayCommand<object>((parametr) => { });
+                return _saveProjectCommand;
+            }
+        }
+        #endregion
+
+        private BtnNameEnum? _checkBoxesEnum;
+        public BtnNameEnum? CheckBoxesEnum
         {
             get { 
                 return _checkBoxesEnum; }
-            set { 
-                if (_checkBoxesEnum != value) 
-                Set(ref _checkBoxesEnum, value);
-
-                var type = StringToTypeOfPageHelper.Convert(_checkBoxesEnum.ToString());
-                if (type != null)
+            set {
+                if (_checkBoxesEnum != value)
                 {
-
-                    SideFrame.Navigate(type);
-                    RaisePropertyChanged("SideFrame");
+                    Set(ref _checkBoxesEnum, value);
+                    if (value == BtnNameEnum.Settings)
+                    {
+                        _ = ShowSettingDialog();
+                    }
                 }
                 else
-                    SideFrame = new Frame();
+                    Set(ref _checkBoxesEnum, null);
             }
         }
 
+        private Project _template;
+        public Project CurrentTemplate { get; set; }
 
-
-        public Frame SettingsFrame { get; }
+      //  public Frame SettingsFrame { get; }
         public Frame PaintFrame { get; }
 
-        private Frame _sidePanel;
-        public Frame SideFrame { get => _sidePanel;
-            set { 
-                    Set(ref _sidePanel, value); 
-            } }
-
-        
 
         public MainPageViewModel(INavigationService _navigationService) 
         {
-            SettingsFrame = new Frame();
-            SettingsFrame.Navigate(typeof(SettingsPage));
+           // SettingsFrame = new Frame();
+           // SettingsFrame.Navigate(typeof(SettingsPage));
 
             PaintFrame = new Frame();
             PaintFrame.Navigate(typeof(PaintPopUpPage));
 
-            SideFrame = new Frame();
-
             NavigationService = _navigationService;
+
+            Messenger.Default.Register<Project>(this, (parameter)=> CurrentTemplate = parameter);
+        }
+
+        private async Task ShowSettingDialog()
+        {
+            var dialog = new SettingsDialog();
+            await dialog.ShowAsync();
         }
     }
 }

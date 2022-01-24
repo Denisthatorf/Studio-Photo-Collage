@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Views;
 using Studio_Photo_Collage.Models;
 using System;
@@ -17,58 +18,69 @@ namespace Studio_Photo_Collage.ViewModels
     public class TemplatesPageViewModel : ViewModelBase
     {
         private readonly INavigationService _navigationService;
+
         public ICommand TemplateClickCommand { get; private set; }
+        public ObservableCollection<GroupedTemplates> TemplateCollection { get; set; } = new ObservableCollection<GroupedTemplates>();
+
 
         public TemplatesPageViewModel(INavigationService navigationService)
         {
             _navigationService = navigationService;
-            TemplateClickCommand = new RelayCommand(() => _navigationService.NavigateTo("MainPage"));
-          /*  FillByNormalTemplate(1, 1, false);
+            TemplateClickCommand = new RelayCommand<Project>((parameter) => {
+                _navigationService.NavigateTo("MainPage");
+                Messenger.Default.Send(parameter);
+            });
+
+            TemplateCollection = GroupedTemplates.FillByGroupedTemplate();
+            //TemplateCollection.Add(new Project(TemplateCollection[0].Rotate()));
+        }
+        #region
+        /* 
+         private void FillByNormalTemplate(int countOfPhoto, int rotationCount, bool IsSecondRow2Star)
+        {
+            /*FillByNormalTemplate(1, 1, false);
 
             FillByNormalTemplate(2, 2, false);
             FillByNormalTemplate(2, 3, true);
 
             FillByNormalTemplate(3, 2, false);
-            FillByNormalTemplate(3, 2, true);*/
-            TemplateCollection.Add(new Template(3, false, 0));
-        }
-        public ObservableCollection<Button> CollageTemplates1 { get; set; } = new ObservableCollection<Button>();
-        public ObservableCollection<Template> TemplateCollection { get; set; } = new ObservableCollection<Template>();
+            FillByNormalTemplate(3, 2, true);
 
-        private void FillByNormalTemplate(int countOfPhoto, int rotationCount, bool IsSecondRow2Star)
-        {
-            for (int j = 0; j < rotationCount; j++)
+            for (int j = 0; j<rotationCount; j++)
             {
                 var grid = new Grid();
-                for (int i = 0; i < countOfPhoto; i++)
+                for (int i = 0; i<countOfPhoto; i++)
                 {
                     if (i == 1 && IsSecondRow2Star)
                         grid.RowDefinitions.Add(new RowDefinition()
-                        { Height = new Windows.UI.Xaml.GridLength(2, Windows.UI.Xaml.GridUnitType.Star) });
+        { Height = new Windows.UI.Xaml.GridLength(2, Windows.UI.Xaml.GridUnitType.Star) });
                     else
                         grid.RowDefinitions.Add(new RowDefinition());
 
                     var rect = new Rectangle();
-                    rect.SetValue(Grid.RowProperty, i);
+        rect.SetValue(Grid.RowProperty, i);
 
                     grid.Children.Add(rect);
 
                     grid.RenderTransformOrigin = new Windows.Foundation.Point(0.5, 0.5);
-                    grid.RenderTransform = new Windows.UI.Xaml.Media.RotateTransform() { Angle = 90 * j };
-                }
-                
-                // grid.RenderTransform = new Windows.UI.Xaml.Media.RotateTransform() { Angle = 90 * j};
-                Button btn = new Button()
-                {
-                    Content = grid,
-                    Margin = new Windows.UI.Xaml.Thickness(10)
-                };
-                CollageTemplates1.Add(btn);
+                    grid.RenderTransform = new Windows.UI.Xaml.Media.RotateTransform() { Angle = 90 * j
+    };
+}
+
+// grid.RenderTransform = new Windows.UI.Xaml.Media.RotateTransform() { Angle = 90 * j};
+Button btn = new Button()
+{
+    Content = grid,
+    Margin = new Windows.UI.Xaml.Thickness(10)
+};
+////
+btn.CommandParameter = new Project(1, true, 1);
+btn.Command = TemplateClickCommand;
+////
+CollageTemplates1.Add(btn);
             }
 
         }
-        #region
-        /* 
         public ObservableCollection<Button> CollageTemplates1 { get; set; } = new ObservableCollection<Button>();
         ObservableCollection<Grid> CollageTemplates2 = new ObservableCollection<Grid>();
         ObservableCollection<Grid> CollageTemplates3 = new ObservableCollection<Grid>();

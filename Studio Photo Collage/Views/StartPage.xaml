@@ -6,6 +6,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:converters="using:Studio_Photo_Collage.Infrastructure.Converters"
+    xmlns:usercontrole="using:Studio_Photo_Collage.UserControles"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     mc:Ignorable="d"
     ui:ApplicationViewExtensions.ExtendViewIntoTitleBar="True"
@@ -13,6 +15,10 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     DataContext="{Binding StartPageInstance, Source={StaticResource Locator}}">
 
+    <Page.Resources>
+        <converters:FromArrToGridConverter x:Key="FromArrConverter"/>
+    </Page.Resources>
+    
     <Grid>
         <!--<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
             <Image Stretch="Fill" Source="/Assets/BackgroungStartPage.jpg"/>
@@ -25,19 +31,24 @@
         <AppBarButton Width="45" Height="45" 
                 HorizontalAlignment="Right" VerticalAlignment="Top"
                 LabelPosition="Collapsed" 
-                Margin="35" Icon="Setting"/>
+                Margin="35" Icon="Setting"
+                Command="{Binding SettingsCommand}"/>
 
         <Grid>
             <Button x:Name="ClassicTemplate"
                     HorizontalAlignment="Center" VerticalAlignment="Center" 
                     Background="Transparent" BorderBrush="Transparent" 
-                    Padding="0"
+                    Padding="0" 
                     Command="{Binding ImageClickCommand}">
                 
                 <Interactivity:Interaction.Behaviors>
                     <Core:EventTriggerBehavior EventName="PointerEntered">
                         <Core:ChangePropertyAction TargetObject="{Binding ElementName=ClassicTempaleBorder}" 
                                                    PropertyName="StrokeDashArray" Value="1 0"/>
+                    </Core:EventTriggerBehavior>
+                    <Core:EventTriggerBehavior EventName="PointerExited">
+                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=ClassicTempaleBorder}" 
+                                                   PropertyName="StrokeDashArray" Value="6 6"/>
                     </Core:EventTriggerBehavior>
                 </Interactivity:Interaction.Behaviors>
 
@@ -83,9 +94,9 @@
 
         <Popup HorizontalAlignment="Left" VerticalAlignment="Bottom"
                Height="200" IsOpen="{Binding IsRecentCollagesOpen}">
-            <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Vertical" Padding="36,0">
 
-                <StackPanel Orientation="Horizontal" Margin="36,0">
+                <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Recent Collages" />
                     <Button Background="Transparent" Style="{StaticResource CloseButton}"
                             Command="{Binding RecentCollCloseCommand}">
@@ -94,48 +105,63 @@
                     </Button>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Margin="36,0,0,0">
+                <ItemsControl x:Name="Template1" ItemsSource="{Binding RecentProjects}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Width="130" Height="130"
+                                    VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                                    Padding="0"
+                                    Command="{Binding ElementName=Template1, 
+                                    Path=DataContext.TemplateClickCommand }"
+                                    CommandParameter="{Binding}"
+                                Content="{Binding Converter={StaticResource FromArrConverter}, 
+                                Path=PhotoArray}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                
+                <!--<StackPanel Orientation="Horizontal" Margin="36,0,0,0">
                     <Button Width="120" Height="120" Background="Transparent" Padding="0"
-                            HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                            HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                            Command="{Binding TemplateClickCommand}">
+                        
+                        <Interactivity:Interaction.Behaviors>
+                            <Core:EventTriggerBehavior EventName="PointerEntered">
+                                <Core:ChangePropertyAction TargetObject="{Binding ElementName=Op}" PropertyName="Visibility" Value="Visible" />
+                            </Core:EventTriggerBehavior>
+                            <Core:EventTriggerBehavior EventName="PointerExited">
+                                <Core:ChangePropertyAction TargetObject="{Binding ElementName=Op}" PropertyName="Visibility" Value="Collapsed" />
+                            </Core:EventTriggerBehavior>
+                        </Interactivity:Interaction.Behaviors>
+                        
                         <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
 
-                            <Rectangle Grid.Column="0" Fill="White" Margin="2.5"/>
-                            <Rectangle Grid.Column="1" Fill="White" Margin="2.5"/>
+                                <Rectangle Grid.Column="0" Fill="White" Margin="2.5"/>
+                                <Rectangle Grid.Column="1" Fill="White" Margin="2.5"/>
+                            </Grid>
+                            <Grid x:Name="Op" Visibility="Collapsed" 
+                                       Opacity="0.4" Background="Gray">
+                                <Button HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock FontSize="16" Text="Project4"/>
+                                    <TextBlock FontSize="12" Text="11/09/2020"/>
+                                </StackPanel>
+                            </Grid>
                         </Grid>
                     </Button>
-                </StackPanel>
+                </StackPanel>-->
+                
             </StackPanel>
         </Popup>
-
-        <Popup IsOpen="{Binding IsConfirmPopUpOpen, Mode=TwoWay}" x:Name="ConfirmPopUp"
-               Width="360" Height="145">
-            <StackPanel Background="White" Padding="26,26,26,24"
-                        BorderBrush="{StaticResource MainBorderBrush}" BorderThickness="1">
-                
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Confirmation" FontSize="20"/>
-                    <Button Style="{StaticResource CloseButton}" Command="{Binding PopUpCloseBtnCommand}">
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8BB;" FontSize="10"/>
-                    </Button>
-                </StackPanel>
-                <TextBlock Text="Do you really want to remove this collage?" Margin="0,14,0,0"/>
-                
-                <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
-                    <StackPanel.Resources>
-                        <Style TargetType="Button">
-                            <Setter Property="Width" Value="154"/>
-                            <Setter Property="Height" Value="32"/>
-                        </Style>
-                    </StackPanel.Resources>
-                    <Button Content="Yes"/>
-                    <Button Content="No" Margin="4,0"/>
-                </StackPanel>
-            </StackPanel>
-        </Popup>
-        
     </Grid>
 </Page>
