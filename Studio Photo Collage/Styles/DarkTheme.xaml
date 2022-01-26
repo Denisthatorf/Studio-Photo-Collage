@@ -3,8 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
 
-        <SolidColorBrush x:Key="MainBackgroundColor" Opacity="0.4">#1f1f1f</SolidColorBrush>
-        <SolidColorBrush x:Key="PopUpsBackground" Opacity="0.5">#1f1f1f</SolidColorBrush>
+        <SolidColorBrush x:Key="MainBackgroundColor" Opacity="0.8">#1f1f1f</SolidColorBrush>
+        <SolidColorBrush x:Key="PopUpsBackground" Opacity="0.9">#1f1f1f</SolidColorBrush>
 
         <SolidColorBrush x:Key="ContentDialogDimmingThemeBrush" Color="Transparent" />
         <SolidColorBrush x:Key="SystemControlPageBackgroundMediumAltMediumBrush" Color="Transparent" />

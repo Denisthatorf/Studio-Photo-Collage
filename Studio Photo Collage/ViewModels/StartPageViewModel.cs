@@ -23,7 +23,7 @@ namespace Studio_Photo_Collage.ViewModels
     public class StartPageViewModel : ViewModelBase
     {
         private readonly INavigationService _navigationService;
-        
+
         public RelayCommand ImageClickCommand { get; private set; }
         public RelayCommand RecentCollCloseCommand { get; private set; }
         public ICommand TemplateClickCommand { get; private set; }
@@ -31,24 +31,26 @@ namespace Studio_Photo_Collage.ViewModels
 
         private bool _isRecentCollagesOpen;
         public bool IsRecentCollagesOpen { get => _isRecentCollagesOpen; set => Set(ref _isRecentCollagesOpen, value); }
-        
+
         private Visibility _isGreetingTextVisible;
         public Visibility IsGreetingTextVisible { get => _isGreetingTextVisible; set => Set(ref _isGreetingTextVisible, value); }
 
-        public ObservableCollection<Project> RecentProjects { get; set; } 
+
+        private ObservableCollection<Project> _recentProjects;
+        public ObservableCollection<Project> RecentProjects { get => _recentProjects; set => Set(ref _recentProjects, value); }
 
         public StartPageViewModel(INavigationService navigationService)
         {
             _navigationService = navigationService;
 
-            SettingsCommand = new RelayCommand(async()=>
+            SettingsCommand = new RelayCommand(async () =>
             {
                 var dialog = new SettingsDialog();
                 //dialog.RequestedTheme = ElementTheme.Dark;
                 await dialog.ShowAsync();
             });
             ImageClickCommand = new RelayCommand(() => _navigationService.NavigateTo("TemplatesPage"));
-            RecentCollCloseCommand = new RelayCommand(async()=>
+            RecentCollCloseCommand = new RelayCommand(async () =>
             {
                 var dialog = new ConfirmDialog();
                 //dialog.RequestedTheme = (Window.Current.Content as FrameworkElement).RequestedTheme;
@@ -60,7 +62,7 @@ namespace Studio_Photo_Collage.ViewModels
                 }
 
             });
-            TemplateClickCommand = new RelayCommand<Project>((parameter)=> 
+            TemplateClickCommand = new RelayCommand<Project>((parameter) =>
                 {
                     _navigationService.NavigateTo("MainPage");
                     Messenger.Default.Send(parameter);

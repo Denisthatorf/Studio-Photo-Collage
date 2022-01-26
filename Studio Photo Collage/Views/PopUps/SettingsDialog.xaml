@@ -12,7 +12,6 @@
     x:Name="SettingsContentDialog"
     DataContext="{Binding SettingsDialogInstance, 
     Source={StaticResource Locator}}"
-    Background="{Binding Source={ThemeResource PopUpsBackground}}"
     RequestedTheme="{Binding ThemeOfSettings}">
     <ContentDialog.Resources>
         <infstruct:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
@@ -206,6 +205,25 @@
 
                     <TextBlock Text="Choose your color"/>
 
+                    <ItemsControl ItemsSource="{Binding Colors}" x:Name="ItemControle" Margin="0,8,0,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Margin="2" Width="38" Height="38"
+                                        Background="{Binding}" CornerRadius="0"
+                                        Command="{Binding ElementName=ItemControle, 
+                                        Path=DataContext.ChangeMainColorCommand}"
+                                        CommandParameter="{Binding Color}">
+
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <controle:WrapPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+
                     <TextBlock Text="Photos on this PC"/>
                     <HyperlinkButton Padding="0">
                         <TextBlock Text="Choose where we will look for photos" 
@@ -217,19 +235,6 @@
                         <TextBlock Text="Choose where we will look for photos" 
                                Foreground="Red"/>
                     </HyperlinkButton>
-                    <ItemsControl ItemsSource="{Binding Colors}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Button Margin="2" Width="38" Height="38"
-                                        Background="{Binding }" CornerRadius="0"/>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <controle:WrapPanel Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
                 </StackPanel>
             </PivotItem>
             <PivotItem x:Name="About" Header="About"  Margin="14,14,29,0">

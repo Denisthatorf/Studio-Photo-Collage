@@ -9,7 +9,7 @@
     mc:Ignorable="d" 
     DataContext="{Binding FiltersPageInstance, Source={StaticResource Locator}}">
 
-    <StackPanel Padding="10" Style="{StaticResource SidePanelStackPanel}">
+    <StackPanel Padding="10" Style="{StaticResource SidePanelStackPanel}" >
         <TextBlock Text="Filters" Style="{StaticResource Header}"/>
 
         <StackPanel Orientation="Horizontal">

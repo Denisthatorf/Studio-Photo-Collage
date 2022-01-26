@@ -9,8 +9,7 @@
     mc:Ignorable="d">
 
     <StackPanel Style="{StaticResource SidePanelStackPanel}">
-        <TextBlock Style="{StaticResource Header}" Text="Templates"
-                   Margin="20,20,20,43"/>
+        <TextBlock Style="{StaticResource Header}" Text="Templates"/>
         <muxc:TreeView>
             
         </muxc:TreeView>

@@ -116,24 +116,27 @@ namespace Studio_Photo_Collage.ViewModels
 
 
         // public BackgroundPageViewModel SettingsPageInstance => ServiceLocator.Current.GetInstance<SettingsPageViewModel>();
-        public static async Task ReloadCurrentPage()
+        public static void ReloadCurrentPage()
         {
-           /* foreach (var view in CoreApplication.Views)
+            var navigation = ServiceLocator.Current.GetInstance<INavigationService>();
+            try
             {
-                await view.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    var navigation = ServiceLocator.Current.GetInstance<INavigationService>();
-                    navigation.NavigateTo(navigation.CurrentPageKey);
-
-                    Frame rootFrame = Window.Current.Content as Frame;
-                    rootFrame?.Navigate(typeof(MainPage));
-                });
-            }*/
+                navigation.NavigateTo("StartPage", "reload");
+            }
+            catch (Exception)
+            {
+                navigation.NavigateTo(navigation.CurrentPageKey.ToString(), "reload");
+            }
         }
         public static void GoBack()
         {
-             var navigation = ServiceLocator.Current.GetInstance<INavigationService>();
-             navigation.GoBack();
+            var navigation = ServiceLocator.Current.GetInstance<INavigationService>();
+            string prePageKey = navigation.CurrentPageKey;
+            navigation.GoBack();
+            if (navigation.CurrentPageKey == prePageKey)
+            {
+                GoBack();
+            }
         }
 
         // <summary>

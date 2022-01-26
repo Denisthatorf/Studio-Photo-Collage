@@ -1,18 +1,21 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Views;
 using Microsoft.Toolkit.Uwp;
 using Studio_Photo_Collage.Infrastructure;
 using Studio_Photo_Collage.Infrastructure.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Resources.Core;
 using Windows.Globalization;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -22,6 +25,8 @@ namespace Studio_Photo_Collage.ViewModels.PopUps
     public class SettingsDialogViewModel : ViewModelBase
     {
         private CultureInfo _languageComBox_SelectedItm;
+        private readonly INavigationService _navigationService;
+
         public CultureInfo LanguageComBox_SelectedItm
         {
             get { return _languageComBox_SelectedItm; }
@@ -32,7 +37,7 @@ namespace Studio_Photo_Collage.ViewModels.PopUps
                 ApplicationLanguages.PrimaryLanguageOverride = value.ToString();
                 ResourceContext.GetForCurrentView().Reset();
                 ResourceContext.GetForViewIndependentUse().Reset();
-                _ = ViewModelLocator.ReloadCurrentPage();
+                ViewModelLocator.ReloadCurrentPage();
             }
         }
 
@@ -44,6 +49,20 @@ namespace Studio_Photo_Collage.ViewModels.PopUps
             {
                 Set(ref _themeComBox_SelectedItem, value);
                 _ = ChangeTheme(_themeComBox_SelectedItem);
+            }
+        }
+
+        private ICommand _changeMainColorCommand;
+        public ICommand ChangeMainColorCommand
+        {
+            get
+            {
+                if (_changeMainColorCommand == null)
+                    _changeMainColorCommand = new RelayCommand<Color>((parametr) => {
+                        (App.Current.Resources["MainBorderBrush"] as SolidColorBrush).Color = parametr;
+                        _navigationService.NavigateTo(_navigationService.CurrentPageKey.ToString(), DateTime.Now.Ticks);
+                    });
+                return _changeMainColorCommand;
             }
         }
 
@@ -62,8 +81,10 @@ namespace Studio_Photo_Collage.ViewModels.PopUps
 
 
 
-        public SettingsDialogViewModel()
+        public SettingsDialogViewModel(INavigationService navigationService)
         {
+            _navigationService = navigationService;
+
             LanguageComBox_SelectedItm = CultureInfo.CurrentCulture;
             ThemeComBox_SelectedItem = ElementTheme.Default;
 

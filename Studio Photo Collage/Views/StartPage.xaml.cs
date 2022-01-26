@@ -29,7 +29,6 @@ namespace Studio_Photo_Collage.Views
         public StartPage()
         {
             this.InitializeComponent();
-            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
         }
     }
 }
