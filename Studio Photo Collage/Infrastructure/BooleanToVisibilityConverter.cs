@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Data;
 
 namespace Studio_Photo_Collage.Infrastructure
 {
-    class BooleanToVisibilityConverter : IValueConverter
+    public class BooleanToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

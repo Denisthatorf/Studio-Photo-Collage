@@ -7,27 +7,27 @@ using Windows.Storage;
 
 namespace Studio_Photo_Collage.Infrastructure
 {
-    public static class Json
+    public static class JsonHelper
     {
         public static async Task<T> ToObjectAsync<T>(string value)
         {
-            return await Task.Run<T>(() =>
+            return await Task.Run(() =>
             {
                 return JsonConvert.DeserializeObject<T>(value);
-            });
+            }).ConfigureAwait(true);
         }
 
         public static async Task<string> StringifyAsync(object value)
         {
-            return await Task.Run<string>(() =>
+            return await Task.Run(() =>
             {
                 return JsonConvert.SerializeObject(value);
-            });
+            }).ConfigureAwait(true);
         }
 
         public static async Task<List<string>> LoadFromJsonAsync(string JsonFile)
         {
-            string JsonString = await DeserializeFileAsync(JsonFile);
+            string JsonString = await DeserializeFileAsync(JsonFile).ConfigureAwait(true);
             if (JsonString != null)
                 return (List<string>)JsonConvert.DeserializeObject(JsonString, typeof(List<string>));
             return null;

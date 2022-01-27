@@ -34,9 +34,6 @@ namespace Studio_Photo_Collage.Views.PopUps
         public ConfirmDialog()
         {
             this.InitializeComponent();
-
-            var solcolor = (SolidColorBrush)Application.Current.Resources["PopUpsBackground"];
-            this.Background = new SolidColorBrush(solcolor.Color);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

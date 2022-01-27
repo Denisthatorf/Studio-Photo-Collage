@@ -8,7 +8,7 @@
     mc:Ignorable="d"
     PrimaryButtonText="Save" 
     SecondaryButtonText="Save as"
-    Background="{Binding Source={ThemeResource PopUpsBackground}}">
+    Style="{StaticResource ContentDialog}">
     <ContentDialog.PrimaryButtonStyle>
         <Style TargetType="Button">
             <Setter Property="Background" Value="{ThemeResource MainBorderBrush}"/>

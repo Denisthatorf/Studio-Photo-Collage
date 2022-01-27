@@ -47,7 +47,7 @@ namespace Studio_Photo_Collage.Models
             return new Project(arr);
         }
 
-        public byte[,] RotateRight(byte[,] arr)
+        public static byte[,] RotateRight(byte[,] arr)
         {
             int width;
             int height;

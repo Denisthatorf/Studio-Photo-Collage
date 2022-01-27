@@ -32,8 +32,8 @@ namespace Studio_Photo_Collage.Infrastructure
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            var culture = value.ToString();
-                var strCulture = culture.ToString();
+            var culture = value?.ToString();
+            var strCulture = culture?.ToString();
 
                 switch (strCulture)
                 {

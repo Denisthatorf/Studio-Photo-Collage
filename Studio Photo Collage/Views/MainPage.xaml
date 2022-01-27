@@ -123,7 +123,7 @@
             </Grid>
 
 
-            <Grid  Grid.ColumnSpan="2"  Background="{ThemeResource MainBackgroundColor}">
+            <Grid  Grid.ColumnSpan="2"  Background="{ThemeResource MainBackgroundColor}" >
                 <CommandBar HorizontalAlignment="Center" DefaultLabelPosition="Collapsed">
                     <CommandBar.PrimaryCommands>
                         <AppBarToggleButton x:Name="Templates"
@@ -201,9 +201,19 @@
                     </CommandBar.PrimaryCommands>
                 </CommandBar>
             </Grid>
-
-
-
+            
+            <!--<ItemsControl ItemsSource="{Binding CurrentTemplate}"
+                          Grid.Column="1" Grid.Row="1" 
+                          HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                          HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Grid Width="400" Height="400">
+                            
+                        </Grid>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>-->
 
             <Grid Grid.Row="1" Grid.Column="1" x:Name="MainGrid">
                 <Grid.RowDefinitions>

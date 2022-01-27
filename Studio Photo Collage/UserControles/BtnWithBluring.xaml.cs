@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
@@ -18,11 +19,12 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Studio_Photo_Collage.UserControles
 {
+    [ContentProperty(Name = "ContentOfBtn")]
     public sealed partial class BtnWithBluring : UserControl
     {
 
 
-        public Grid ContentOfBtn
+        public object ContentOfBtn
         {
             get {
                 return (Grid)GetValue(ContentOfBtnProperty); 
@@ -36,7 +38,7 @@ namespace Studio_Photo_Collage.UserControles
 
         // Using a DependencyProperty as the backing store for ContentOfBtn.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ContentOfBtnProperty =
-            DependencyProperty.Register("ContentOfBtn", typeof(Grid), typeof(BtnWithBluring), new PropertyMetadata(0));
+            DependencyProperty.Register("ContentOfBtn", typeof(object), typeof(BtnWithBluring), null);
 
 
 
@@ -52,7 +54,7 @@ namespace Studio_Photo_Collage.UserControles
 
 
 
-        public string ProjectName
+   /*     public string ProjectName
         {
             get { return (string)GetValue(ProjectNameProperty); }
             set { SetValue(ProjectNameProperty, value); }
@@ -60,9 +62,9 @@ namespace Studio_Photo_Collage.UserControles
 
         // Using a DependencyProperty as the backing store for ProjectName.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ProjectNameProperty =
-            DependencyProperty.Register("ProjectName", typeof(string), typeof(BtnWithBluring), new PropertyMetadata(0));
+            DependencyProperty.Register("ProjectName", typeof(string), typeof(BtnWithBluring), null);
 
-
+*/
 
         public string Date
         {

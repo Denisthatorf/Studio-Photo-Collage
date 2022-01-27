@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Studio_Photo_Collage.Infrastructure.Helpers
 {
-    public static class DialogProvider 
+   /* public static class DialogProvider 
     {
         public static List<ContentDialog> AllContentDialogs { get; set; } = new List<ContentDialog>();
 
@@ -60,7 +60,7 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
            // await dialog.ShowAsync();
         }
 
-        /*public static async Task<bool> ShowConfirmDialogAsync(string _allOrThisCollages)
+        *//*public static async Task<bool> ShowConfirmDialogAsync(string _allOrThisCollages)
         {
             ConfirmContentDialog.AllOrThis = _allOrThisCollages;
             var result = await ConfirmContentDialog.ShowAsync();
@@ -75,7 +75,7 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             SaveContentDialog.WhatSave = _whatSave;
             var result = await
 
-        }*/
+        }*//*
 
         static bool ContentDialogResultToBool(ContentDialogResult result)
         {
@@ -89,5 +89,5 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             }
         }
 
-    }
+    }*/
 }

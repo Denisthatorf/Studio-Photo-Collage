@@ -8,9 +8,10 @@ namespace Studio_Photo_Collage.Models
     {
         public GroupedTemplates()
         {
+            Projects = new ObservableCollection<Project>();
         }
 
-        public ObservableCollection<Project> Projects { get; set; } = new ObservableCollection<Project>();
+        public ObservableCollection<Project> Projects { get;}
 
         public int CountOfPhotos { get; set; }
 

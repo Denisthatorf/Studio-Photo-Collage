@@ -1,14 +1,14 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Views;
-using Studio_Photo_Collage.Views.PopUps;
-using Windows.UI.Xaml.Controls;
 using GalaSoft.MvvmLight.Messaging;
-using System.Windows.Input;
+using GalaSoft.MvvmLight.Views;
 using Studio_Photo_Collage.Infrastructure.Helpers;
 using Studio_Photo_Collage.Models;
-using System.Threading.Tasks;
+using Studio_Photo_Collage.Views.PopUps;
 using System;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Windows.UI.Xaml.Controls;
 
 namespace Studio_Photo_Collage.ViewModels
 {
@@ -23,7 +23,7 @@ namespace Studio_Photo_Collage.ViewModels
             get
             {
                 if (_saveImageCommand == null)
-                    _saveImageCommand = new RelayCommand<object>((parametr) => {});
+                    _saveImageCommand = new RelayCommand<object>((parametr) => { });
                 return _saveImageCommand;
             }
         }
@@ -40,12 +40,15 @@ namespace Studio_Photo_Collage.ViewModels
         }
         #endregion
 
-        private BtnNameEnum? _checkBoxesEnum;
+        private BtnNameEnum? _checkBoxesEnum = null;
         public BtnNameEnum? CheckBoxesEnum
         {
-            get { 
-                return _checkBoxesEnum; }
-            set {
+            get
+            {
+                return _checkBoxesEnum;
+            }
+            set
+            {
                 if (_checkBoxesEnum != value)
                 {
                     Set(ref _checkBoxesEnum, value);
@@ -60,23 +63,24 @@ namespace Studio_Photo_Collage.ViewModels
         }
 
         private Project _template;
-        public Project CurrentTemplate { get; set; }
+        public Project CurrentTemplate { get => _template; set => Set(ref _template, value); }
 
-      //  public Frame SettingsFrame { get; }
+
+        //  public Frame SettingsFrame { get; }
         public Frame PaintFrame { get; }
+         
 
-
-        public MainPageViewModel(INavigationService _navigationService) 
+        public MainPageViewModel(INavigationService _navigationService)
         {
-           // SettingsFrame = new Frame();
-           // SettingsFrame.Navigate(typeof(SettingsPage));
+            // SettingsFrame = new Frame();
+            // SettingsFrame.Navigate(typeof(SettingsPage));
 
             PaintFrame = new Frame();
             PaintFrame.Navigate(typeof(PaintPopUpPage));
 
             NavigationService = _navigationService;
 
-            Messenger.Default.Register<Project>(this, (parameter)=> CurrentTemplate = parameter);
+            Messenger.Default.Register<Project>(this, (parameter) => CurrentTemplate = parameter);
         }
 
         private async Task ShowSettingDialog()

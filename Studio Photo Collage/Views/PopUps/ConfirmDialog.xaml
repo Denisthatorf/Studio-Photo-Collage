@@ -7,10 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
      x:Name="ConfirmContentDialog"
-    BorderBrush="Red"
     PrimaryButtonText="Yes"
     SecondaryButtonText="No"
-    Background="{Binding Source={ThemeResource PopUpsBackground}}">
+    Style="{StaticResource ContentDialog}">
     
     <ContentDialog.SecondaryButtonStyle>
         <Style TargetType="Button">

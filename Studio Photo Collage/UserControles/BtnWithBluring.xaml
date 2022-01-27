@@ -10,15 +10,15 @@
     mc:Ignorable="d">
     <Grid>
         <Button x:Name="Btn"
-            Width="120" Height="120"  
-            Padding="0" Background="Transparent" BorderBrush="Transparent"
+                Background="AliceBlue" BorderBrush="Black"
+            Width="120" Height="120" Padding="0"
             HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <Grid>
                 <Grid x:Name="ContentGrid"/>
                 <Grid x:Name="Blur" Visibility="Collapsed"
                           Opacity="0.4" Background="Gray">
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <TextBlock FontSize="16" Text="{x:Bind ProjectName}"/>
+                            <TextBlock FontSize="16" />
                             <TextBlock FontSize="12" Text="{x:Bind Date}"/>
                         </StackPanel>
                     </Grid>

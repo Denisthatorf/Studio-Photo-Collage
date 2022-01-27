@@ -12,6 +12,7 @@
     x:Name="SettingsContentDialog"
     DataContext="{Binding SettingsDialogInstance, 
     Source={StaticResource Locator}}"
+    Style="{StaticResource ContentDialog}"
     RequestedTheme="{Binding ThemeOfSettings}">
     <ContentDialog.Resources>
         <infstruct:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>

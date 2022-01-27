@@ -88,8 +88,8 @@ namespace Studio_Photo_Collage.ViewModels
             //coll.Add();
             //var jsonDesStr = await Json.StringifyAsync(RecentProjects);
             //await Json.WriteToFile("projects.json", jsonDesStr);
-            var jsonStr = await Json.DeserializeFileAsync("projects.json");
-            RecentProjects = await Json.ToObjectAsync<ObservableCollection<Project>>(jsonStr);
+            var jsonStr = await JsonHelper.DeserializeFileAsync("projects.json");
+            RecentProjects = await JsonHelper.ToObjectAsync<ObservableCollection<Project>>(jsonStr);
         }
     }
 }

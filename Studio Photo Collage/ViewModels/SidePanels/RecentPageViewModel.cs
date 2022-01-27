@@ -52,8 +52,8 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
         {
            // var jsonDesStr = await Json.StringifyAsync(Projects);
            // await Json.AddTextToFile("projects.json", jsonDesStr);
-            var jsonStr = await Json.DeserializeFileAsync("projects.json");
-            Projects = await Json.ToObjectAsync<ObservableCollection<Project>>(jsonStr);
+            var jsonStr = await JsonHelper.DeserializeFileAsync("projects.json");
+            Projects = await JsonHelper.ToObjectAsync<ObservableCollection<Project>>(jsonStr);
         }
         private async Task RemoveProjects()
         {
@@ -63,7 +63,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
             if (result.ToString() == "Primary") //yes
             {
                 Projects?.Clear();
-                await Json.WriteToFile("projects.json", string.Empty);
+                await JsonHelper.WriteToFile("projects.json", string.Empty);
             }
         }
     

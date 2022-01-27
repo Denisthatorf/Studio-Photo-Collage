@@ -19,7 +19,7 @@ namespace Studio_Photo_Collage.Infrastructure
         public static async Task SaveAsync<T>(this StorageFolder folder, string name, T content)
         {
             var file = await folder.CreateFileAsync(GetFileName(name), CreationCollisionOption.ReplaceExisting);
-            var fileContent = await Json.StringifyAsync(content);
+            var fileContent = await JsonHelper.StringifyAsync(content).ConfigureAwait(true);
 
             await FileIO.WriteTextAsync(file, fileContent);
         }
@@ -34,12 +34,12 @@ namespace Studio_Photo_Collage.Infrastructure
             var file = await folder.GetFileAsync($"{name}.json");
             var fileContent = await FileIO.ReadTextAsync(file);
 
-            return await Json.ToObjectAsync<T>(fileContent);
+            return await JsonHelper.ToObjectAsync<T>(fileContent);
         }
 
         public static async Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value)
         {
-            settings.SaveString(key, await Json.StringifyAsync(value));
+            settings.SaveString(key, await JsonHelper.StringifyAsync(value));
         }
 
         public static void SaveString(this ApplicationDataContainer settings, string key, string value)
@@ -53,7 +53,7 @@ namespace Studio_Photo_Collage.Infrastructure
 
             if (settings.Values.TryGetValue(key, out obj))
             {
-                return await Json.ToObjectAsync<T>((string)obj);
+                return await JsonHelper.ToObjectAsync<T>((string)obj);
             }
 
             return default;

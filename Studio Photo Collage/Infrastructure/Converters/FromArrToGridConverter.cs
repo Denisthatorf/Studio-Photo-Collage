@@ -11,7 +11,7 @@ using Windows.UI.Xaml.Shapes;
 
 namespace Studio_Photo_Collage.Infrastructure.Converters
 {
-    class FromArrToGridConverter : IValueConverter
+    public class FromArrToGridConverter : IValueConverter
     {
         private Grid GetGridWithRectangles(byte[,] _photoArray)
         {

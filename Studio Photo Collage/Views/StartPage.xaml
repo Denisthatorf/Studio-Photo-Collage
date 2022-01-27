@@ -113,16 +113,16 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Button Width="130" Height="130" Margin="0,0,8,0"
+                            <usercontrole:BtnWithBluring ContentOfBtn="{Binding PhotoArray, Converter={StaticResource FromArrConverter}}"
+                                                          Date="{Binding DateOfLastEditing}"/>
+                            <!--<Button Width="130" Height="130" Margin="0,0,8,0"
                                      Background="Transparent"
                                     VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
                                     Padding="0"
-                                    
                                     Command="{Binding ElementName=Template1, 
                                     Path=DataContext.TemplateClickCommand }"
                                     CommandParameter="{Binding}"
-                                    
-                                Content="{Binding PhotoArray, Converter={StaticResource FromArrConverter}}"/>
+                                    Content="{Binding PhotoArray, Converter={StaticResource FromArrConverter}}"/>-->
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

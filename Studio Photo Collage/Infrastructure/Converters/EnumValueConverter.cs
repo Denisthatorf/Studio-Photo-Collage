@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Data;
 
 namespace Studio_Photo_Collage.Infrastructure.Converters
 {
-    class EnumValueConverter : IValueConverter
+    public class EnumValueConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
@@ -27,7 +27,7 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
                 object returnEnum = Enum.Parse(typeof(BtnNameEnum), rtnValue);
                 return returnEnum;
             }
-            catch
+            catch(ArgumentException)
             {
                 return null;
             }
