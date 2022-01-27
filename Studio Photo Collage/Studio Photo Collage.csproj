@@ -135,6 +135,7 @@
     </Compile>
     <Compile Include="Infrastructure\BooleanToVisibilityConverter.cs" />
     <Compile Include="Infrastructure\Converters\FromArrToGridConverter.cs" />
+    <Compile Include="Infrastructure\Converters\ProjectToCollage.cs" />
     <Compile Include="Infrastructure\Converters\StringToFrameConverter.cs" />
     <Compile Include="Infrastructure\CultureInfoToFullStringNameConverter.cs" />
     <Compile Include="Infrastructure\Converters\EnumValueConverter.cs" />
@@ -151,6 +152,9 @@
     <Compile Include="Services\NavigationServiceEx.cs" />
     <Compile Include="UserControles\BtnWithBluring.xaml.cs">
       <DependentUpon>BtnWithBluring.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControles\Collage.xaml.cs">
+      <DependentUpon>Collage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\PopUps\SettingsDialogViewModel.cs" />
@@ -289,6 +293,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControles\BtnWithBluring.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControles\Collage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

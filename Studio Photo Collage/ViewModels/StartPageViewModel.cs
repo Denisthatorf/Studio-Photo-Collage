@@ -35,7 +35,6 @@ namespace Studio_Photo_Collage.ViewModels
         private Visibility _isGreetingTextVisible;
         public Visibility IsGreetingTextVisible { get => _isGreetingTextVisible; set => Set(ref _isGreetingTextVisible, value); }
 
-
         private ObservableCollection<Project> _recentProjects;
         public ObservableCollection<Project> RecentProjects { get => _recentProjects; set => Set(ref _recentProjects, value); }
 
@@ -45,9 +44,14 @@ namespace Studio_Photo_Collage.ViewModels
 
             SettingsCommand = new RelayCommand(async () =>
             {
-                var dialog = new SettingsDialog();
-                //dialog.RequestedTheme = ElementTheme.Dark;
-                await dialog.ShowAsync();
+                var dialog = new ConfirmDialog();
+                var result = await dialog.ShowAsync();
+
+                if (result.ToString() == "Primary") //yes
+                {
+                    RecentProjects?.Clear();
+                    await JsonHelper.WriteToFile("projects.json", string.Empty);
+                }
             });
             ImageClickCommand = new RelayCommand(() => _navigationService.NavigateTo("TemplatesPage"));
             RecentCollCloseCommand = new RelayCommand(async () =>
@@ -82,12 +86,6 @@ namespace Studio_Photo_Collage.ViewModels
 
         private async Task DesserializeProjects()
         {
-            // var jsonDesStr = await Json.StringifyAsync(Projects);
-            // await Json.AddTextToFile("projects.json", jsonDesStr);
-            //var coll = new ObservableCollection<Project>();
-            //coll.Add();
-            //var jsonDesStr = await Json.StringifyAsync(RecentProjects);
-            //await Json.WriteToFile("projects.json", jsonDesStr);
             var jsonStr = await JsonHelper.DeserializeFileAsync("projects.json");
             RecentProjects = await JsonHelper.ToObjectAsync<ObservableCollection<Project>>(jsonStr);
         }

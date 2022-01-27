@@ -30,7 +30,7 @@ namespace Studio_Photo_Collage.Views.PopUps
                 _whatSave = value;
                 if (WhatSave == "project")
                     this.SecondaryButtonText = "Save";
-                else if (WhatSave == "collages")
+                else if (WhatSave == "collage")
                 {
                     this.PrimaryButtonText = "Yes";
                     this.SecondaryButtonText = "No";
@@ -44,10 +44,9 @@ namespace Studio_Photo_Collage.Views.PopUps
             WhatSave = projectOrCollages;
         }
 
-        private void ProjectNameEnterClicked(object sender, DragEventArgs e)
+        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            var textbox = sender as TextBox;
-            ProjectName = textbox.Text;
+
         }
     }
 }

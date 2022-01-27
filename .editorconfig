@@ -30,6 +30,9 @@ dotnet_diagnostic.CA1031.severity = none
 # CA2227: Collection properties should be read only
 dotnet_diagnostic.CA2227.severity = none
 
+# CS4014: Because this call is not awaited, execution of the current method continues before the call is completed
+dotnet_diagnostic.CS4014.severity = none
+
 [*.{cs,vb}]
 dotnet_diagnostic.CA1419.severity=silent
 dotnet_diagnostic.CA1501.severity=silent

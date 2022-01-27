@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
@@ -13,7 +14,7 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
 {
     public class FromArrToGridConverter : IValueConverter
     {
-        private Grid GetGridWithRectangles(byte[,] _photoArray)
+        public static Grid GetGridWith<T>(byte[,] _photoArray) where T: UIElement, new()
         {
             int row = _photoArray.GetLength(0);
             int column = _photoArray.GetLength(1);
@@ -26,7 +27,7 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
             {
                 for (int j = 0; j < column; j++)
                 {
-                    var rect = RectangleFromData(ref arr, i, j);
+                    var rect = UIelementsFromData<T>(ref arr, i, j);
                     if (rect != null)
                         grid.Children.Add(rect);
                 }
@@ -34,7 +35,7 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
             return grid;
         }
 
-        private Grid CreateGrid(int row, int column)
+        public static Grid CreateGrid(int row, int column)
         {
             var grid = new Grid();
             for (int i = 0; i < row; i++)
@@ -53,7 +54,7 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
             return grid;
         }
 
-        private Rectangle RectangleFromData(ref byte[,] arr, int rowPosition, int columnPosition)
+        public static UIElement UIelementsFromData<T>(ref byte[,] arr, int rowPosition, int columnPosition) where T : UIElement, new()
         {
             byte number = arr[rowPosition, columnPosition];
             if (number == 0)
@@ -64,7 +65,7 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
             int countofRow = arr.GetLength(0);
             int countofColumn = arr.GetLength(1);
 
-            var rect = new Rectangle();
+            T element = new T();
 
             for (int i = columnPosition + 1; i < countofColumn; i++) //all column after
             {
@@ -93,20 +94,25 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
 
             arr[rowPosition, columnPosition] = 0;
 
-            rect.SetValue(Grid.ColumnProperty, columnPosition);
-            rect.SetValue(Grid.RowProperty, rowPosition);
-            rect.SetValue(Grid.RowSpanProperty, rowspan);
-            rect.SetValue(Grid.ColumnSpanProperty, columnspan);
+            element.SetValue(Grid.ColumnProperty, columnPosition);
+            element.SetValue(Grid.RowProperty, rowPosition);
+            element.SetValue(Grid.RowSpanProperty, rowspan);
+            element.SetValue(Grid.ColumnSpanProperty, columnspan);
 
            // rect.Fill = new SolidColorBrush(Colors.Aqua);
-            return rect;
+            return element;
         }
 
+        public object ConvertFromProjectTo<T>(object value) where T: UIElement, new()
+        {
+            var grid = GetGridWith<T>(value as byte[,]);
+            return grid;
+        }
         /////
 
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var grid = GetGridWithRectangles(value as byte[,]);
+            var grid = GetGridWith<Rectangle>(value as byte[,]);
             return grid;
         }
 

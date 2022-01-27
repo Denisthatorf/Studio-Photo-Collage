@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using Windows.UI;
 using Windows.UI.Core;
@@ -9,7 +11,7 @@ using Windows.UI.Xaml.Shapes;
 
 namespace Studio_Photo_Collage.Models
 {
-    public class Project
+    public class Project : INotifyPropertyChanged
     {
         private byte[,] _photoArray;
         public byte[,] PhotoArray
@@ -18,19 +20,33 @@ namespace Studio_Photo_Collage.Models
             set {_photoArray = value; }
         }
 
-        public int CountOfPhoto { get; }
+        //public int CountOfPhoto { get; }
 
         public DateTime DateOfLastEditing { get; set; }
 
         public string ProjectName { get; set; }
 
-        public Project(byte[,] _photoArr)
+        private Color _background;
+        public Color Background
         {
-            _photoArray = _photoArr;
+            get { return _background; }
+            set { _background = value; NotifyPropertyChanged(); }
         }
 
-        public Project()
+
+
+        public Project(byte[,] _photoArr) => _photoArray = _photoArr;
+
+        public Project() { }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         public Project GetRotatedProject(int count)

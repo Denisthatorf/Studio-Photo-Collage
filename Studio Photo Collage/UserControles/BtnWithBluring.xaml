@@ -5,46 +5,41 @@
     xmlns:local="using:Studio_Photo_Collage.UserControles"
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:converters="using:Studio_Photo_Collage.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:FromArrToGridConverter x:Key="ToGridConv"/>
+    </UserControl.Resources>
+    
     <Grid>
-        <Button x:Name="Btn"
-                Background="AliceBlue" BorderBrush="Black"
+        <Button x:Name="Btn" 
+                Background="Transparent"
             Width="120" Height="120" Padding="0"
+            Content="{x:Bind Project.PhotoArray, Converter={StaticResource ToGridConv}}"
             HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-            <Grid>
-                <Grid x:Name="ContentGrid"/>
-                <Grid x:Name="Blur" Visibility="Collapsed"
-                          Opacity="0.4" Background="Gray">
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <TextBlock FontSize="16" />
-                            <TextBlock FontSize="12" Text="{x:Bind Date}"/>
-                        </StackPanel>
-                    </Grid>
-                </Grid>
             <Interactivity:Interaction.Behaviors>
                 <Core:EventTriggerBehavior EventName="PointerEntered">
                     <Core:ChangePropertyAction TargetObject="{Binding ElementName=Blur}" 
                                                PropertyName="Visibility" Value="Visible" />
-                    <Core:ChangePropertyAction TargetObject="{Binding ElementName=Btn}"
-                                               PropertyName="BorderBrush">
-                        <Core:ChangePropertyAction.Value>
-                            <SolidColorBrush Opacity="0.6" Color="{Binding Path=Color, Source={ThemeResource BlackAndWhite}}"/>
-                        </Core:ChangePropertyAction.Value>
-                    </Core:ChangePropertyAction>
-                </Core:EventTriggerBehavior>
-                <Core:EventTriggerBehavior EventName="PointerExited">
-                    <Core:ChangePropertyAction TargetObject="{Binding ElementName=Blur}" 
-                                               PropertyName="Visibility" Value="Collapsed" />
-                    <Core:ChangePropertyAction TargetObject="{Binding ElementName=Btn}"
-                                               PropertyName="BorderBrush">
-                        <Core:ChangePropertyAction.Value>
-                            <SolidColorBrush Color="Transparent"/>
-                        </Core:ChangePropertyAction.Value>
-                    </Core:ChangePropertyAction> 
                 </Core:EventTriggerBehavior>
             </Interactivity:Interaction.Behaviors>
         </Button>
+
+
+        <Grid x:Name="Blur" Visibility="Collapsed"
+                          Opacity="0.6" Background="Gray">
+            <Interactivity:Interaction.Behaviors>
+                <Core:EventTriggerBehavior EventName="PointerExited">
+                    <Core:ChangePropertyAction TargetObject="{Binding ElementName=Blur}" 
+                                               PropertyName="Visibility" Value="Collapsed" />
+                </Core:EventTriggerBehavior>
+            </Interactivity:Interaction.Behaviors>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock FontSize="16" Text="{x:Bind Project.ProjectName}"/>
+                <TextBlock FontSize="12" Text="{x:Bind Project.DateOfLastEditing}"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

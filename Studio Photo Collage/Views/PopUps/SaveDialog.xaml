@@ -6,8 +6,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Style="{StaticResource ContentDialog}">
+    Style="{StaticResource ContentDialog}"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick">
 
+    <ContentDialog.PrimaryButtonStyle>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{ThemeResource MainBorderBrush}"/>
+        </Style>
+    </ContentDialog.PrimaryButtonStyle>
+    
     <StackPanel>
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Save" FontSize="20"/>
@@ -28,6 +35,7 @@
         <TextBox BorderBrush="{StaticResource MainBorderBrush}" 
                  Background="Transparent" 
                  Margin="0,8,0,0" CornerRadius="0" 
-                 DragEnter="ProjectNameEnterClicked"/>
+                 Text="{x:Bind ProjectName,
+                 Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
     </StackPanel>
 </ContentDialog>

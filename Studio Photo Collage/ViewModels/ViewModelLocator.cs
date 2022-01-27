@@ -1,6 +1,7 @@
 ﻿using CommonServiceLocator;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
+using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Views;
 using Studio_Photo_Collage.ViewModels.PopUps;
 using Studio_Photo_Collage.ViewModels.SidePanels;
@@ -8,14 +9,7 @@ using Studio_Photo_Collage.Views;
 using Studio_Photo_Collage.Views.PopUps;
 using Studio_Photo_Collage.Views.SidePanels;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 namespace Studio_Photo_Collage.ViewModels
 {
@@ -26,8 +20,8 @@ namespace Studio_Photo_Collage.ViewModels
     /// 
     public class ViewModelLocator
     {
-       // private static ViewModelLocator _current;
-      //  public static ViewModelLocator Current => _current ?? (_current = new ViewModelLocator());
+        // private static ViewModelLocator _current;
+        //  public static ViewModelLocator Current => _current ?? (_current = new ViewModelLocator());
 
         public const string StartPageKey = "StartPage";
         public const string TemplatesPageKey = "TemplatesPage";
@@ -35,7 +29,7 @@ namespace Studio_Photo_Collage.ViewModels
         public const string FiltersPageKey = "FiltersPage";
         public const string BackgroundPageKey = "BackgroundPage";
 
-       // public const string SettingsPageKey = "SettingsPage";
+        // public const string SettingsPageKey = "SettingsPage";
         public const string SettingstDialogKey = "SettingsContentDialog";
 
         public const string RecentPageKey = "RecentPage";
@@ -58,12 +52,12 @@ namespace Studio_Photo_Collage.ViewModels
             nav.Configure(FiltersPageKey, typeof(FiltersPage));
             nav.Configure(BackgroundPageKey, typeof(BackgroundPage));
 
-          //  nav.Configure(SettingsPageKey, typeof(SettingsPage));
+            //  nav.Configure(SettingsPageKey, typeof(SettingsPage));
             nav.Configure(SettingstDialogKey, typeof(SettingsDialog));
 
             nav.Configure(RecentPageKey, typeof(ResentsPage));
             nav.Configure(FramesPadeKey, typeof(FramesPage));
-           // nav.Configure(TemplatesSidePanelPageKey, typeof(TemplatesSidePanelPage));
+            // nav.Configure(TemplatesSidePanelPageKey, typeof(TemplatesSidePanelPage));
 
             if (ViewModelBase.IsInDesignModeStatic)
             {
@@ -83,7 +77,7 @@ namespace Studio_Photo_Collage.ViewModels
             SimpleIoc.Default.Register<FiltersPageViewModel>();
             SimpleIoc.Default.Register<BackgroundPageViewModel>();
 
-           // SimpleIoc.Default.Register<SettingsPageViewModel>();
+            // SimpleIoc.Default.Register<SettingsPageViewModel>();
             SimpleIoc.Default.Register<SettingsDialogViewModel>();
 
             SimpleIoc.Default.Register<RecentPageViewModel>();
@@ -128,15 +122,22 @@ namespace Studio_Photo_Collage.ViewModels
                 navigation.NavigateTo(navigation.CurrentPageKey.ToString(), "reload");
             }
         }
-        public static void GoBack()
+        public static async Task GoBack()
         {
             var navigation = ServiceLocator.Current.GetInstance<INavigationService>();
             string prePageKey = navigation.CurrentPageKey;
-            navigation.GoBack();
-            if (navigation.CurrentPageKey == prePageKey)
+
+            if (navigation.CurrentPageKey == "MainPage")
             {
-                GoBack();
+                var dialog = new SaveDialog("collage");
+                var result = await dialog.ShowAsync();
+                if (result.ToString() == "Primary") // Save
+                    Messenger.Default.Send(dialog.ProjectName);
             }
+            do
+            {
+                navigation.GoBack();
+            } while (navigation.CurrentPageKey == prePageKey);
         }
 
         // <summary>
