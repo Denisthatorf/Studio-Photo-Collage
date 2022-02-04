@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Studio_Photo_Collage.Infrastructure;
+using Studio_Photo_Collage.Infrastructure.Helpers;
 using Studio_Photo_Collage.Models;
 using Studio_Photo_Collage.Views.PopUps;
 using System;
@@ -38,7 +39,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
             get
             {
                 if (_removeAllCollagesCommand == null)
-                    _removeAllCollagesCommand = new RelayCommand(() => { _ = RemoveProjects(); });
+                    _removeAllCollagesCommand = new RelayCommand(() => { RemoveProjects(); });
                 return _removeAllCollagesCommand;
             }
         }
@@ -46,16 +47,14 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
 
         public RecentPageViewModel()
         {
-            _ = DesserializeProjects();
+            DesserializeProjects();
         }
-        private async Task DesserializeProjects()
+        private async void DesserializeProjects()
         {
-           // var jsonDesStr = await Json.StringifyAsync(Projects);
-           // await Json.AddTextToFile("projects.json", jsonDesStr);
             var jsonStr = await JsonHelper.DeserializeFileAsync("projects.json");
             Projects = await JsonHelper.ToObjectAsync<ObservableCollection<Project>>(jsonStr);
         }
-        private async Task RemoveProjects()
+        private async void RemoveProjects()
         {
             var dialog = new ConfirmDialog();
             var result = await dialog.ShowAsync();

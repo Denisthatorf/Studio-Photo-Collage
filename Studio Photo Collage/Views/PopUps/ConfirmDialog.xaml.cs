@@ -34,6 +34,8 @@ namespace Studio_Photo_Collage.Views.PopUps
         public ConfirmDialog()
         {
             this.InitializeComponent();
+            var frame = Window.Current.Content as Frame; ;
+            this.RequestedTheme = frame.ActualTheme;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

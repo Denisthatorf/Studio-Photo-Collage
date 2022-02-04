@@ -22,6 +22,10 @@
             <Setter Property="Width" Value="48"/>
             <Setter Property="Height" Value="48"/>
         </Style>
+        <Style TargetType="AppBarButton">
+            <Setter Property="Width" Value="48"/>
+            <Setter Property="Height" Value="48"/>
+        </Style>
     </Page.Resources>
     <Grid>
         <Grid>
@@ -33,46 +37,6 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <!-- 
-            <Grid Grid.Row="1" Grid.Column="0">
-                <muxc:NavigationView  x:Name="SideNavigation" 
-                             SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-                             IsPaneToggleButtonVisible="False"
-                             IsBackButtonVisible="Collapsed" IsBackEnabled="False"
-                             Width="50" Background="{ThemeResource MainBackgroundColor}">
-                    <muxc:NavigationView.MenuItems>
-                        <muxc:NavigationViewItem Tag="Add">
-                            <muxc:NavigationViewItem.Icon>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8F4;"/>
-                            </muxc:NavigationViewItem.Icon>
-                        </muxc:NavigationViewItem>
-            
-            <muxc:NavigationViewItem Tag="Open">
-                        <muxc:NavigationViewItem.Icon>
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE838;"/>
-                        </muxc:NavigationViewItem.Icon>
-                    </muxc:NavigationViewItem>
-            <muxc:NavigationViewItem Tag="Recent">
-                <muxc:NavigationViewItem.Icon>
-                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72C;"/>
-                </muxc:NavigationViewItem.Icon>
-            </muxc:NavigationViewItem>
-
-            <muxc:NavigationViewItem Tag="Print">
-                <muxc:NavigationViewItem.Icon>
-                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE749;"/>
-                </muxc:NavigationViewItem.Icon>
-            </muxc:NavigationViewItem>
-
-            <muxc:NavigationViewItem Tag="Save">
-                <muxc:NavigationViewItem.Icon>
-                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74E;"/>
-                </muxc:NavigationViewItem.Icon>
-            </muxc:NavigationViewItem>
-            </muxc:NavigationView.MenuItems>
-            </muxc:NavigationView>
-        </Grid>
-        -->
 
             <Grid  Grid.Row="1">
                 <StackPanel Background="{ThemeResource MainBackgroundColor}">
@@ -100,21 +64,18 @@
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE749;"/>
                         </AppBarToggleButton.Icon>
                     </AppBarToggleButton>
-                    <AppBarToggleButton  x:Name="Save" 
-                                        PointerEntered="Save_PointerEntered"
-                                        IsChecked="{Binding CheckBoxesEnum, 
-                                        Converter={StaticResource EnumValueConverter},
-                                        ConverterParameter=Save, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                        <AppBarToggleButton.Icon>
+                    <AppBarButton  x:Name="Save" 
+                                        PointerEntered="Save_PointerEntered">
+                        <AppBarButton.Icon>
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74E;"/>
-                        </AppBarToggleButton.Icon>
+                        </AppBarButton.Icon>
                         <FlyoutBase.AttachedFlyout>
                             <MenuFlyout Placement="Right">
                                 <MenuFlyoutItem Text="Save image" Command="{Binding SaveImageCommand}"/>
                                 <MenuFlyoutItem Text="Save project" Command="{Binding SaveProjectCommand}"/>
                             </MenuFlyout>
                         </FlyoutBase.AttachedFlyout>
-                    </AppBarToggleButton>
+                    </AppBarButton>
                 </StackPanel>
 
                 <AppBarToggleButton x:Name="Settings" 
@@ -123,11 +84,15 @@
                                      ConverterParameter=Settings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           Icon="Setting" Grid.Row="1" VerticalAlignment="Bottom"/>
             </Grid>
+            
+            <!--<UserControl Content="{Binding CurrentProject.Collage}"
+                                  Grid.Column="1" Grid.Row="1"
+                                  Width="400" Height="400"/>-->
 
-            <usercontrole:Collage Content="{Binding CurrentProject, Converter={StaticResource ToCollageConverter}}"
+            <UserControl Content="{Binding CurrentCollage.CollageGrid}"
                                   Grid.Column="1" Grid.Row="1"
                                   Width="400" Height="400"/>
-
+            
             <Grid  Grid.ColumnSpan="2"  Background="{ThemeResource MainBackgroundColor}" >
                 <CommandBar HorizontalAlignment="Center" DefaultLabelPosition="Collapsed">
                     <CommandBar.PrimaryCommands>

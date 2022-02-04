@@ -16,6 +16,9 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
     {
         public static Grid GetGridWith<T>(byte[,] _photoArray) where T: UIElement, new()
         {
+            if (_photoArray == null)
+                return null;
+
             int row = _photoArray.GetLength(0);
             int column = _photoArray.GetLength(1);
             var grid = CreateGrid(row, column);

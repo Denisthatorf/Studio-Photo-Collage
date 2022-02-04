@@ -35,12 +35,31 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
 
         public static SolidColorBrush GetSolidColorBrush(string colour)
         {
+            if (string.IsNullOrEmpty(colour))
+                return null;
+
+            colour = colour.Replace("#", string.Empty).ToLower();
+
+            if (colour.Length == 6)
+            {
                 var c = Color.FromArgb(255,
                         Convert.ToByte(colour.Substring(0, 2), 16),
                         Convert.ToByte(colour.Substring(2, 2), 16),
                         Convert.ToByte(colour.Substring(4, 2), 16));
-            SolidColorBrush myBrush = new SolidColorBrush(c);
-            return myBrush;
+                SolidColorBrush myBrush = new SolidColorBrush(c);
+                return myBrush;
+            }
+
+            if (colour.Length == 8)
+            {
+                byte a = (byte)(Convert.ToUInt32(colour.Substring(0, 2), 16));
+                byte r = (byte)(Convert.ToUInt32(colour.Substring(2, 2), 16));
+                byte g = (byte)(Convert.ToUInt32(colour.Substring(4, 2), 16));
+                byte b = (byte)(Convert.ToUInt32(colour.Substring(6, 2), 16));
+                SolidColorBrush myBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(a, r, g, b));
+                return myBrush;
+            }
+            throw new Exception("Color Exeption");
         }
     }
 }

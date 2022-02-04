@@ -245,8 +245,8 @@
                         Control header
                     </Bold>
                     </TextBlock>
-                    <TextBlock>
-                    Version 1.1.0.1
+                    <TextBlock Text="{Binding VersionDescription}">
+                    <!--Version 1.1.0.1-->
                     <LineBreak/>
                     Published by Company name
                     <LineBreak/>

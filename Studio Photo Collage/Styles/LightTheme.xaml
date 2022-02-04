@@ -13,4 +13,8 @@
 
         <SolidColorBrush x:Key="BlackAndWhite" Color="Black"/>
     <SolidColorBrush x:Key="NoBtnPopUpBtnBrush" Color="#383838"/>
+
+    <Style TargetType="StackPanel" BasedOn="{StaticResource SidePanelStackPanel}" x:Key="SidePanelPopUp">
+        <Setter Property="Background" Value="{ThemeResource MainBackgroundColor}"/>
+    </Style>
 </ResourceDictionary>

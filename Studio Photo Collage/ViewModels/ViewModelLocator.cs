@@ -10,6 +10,8 @@ using Studio_Photo_Collage.Views.PopUps;
 using Studio_Photo_Collage.Views.SidePanels;
 using System;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace Studio_Photo_Collage.ViewModels
 {
@@ -26,12 +28,11 @@ namespace Studio_Photo_Collage.ViewModels
         public const string StartPageKey = "StartPage";
         public const string TemplatesPageKey = "TemplatesPage";
         public const string MainPageKey = "MainPage";
+
         public const string FiltersPageKey = "FiltersPage";
         public const string BackgroundPageKey = "BackgroundPage";
-
-        // public const string SettingsPageKey = "SettingsPage";
         public const string SettingstDialogKey = "SettingsContentDialog";
-
+        public const string TransformPageKey = "TransformPage";
         public const string RecentPageKey = "RecentPage";
         public const string FramesPadeKey = "FramesPage";
         public const string TemplatesSidePanelPageKey = "TemplatesSidePagePage";
@@ -49,12 +50,11 @@ namespace Studio_Photo_Collage.ViewModels
             nav.Configure(StartPageKey, typeof(StartPage));
             nav.Configure(TemplatesPageKey, typeof(TemplatesPage));
             nav.Configure(MainPageKey, typeof(MainPage));
+
             nav.Configure(FiltersPageKey, typeof(FiltersPage));
             nav.Configure(BackgroundPageKey, typeof(BackgroundPage));
-
-            //  nav.Configure(SettingsPageKey, typeof(SettingsPage));
             nav.Configure(SettingstDialogKey, typeof(SettingsDialog));
-
+            nav.Configure(TransformPageKey, typeof(TransformPage));
             nav.Configure(RecentPageKey, typeof(ResentsPage));
             nav.Configure(FramesPadeKey, typeof(FramesPage));
             // nav.Configure(TemplatesSidePanelPageKey, typeof(TemplatesSidePanelPage));
@@ -76,10 +76,8 @@ namespace Studio_Photo_Collage.ViewModels
 
             SimpleIoc.Default.Register<FiltersPageViewModel>();
             SimpleIoc.Default.Register<BackgroundPageViewModel>();
-
-            // SimpleIoc.Default.Register<SettingsPageViewModel>();
             SimpleIoc.Default.Register<SettingsDialogViewModel>();
-
+            SimpleIoc.Default.Register<TransformPageViewModel>();
             SimpleIoc.Default.Register<RecentPageViewModel>();
             SimpleIoc.Default.Register<FramesPageViewModel>();
             SimpleIoc.Default.Register<TemplatesSidePanelPageViewModel>();
@@ -100,44 +98,40 @@ namespace Studio_Photo_Collage.ViewModels
 
         public FiltersPageViewModel FiltersPageInstance => ServiceLocator.Current.GetInstance<FiltersPageViewModel>();
         public BackgroundPageViewModel BackgroundPageInstance => ServiceLocator.Current.GetInstance<BackgroundPageViewModel>();
-
-        //public SettingsPageViewModel SettingsPageInstance => ServiceLocator.Current.GetInstance<SettingsPageViewModel>();
         public SettingsDialogViewModel SettingsDialogInstance => ServiceLocator.Current.GetInstance<SettingsDialogViewModel>();
-
+        public TransformPageViewModel TransformPageInstance => ServiceLocator.Current.GetInstance<TransformPageViewModel>();
         public RecentPageViewModel RecentPageInstance => ServiceLocator.Current.GetInstance<RecentPageViewModel>();
         public FramesPageViewModel FramesPageInstanse => ServiceLocator.Current.GetInstance<FramesPageViewModel>();
         public TemplatesSidePanelPageViewModel TemplatesSidePanelPageInstance => ServiceLocator.Current.GetInstance<TemplatesSidePanelPageViewModel>();
 
 
-        // public BackgroundPageViewModel SettingsPageInstance => ServiceLocator.Current.GetInstance<SettingsPageViewModel>();
         public static void ReloadCurrentPage()
         {
             var navigation = ServiceLocator.Current.GetInstance<INavigationService>();
-            try
-            {
-                navigation.NavigateTo("StartPage", "reload");
-            }
-            catch (Exception)
-            {
-                navigation.NavigateTo(navigation.CurrentPageKey.ToString(), "reload");
-            }
+
+            Frame rootFrame = Window.Current.Content as Frame;
+            var strContent = rootFrame.Content.ToString();
+            var arr = strContent.Split('.');
+
+            navigation.NavigateTo(arr[arr.Length - 1], "reload");
         }
-        public static async Task GoBack()
+
+        public static void GoBack()
         {
             var navigation = ServiceLocator.Current.GetInstance<INavigationService>();
-            string prePageKey = navigation.CurrentPageKey;
+            var pageFullType = (Window.Current.Content as Frame).Content.ToString();
+            var arr = pageFullType.Split('.');
+            var currentPage = arr[arr.Length - 1];
 
-            if (navigation.CurrentPageKey == "MainPage")
+            if (currentPage == "MainPage")
             {
-                var dialog = new SaveDialog("collage");
-                var result = await dialog.ShowAsync();
-                if (result.ToString() == "Primary") // Save
-                    Messenger.Default.Send(dialog.ProjectName);
+                var mainPage =ServiceLocator.Current.GetInstance<MainPageViewModel>();
+               mainPage.GoBack();
             }
-            do
+            else if(currentPage == "TemplatesPage")
             {
-                navigation.GoBack();
-            } while (navigation.CurrentPageKey == prePageKey);
+                navigation.NavigateTo("StartPage");
+            }
         }
 
         // <summary>

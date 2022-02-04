@@ -7,7 +7,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 
 
-namespace Studio_Photo_Collage.Infrastructure
+namespace Studio_Photo_Collage.Infrastructure.Helpers
 {
     public static class ThemeSelectorService
     {

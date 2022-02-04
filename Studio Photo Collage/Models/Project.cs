@@ -1,97 +1,138 @@
 ﻿using Newtonsoft.Json;
+using Studio_Photo_Collage.Infrastructure.Helpers;
+using Studio_Photo_Collage.ViewModels.SidePanels;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
-using Windows.UI;
-using Windows.UI.Core;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Shapes;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace Studio_Photo_Collage.Models
 {
+    [JsonObject(MemberSerialization.Fields)]
     public class Project : INotifyPropertyChanged
     {
+        private int Uid;
+
         private byte[,] _photoArray;
         public byte[,] PhotoArray
         {
             get { return _photoArray; }
-            set {_photoArray = value; }
+            set { _photoArray = value; }
         }
-
-        //public int CountOfPhoto { get; }
 
         public DateTime DateOfLastEditing { get; set; }
 
         public string ProjectName { get; set; }
 
-        private Color _background;
-        public Color Background
+        public string SaveFormat { get; set; }
+
+        public int CountOfPhotos
         {
-            get { return _background; }
-            set { _background = value; NotifyPropertyChanged(); }
+            get
+            {
+                var list = new List<byte>();
+                foreach (var item in _photoArray)
+                {
+                    if (!list.Contains(item))
+                        list.Add(item);
+                }
+                return list.Count;
+            }
+        }
+
+        #region UIelement Properties
+
+        private string _colorOfBorders; // background in grid
+        public string BorderColor
+        {
+            get { return _colorOfBorders; }
+            set { _colorOfBorders = value; }
+        }
+
+        private double _borderThickness;
+        public double BorderThickness
+        {
+            get { return _borderThickness; }
+            set { _borderThickness = value;  }
+        }
+
+        private double _borderOpacity;
+        public double BorderOpacity
+        {
+            get { return _borderOpacity; }
+            set { _borderOpacity = value;  }
+        }
+
+        private string[] _arrayOfImages;
+        public string[] ImageArr
+        {
+            get { return _arrayOfImages; }
+            set { _arrayOfImages = value; }
         }
 
 
+        #endregion
 
-        public Project(byte[,] _photoArr) => _photoArray = _photoArr;
-
+        public Project(byte[,] photoArr)
+        {
+            var rnd = new Random();
+            Uid = rnd.Next();
+            SaveFormat = "png";
+            _photoArray = photoArr;
+            _borderOpacity = 1;
+            _colorOfBorders = "#ffff00";
+            _arrayOfImages = new string[CountOfPhotos];
+        }
         public Project() { }
+
+        public override string ToString()
+        {
+            return ProjectName;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+           return Equals(obj as Project);
+        }
+
+        public bool Equals(Project other)
+        {
+            if (other == null)
+                return false;
+            return other.GetHashCode() == this.GetHashCode();
+        }
+
+        public override int GetHashCode()
+        {
+            /* int hashCode = 547882800;
+
+             hashCode = hashCode * -1521134295 + DateOfLastEditing.GetHashCode();
+             hashCode = hashCode * -1521134295 + ProjectName.GetDeterministicHashCode();
+             hashCode = hashCode * -1521134295 + Uid.GetHashCode();
+             foreach (var item in _photoArray)
+             {
+                 hashCode = hashCode * -1521134295 + item.GetHashCode();
+             }
+             foreach(var item in _arrayOfImages)
+             {
+                 if(item != null)
+                    hashCode = hashCode * -1521134295 + item.GetDeterministicHashCode();
+             }
+             return hashCode;*/
+            return Uid;
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        private void NotifyPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
-        }
-
-        public Project GetRotatedProject(int count)
-        {
-            var width = _photoArray.GetUpperBound(0) + 1;
-            var height = _photoArray.GetUpperBound(1) + 1;
-            byte[,] arr = new byte[width,height];
-
-            Array.Copy(_photoArray, arr, _photoArray.Length);
-            for (int i = 0; i < count; i++)
-            {
-                arr = RotateRight(arr);
-            }
-            return new Project(arr);
-        }
-
-        public static byte[,] RotateRight(byte[,] arr)
-        {
-            int width;
-            int height;
-            byte[,] dst;
-
-            width = arr.GetUpperBound(0) + 1;
-            height = arr.GetUpperBound(1) + 1;
-
-            var src = new byte[width, height];
-            Array.Copy(arr, src, src.Length);
-
-            dst = new byte[height, width];
-
-            for (int row = 0; row < height; row++)
-            {
-                for (int col = 0; col < width; col++)
-                {
-                    int newRow;
-                    int newCol;
-
-                    newRow = col;
-                    newCol = height - (row + 1);
-
-                    dst[newCol, newRow] = src[col, row];
-                }
-            }
-
-            return dst;
         }
     }
 }

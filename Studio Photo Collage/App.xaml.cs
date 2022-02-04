@@ -1,14 +1,17 @@
-﻿using Studio_Photo_Collage.ViewModels;
+﻿using CommonServiceLocator;
+using GalaSoft.MvvmLight.Messaging;
+using GalaSoft.MvvmLight.Views;
+using Studio_Photo_Collage.Infrastructure.Helpers;
+using Studio_Photo_Collage.Models;
+using Studio_Photo_Collage.ViewModels;
 using Studio_Photo_Collage.Views;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
-using System.Threading;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.Core;
 using Windows.UI;
 using Windows.UI.Core;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -44,8 +47,10 @@ namespace Studio_Photo_Collage
             titleBar.BackgroundColor = (Application.Current.Resources["MainBackgroundColor"] as SolidColorBrush).Color;
             titleBar.ButtonForegroundColor = (Application.Current.Resources["AppBarItemForegroundThemeBrush"] as SolidColorBrush).Color;
             titleBar.ButtonBackgroundColor = Colors.Transparent;
+
             var currentView = SystemNavigationManager.GetForCurrentView();
             currentView.BackRequested += (object s, BackRequestedEventArgs ev) => ViewModelLocator.GoBack();
+
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
@@ -78,6 +83,11 @@ namespace Studio_Photo_Collage
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
+
+
+            var argumentOfSecondaryBtn = e.Arguments;
+            SetProjectFromSecondaryTile(argumentOfSecondaryBtn);
+
         }
 
         /// <summary>
@@ -103,5 +113,33 @@ namespace Studio_Photo_Collage
             //TODO: Save application state and stop any background activity
             deferral.Complete();
         }
+
+        private async void SetProjectFromSecondaryTile(string argument)
+        {
+            if (string.IsNullOrEmpty(argument))
+                return;
+
+            var jsonStr = await JsonHelper.DeserializeFileAsync("projects.json");
+            var projectList = await JsonHelper.ToObjectAsync<List<Project>>(jsonStr);
+
+            if(projectList != null)
+            {
+                foreach (var proj in projectList)
+                {
+                    var hashCode = proj.GetHashCode().ToString();
+                    if (hashCode == argument)
+                    {
+                        var navigation = ServiceLocator.Current.GetInstance<INavigationService>();
+
+                        navigation.NavigateTo("MainPage");
+                        Messenger.Default.Send(proj);
+
+                        break;
+                    }
+
+                }
+            }
+        }
+
     }
 }

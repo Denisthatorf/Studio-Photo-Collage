@@ -1,6 +1,5 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Studio_Photo_Collage.Models
 {
@@ -8,10 +7,10 @@ namespace Studio_Photo_Collage.Models
     {
         public GroupedTemplates()
         {
-            Projects = new ObservableCollection<Project>();
+            Projects = new List<Project>();
         }
 
-        public ObservableCollection<Project> Projects { get;}
+        public List<Project> Projects { get;}
 
         public int CountOfPhotos { get; set; }
 
@@ -35,9 +34,52 @@ namespace Studio_Photo_Collage.Models
         {
             for (int i = 0; i < countOfRotation; i++)
             {
-                Project newproj = project.GetRotatedProject(i);
+                Project newproj = GetRotatedProject(project.PhotoArray, i);
                 groupedTemplates.Projects.Add(newproj);
             }
+        }
+        public static Project GetRotatedProject(byte[,] arr, int countOfRotation)
+        {
+            var width = arr.GetUpperBound(0) + 1;
+            var height = arr.GetUpperBound(1) + 1;
+            //byte[,] arr = new byte[width, height];
+
+            //Array.Copy(_photoArray, arr, _photoArray.Length);
+            for (int i = 0; i < countOfRotation; i++)
+            {
+                arr = RotateRight(arr);
+            }
+            return new Project(arr);
+        }
+        public static byte[,] RotateRight(byte[,] arr)
+        {
+            int width;
+            int height;
+            byte[,] dst;
+
+            width = arr.GetUpperBound(0) + 1;
+            height = arr.GetUpperBound(1) + 1;
+
+            //var src = new byte[width, height];
+           // Array.Copy(arr, src, src.Length);
+
+            dst = new byte[height, width];
+
+            for (int row = 0; row < height; row++)
+            {
+                for (int col = 0; col < width; col++)
+                {
+                    int newRow;
+                    int newCol;
+
+                    newRow = col;
+                    newCol = height - (row + 1);
+
+                    dst[newCol, newRow] = arr[col, row];
+                }
+            }
+
+            return dst;
         }
     }
 

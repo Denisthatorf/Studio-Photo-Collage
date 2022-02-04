@@ -2,7 +2,6 @@
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Views;
-using Studio_Photo_Collage.Infrastructure;
 using Studio_Photo_Collage.Infrastructure.Helpers;
 using Studio_Photo_Collage.Models;
 using Studio_Photo_Collage.Views.PopUps;
@@ -40,18 +39,13 @@ namespace Studio_Photo_Collage.ViewModels
 
         public StartPageViewModel(INavigationService navigationService)
         {
+
             _navigationService = navigationService;
 
             SettingsCommand = new RelayCommand(async () =>
             {
-                var dialog = new ConfirmDialog();
-                var result = await dialog.ShowAsync();
-
-                if (result.ToString() == "Primary") //yes
-                {
-                    RecentProjects?.Clear();
-                    await JsonHelper.WriteToFile("projects.json", string.Empty);
-                }
+                var dialog = new SettingsDialog();
+                await dialog.ShowAsync();
             });
             ImageClickCommand = new RelayCommand(() => _navigationService.NavigateTo("TemplatesPage"));
             RecentCollCloseCommand = new RelayCommand(async () =>
@@ -62,14 +56,13 @@ namespace Studio_Photo_Collage.ViewModels
                 if (result.ToString() == "Primary") //yes
                 {
                     RecentProjects.Clear();
-                    File.WriteAllText("projects.json", string.Empty);
+                    JsonHelper.WriteToFile("projects.json", string.Empty);
                 }
 
             });
             TemplateClickCommand = new RelayCommand<Project>((parameter) =>
                 {
-                    _navigationService.NavigateTo("MainPage");
-                    Messenger.Default.Send(parameter);
+                    m(parameter);
                 });
 
             _ = DesserializeProjects();
@@ -83,11 +76,18 @@ namespace Studio_Photo_Collage.ViewModels
                 }
             };
         }
-
+        void m(Project parameter)
+        {
+            _navigationService.NavigateTo("MainPage");
+            Messenger.Default.Send(parameter);
+        }
         private async Task DesserializeProjects()
         {
             var jsonStr = await JsonHelper.DeserializeFileAsync("projects.json");
-            RecentProjects = await JsonHelper.ToObjectAsync<ObservableCollection<Project>>(jsonStr);
+            if (String.IsNullOrEmpty(jsonStr))
+                RecentProjects = await JsonHelper.ToObjectAsync<ObservableCollection<Project>>(jsonStr);
+            else
+                RecentProjects = new ObservableCollection<Project>();
         }
     }
 }

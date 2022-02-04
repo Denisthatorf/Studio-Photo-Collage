@@ -11,10 +11,10 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
      DataContext="{Binding RecentPageInstance, Source={StaticResource Locator}}">
     <Page.Resources>
-        <converters:FromArrToGridConverter x:Key="FromArrToGridConverter"/>
+        <converters:ProjectToCollage x:Key="ProjToCollageConv"/>
     </Page.Resources>
     <ScrollViewer>
-        <StackPanel Style="{StaticResource SidePanelStackPanel}" Background="{ThemeResource MainBackgroundColor}">
+        <StackPanel  Style="{ThemeResource SidePanelPopUp}" Background="{ThemeResource MainBackgroundColor}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Style="{StaticResource Header}">
                 Recent
@@ -38,14 +38,16 @@
                     <DataTemplate>
                         <Button Command="{Binding ElementName=Templates, 
                                     Path=DataContext.ProjectCommand}"
-                                    Content="{Binding PhotoArray, Converter={StaticResource FromArrToGridConverter}}" 
+                                CommandParameter="{Binding}"
+                                    Content="{Binding Converter={StaticResource ProjToCollageConv}}" 
                                     Background="Transparent" Padding="0"
                                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                                    Width="99" Height="99" Margin="0,0,0,8"/>
+                                    Width="50" Height="50" Margin="0,0,0,8"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            
+
+
         </StackPanel>
     </ScrollViewer>
 </Page>

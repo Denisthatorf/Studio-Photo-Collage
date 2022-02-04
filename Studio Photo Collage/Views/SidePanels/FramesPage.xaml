@@ -15,7 +15,7 @@
         </Style>
     </Page.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Visible">
-    <StackPanel Padding="21,21,14,0" Style="{StaticResource SidePanelStackPanel}">
+        <StackPanel Padding="21,21,14,0"  Style="{ThemeResource SidePanelPopUp}">
         <TextBlock Text="Frame" Style="{StaticResource Header}"/>
         <Grid>
             <Grid.RowDefinitions>

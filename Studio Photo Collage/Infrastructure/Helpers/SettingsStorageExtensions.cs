@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
 
-namespace Studio_Photo_Collage.Infrastructure
+namespace Studio_Photo_Collage.Infrastructure.Helpers
 {
     public static class SettingsStorageExtensions
     {
@@ -80,7 +80,7 @@ namespace Studio_Photo_Collage.Infrastructure
         {
             var item = await folder.TryGetItemAsync(fileName).AsTask().ConfigureAwait(false);
 
-            if ((item != null) && item.IsOfType(StorageItemTypes.File))
+            if (item != null && item.IsOfType(StorageItemTypes.File))
             {
                 var storageFile = await folder.GetFileAsync(fileName);
                 byte[] content = await storageFile.ReadBytesAsync();

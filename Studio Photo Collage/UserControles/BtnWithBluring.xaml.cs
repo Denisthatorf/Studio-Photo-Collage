@@ -23,9 +23,6 @@ namespace Studio_Photo_Collage.UserControles
 {
     public sealed partial class BtnWithBluring : UserControl
     {
-
-
-
         public Project Project
         {
             get { return (Project)GetValue(ProjectProperty); }
@@ -36,7 +33,33 @@ namespace Studio_Photo_Collage.UserControles
         public static readonly DependencyProperty ProjectProperty =
             DependencyProperty.Register("Project", typeof(Project), typeof(BtnWithBluring), new PropertyMetadata(null));
 
-            public BtnWithBluring()
+
+
+        public ICommand MyCommand
+        {
+            get { return (ICommand)GetValue(MyCommandProperty); }
+            set { SetValue(MyCommandProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for MyCommand.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty MyCommandProperty =
+            DependencyProperty.Register("MyCommand", typeof(ICommand), typeof(BtnWithBluring), new PropertyMetadata(null));
+
+
+
+        public object MyCommandParameter
+        {
+            get { return (object)GetValue(MyCommandParametrProperty); }
+            set { SetValue(MyCommandParametrProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for MyCommandParametr.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty MyCommandParametrProperty =
+            DependencyProperty.Register("MyCommandParametr", typeof(object), typeof(BtnWithBluring), new PropertyMetadata(0));
+
+
+
+        public BtnWithBluring()
         {
             this.InitializeComponent();
             this.DataContextChanged += (o, e) => {  };

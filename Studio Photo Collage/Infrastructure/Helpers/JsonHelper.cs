@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Windows.Storage;
 
-namespace Studio_Photo_Collage.Infrastructure
+namespace Studio_Photo_Collage.Infrastructure.Helpers
 {
     public static class JsonHelper
     {
@@ -48,15 +48,15 @@ namespace Studio_Photo_Collage.Infrastructure
 
         public static async Task WriteToFile(string fileNameString, string textToSave)
         {
-            var appFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-
+            var appFolder = ApplicationData.Current.LocalFolder;
+            
             var file = await appFolder.CreateFileAsync(fileNameString,
-                Windows.Storage.CreationCollisionOption.OpenIfExists);
-           // await Windows.Storage.FileIO.AppendTextAsync(file, textToSave + Environment.NewLine);
-            await Windows.Storage.FileIO.WriteTextAsync(file, textToSave);
+                CreationCollisionOption.OpenIfExists);
+            // await Windows.Storage.FileIO.AppendTextAsync(file, textToSave + Environment.NewLine);
+            await FileIO.WriteTextAsync(file, textToSave);
 
             // Look in Output Window of Visual Studio for path to file
-            System.Diagnostics.Debug.WriteLine(String.Format("File is located at {0}", file.Path.ToString()));
+            System.Diagnostics.Debug.WriteLine(string.Format("File is located at {0}", file.Path.ToString()));
         }
 
     }

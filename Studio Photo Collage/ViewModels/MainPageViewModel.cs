@@ -2,7 +2,9 @@
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Views;
-using Studio_Photo_Collage.Infrastructure;
+using Microsoft.Toolkit.Uwp.Notifications;
+using Newtonsoft.Json;
+using Studio_Photo_Collage.Infrastructure.Converters;
 using Studio_Photo_Collage.Infrastructure.Helpers;
 using Studio_Photo_Collage.Models;
 using Studio_Photo_Collage.Views.PopUps;
@@ -10,7 +12,18 @@ using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.Graphics.Imaging;
+using Windows.Storage;
+using Windows.Storage.Streams;
+using Windows.UI;
+using Windows.UI.Core;
+using Windows.UI.Notifications;
+using Windows.UI.StartScreen;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace Studio_Photo_Collage.ViewModels
 {
@@ -36,7 +49,13 @@ namespace Studio_Photo_Collage.ViewModels
             get
             {
                 if (_saveProjectCommand == null)
-                    _saveProjectCommand = new RelayCommand<object>((parametr) => { });
+                    _saveProjectCommand = new RelayCommand<object>(async(parametr) => 
+                    {
+                        var dialog = new SaveDialog("project");
+                        var result = await dialog.ShowAsync();
+                        if (result != ContentDialogResult.None)
+                            SaveProject();
+                    });
                 return _saveProjectCommand;
             }
         }
@@ -45,59 +64,161 @@ namespace Studio_Photo_Collage.ViewModels
         private BtnNameEnum? _checkBoxesEnum = null;
         public BtnNameEnum? CheckBoxesEnum
         {
-            get
-            {
-                return _checkBoxesEnum;
-            }
+            get => _checkBoxesEnum;
             set
             {
                 if (_checkBoxesEnum != value)
                 {
                     Set(ref _checkBoxesEnum, value);
                     if (value == BtnNameEnum.Settings)
-                    {
-                        _ = ShowSettingDialog();
-                    }
+                        ShowSettingDialog();
+                    if (value == BtnNameEnum.Print)
+                        PinCollageToSecondaryTile();
                 }
                 else
                     Set(ref _checkBoxesEnum, null);
             }
         }
 
-        private Project _project;
-        public Project CurrentProject { get => _project; set => Set(ref _project, value); }
+        private Collage _currentCollage;
+        public Collage CurrentCollage {
+            get => _currentCollage;
+            set => Set(ref _currentCollage, value); }
 
-
-        //  public Frame SettingsFrame { get; }
         public Frame PaintFrame { get; }
          
 
         public MainPageViewModel(INavigationService _navigationService)
         {
-            // SettingsFrame = new Frame();
-            // SettingsFrame.Navigate(typeof(SettingsPage));
-
             PaintFrame = new Frame();
             PaintFrame.Navigate(typeof(PaintPopUpPage));
 
             NavigationService = _navigationService;
-
-            Messenger.Default.Register<Project>(this, (parameter) => CurrentProject = parameter);
-            Messenger.Default.Register<string>(this, (parametr) => { CurrentProject.ProjectName = parametr; SaveProject();});
+            MessengersRegistration();
         }
 
-        private async Task ShowSettingDialog()
+
+        public async void GoBack()
         {
-            var dialog = new SettingsDialog();
-            await dialog.ShowAsync();
+            var dialog = new SaveDialog("collage");
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary) // Yes
+            {
+                CurrentCollage.Project.ProjectName = dialog.ProjectName;
+                SaveProject();
+                NavigationService.NavigateTo("TemplatesPage");
+                CurrentCollage = null;
+            }
+            else if (result == ContentDialogResult.Secondary)
+                NavigationService.NavigateTo("TemplatesPage");
+            CurrentCollage = null;
         }
+
+        private void MessengersRegistration()
+        {
+            Messenger.Default.Register<Project>(this, (parameter) =>
+           CurrentCollage = new Collage(parameter));
+
+            Messenger.Default.Register<Thickness>(this, (Action<Thickness>)((parameter) => {
+                CurrentCollage.Project.BorderThickness = parameter.Top;
+                CurrentCollage.UpdateAll();
+            }));
+
+            Messenger.Default.Register<double>(this, (Action<double>)((parameter) => {
+                CurrentCollage.Project.BorderOpacity = parameter;
+                CurrentCollage.UpdateAll();
+            }));
+
+            Messenger.Default.Register<SolidColorBrush>(this, (Action<SolidColorBrush>)((parameter) => {
+                CurrentCollage.Project.BorderColor = parameter.Color.ToString();
+                CurrentCollage.UpdateAll();
+            }));
+
+            Messenger.Default.Register<NotificationMessageAction<Image>>(this, (messageAct) => {
+                var image = CurrentCollage.SelectedImage;
+                if (image?.Source != null)
+                    messageAct.Execute(image);
+            });
+        }
+
         private async Task SaveProject()
         {
             var str = await JsonHelper.DeserializeFileAsync("projects.json");
             var projects = await JsonHelper.ToObjectAsync<ObservableCollection<Project>>(str);
-            projects.Add(CurrentProject);
-            str = await JsonHelper.StringifyAsync(projects);
-            await JsonHelper.WriteToFile("projects.json",str);
+            if (projects == null)
+                projects = new ObservableCollection<Project>();
+
+            int index = projects.IndexOf(CurrentCollage.Project);
+            if (index == -1)
+                projects.Add(CurrentCollage.Project);
+            else
+                projects[index] = CurrentCollage.Project;
+
+            string projectsAsList = await JsonHelper.StringifyAsync(projects);
+            await JsonHelper.WriteToFile("projects.json", projectsAsList);
+
+            await UpdateSecondaryTile();
+        }
+
+        private async void ShowSettingDialog()
+        {
+            var dialog = new SettingsDialog();
+            await dialog.ShowAsync();
+            CheckBoxesEnum = null;
+        }
+
+        private async void PinCollageToSecondaryTile()
+        {
+            var dialog = new SaveDialog("collage");
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary) // Yes
+            {
+                CurrentCollage.Project.ProjectName = dialog.ProjectName;
+                SaveProject();
+
+                var source = await ImageHelper.SaveCollageUIAsImage(CurrentCollage);
+                
+                var zipCode = CurrentCollage.Project.GetHashCode().ToString();
+                string tileId = zipCode;
+                string displayName = CurrentCollage.Project.ProjectName != null ? 
+                                            CurrentCollage.Project.ProjectName : "Test";
+                string arguments = zipCode;
+                // Initialize the tile with required arguments
+                SecondaryTile tile = new SecondaryTile(
+                    tileId,
+                    displayName,
+                    arguments,
+                    new Uri(source),
+                    Windows.UI.StartScreen.TileSize.Default);
+
+                var p = await tile.RequestCreateAsync();
+            }
+
+
+        }
+
+        private async Task UpdateSecondaryTile()
+        {
+            var tileId = CurrentCollage.Project.GetHashCode().ToString();
+            bool isPinned = SecondaryTile.Exists(tileId);
+
+            if (isPinned)
+            {
+                var path = $"{CurrentCollage.Project.ProjectName}.{CurrentCollage.Project.SaveFormat}";
+                    var file =await ApplicationData.Current.LocalFolder.GetFileAsync(path);
+                    await file.DeleteAsync();
+
+                var source = await ImageHelper.SaveCollageUIAsImage(CurrentCollage);
+
+                // Initialize a secondary tile with the same tile ID you want to update
+                SecondaryTile tile = new SecondaryTile(tileId);
+
+                // Assign ALL properties, including ones you aren't changing
+
+                // And then update it
+                await tile.UpdateAsync();
+            }
+
         }
     }
 }

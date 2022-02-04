@@ -2,7 +2,6 @@
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using Microsoft.Toolkit.Uwp;
-using Studio_Photo_Collage.Infrastructure;
 using Studio_Photo_Collage.Infrastructure.Helpers;
 using System;
 using System.Collections.Generic;
@@ -85,8 +84,12 @@ namespace Studio_Photo_Collage.ViewModels.PopUps
         {
             _navigationService = navigationService;
 
+
+            var frame = Window.Current.Content as Frame; 
+
             LanguageComBox_SelectedItm = CultureInfo.CurrentCulture;
-            ThemeComBox_SelectedItem = ElementTheme.Default;
+            ThemeComBox_SelectedItem = frame.RequestedTheme;
+            VersionDescription = GetVersionDescription();
 
             Colors = new List<SolidColorBrush>()
             {
@@ -121,20 +124,20 @@ namespace Studio_Photo_Collage.ViewModels.PopUps
         }
 
 
-        /*      public async Task InitializeAsync()
-              {
+       /*  public async Task InitializeAsync()
+         {
                   VersionDescription = GetVersionDescription();
                   await Task.CompletedTask;
-              }*/
+         }*/
 
         private string GetVersionDescription()
         {
-            var appName = "AppDisplayName".GetLocalized();
+            //var appName = "AppDisplayName".GetLocalized();
             var package = Package.Current;
             var packageId = package.Id;
             var version = packageId.Version;
 
-            return $"{appName} - {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+            return $"Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
         }
     }
 }

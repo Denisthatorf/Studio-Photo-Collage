@@ -41,6 +41,8 @@ namespace Studio_Photo_Collage.Views.PopUps
         public SaveDialog(string projectOrCollages)
         {
             this.InitializeComponent();
+            var frame = Window.Current.Content as Frame; ;
+            this.RequestedTheme = frame.ActualTheme;
             WhatSave = projectOrCollages;
         }
 

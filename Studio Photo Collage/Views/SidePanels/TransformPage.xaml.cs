@@ -1,4 +1,7 @@
-﻿using System;
+﻿using CommonServiceLocator;
+using Studio_Photo_Collage.ViewModels;
+using Studio_Photo_Collage.ViewModels.SidePanels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,6 +25,11 @@ namespace Studio_Photo_Collage.Views.SidePanels
     /// </summary>
     public sealed partial class TransformPage : Page
     {
+        private TransformPageViewModel ViewModel
+        {
+            get => ServiceLocator.Current.GetInstance<TransformPageViewModel>();
+        }
+
         public TransformPage()
         {
             this.InitializeComponent();

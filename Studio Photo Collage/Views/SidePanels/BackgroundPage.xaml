@@ -10,8 +10,7 @@
     DataContext="{Binding BackgroundPageInstance, Source={StaticResource Locator}}">
 
     <ScrollViewer>
-        <StackPanel Padding="15" Style="{StaticResource SidePanelStackPanel}"
-                    Background="{ThemeResource MainBackgroundColor}">
+        <StackPanel Padding="15" Style="{ThemeResource SidePanelPopUp}">
 
             <TextBlock Text="Background"  x:Uid="BackgroudHeader"
                        Style="{StaticResource Header}"/>
@@ -26,15 +25,22 @@
                 <TextBlock Text="{Binding ElementName=PictureSizeSlider, 
                                       Path=Value}"/>
             </StackPanel>
-            <Slider x:Name="PictureSizeSlider" Style="{StaticResource CustomSlider}"/>
+            <Slider x:Name="PictureSizeSlider" Style="{StaticResource CustomSlider}" 
+                    Value="{Binding BordersThickness, Mode=TwoWay,
+                   UpdateSourceTrigger=PropertyChanged}"/>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Opacity: " Margin="0,0,5,0"/>
                 <TextBlock Text="{Binding ElementName=OpacitySlider, 
                                       Path=Value}"/>
             </StackPanel>
-            <Slider x:Name="OpacitySlider" Style="{StaticResource CustomSlider}"/>
+            <Slider x:Name="OpacitySlider" Style="{StaticResource CustomSlider}"
+                    Value="{Binding BorderOpacity, Mode=TwoWay, 
+                     UpdateSourceTrigger=PropertyChanged}"/>
             
-            <ItemsControl ItemsSource="{Binding Colors}" Margin="0,8,0,0" Padding="0" ScrollViewer.CanContentRenderOutsideBounds="True" ScrollViewer.VerticalScrollMode="Enabled">
+            <ItemsControl x:Name="ColorControl" ItemsSource="{Binding Colors}"
+                          Margin="0,8,0,0" Padding="0"
+                          ScrollViewer.CanContentRenderOutsideBounds="True"
+                          ScrollViewer.VerticalScrollMode="Enabled">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <controle:WrapPanel/>
@@ -44,7 +50,9 @@
                     <DataTemplate>
                         <Button Width="38" Height="38" Margin="0,5,4,0"
                                 CornerRadius="0" 
-                               Background="{Binding}"/>
+                               Background="{Binding}"
+                                Command="{Binding ElementName=ColorControl, Path=DataContext.ColorBtnCommand}"
+                                CommandParameter="{Binding}"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
