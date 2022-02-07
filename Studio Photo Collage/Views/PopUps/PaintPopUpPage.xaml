@@ -3,11 +3,14 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Studio_Photo_Collage.Views.PopUps"
+    xmlns:converters="using:Studio_Photo_Collage.Infrastructure.Converters"
      xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" Height="64" Width="380" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+    mc:Ignorable="d" Height="64" Width="380" HorizontalAlignment="Center" VerticalAlignment="Bottom"
+    DataContext="{Binding PaintPopUppageInstance, Source={StaticResource Locator}}" >
     <Page.Resources>
+        <converters:EnumValueConverter x:Key="EnumValueConverter"/>
         <Style TargetType="AppBarToggleButton">
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="Width" Value="36"/>
@@ -15,25 +18,37 @@
             <Setter Property="Margin" Value="5"/>
         </Style>
     </Page.Resources>
-    
+
     <StackPanel Orientation="Horizontal" 
                 Background="{StaticResource MainBackgroundColor}">
-            <AppBarToggleButton>
-                <AppBarToggleButton.Icon>
-                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;"/>
-                </AppBarToggleButton.Icon>
-            </AppBarToggleButton>
-        <AppBarToggleButton>
-            <AppBarToggleButton.Icon>
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xED60;"/>
-            </AppBarToggleButton.Icon>
-        </AppBarToggleButton>
+        <ToggleButton
+                      IsChecked="{Binding AppBarBtnsEnum, 
+                      Converter={StaticResource EnumValueConverter},
+                      ConverterParameter=Pen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;"/>
+        </ToggleButton>
 
-        <Grid VerticalAlignment="Center">
+        <ToggleButton   
+                     IsChecked="{Binding AppBarBtnsEnum, 
+                     Converter={StaticResource EnumValueConverter},
+                     ConverterParameter=Rubber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xED60;"/>
+        </ToggleButton>
+
+        <!--<Grid VerticalAlignment="Center">
             <ColorPicker Height="6" Width="300" VerticalAlignment="Center"/>
             <ColorPickerSlider Background="Transparent"  Width="350"/>
-        </Grid>
-        
-        
+        </Grid>-->
+        <muxc:ColorPicker 
+      ColorSpectrumShape="Box"
+      IsMoreButtonVisible="False"
+      IsColorSliderVisible="False"
+      IsColorChannelTextInputVisible="False"
+      IsHexInputVisible="False"
+      IsAlphaEnabled="False"
+      IsAlphaSliderVisible="True"
+      IsAlphaTextInputVisible="True"
+      Height="17" Width="198"/>
+
     </StackPanel>
 </Page>

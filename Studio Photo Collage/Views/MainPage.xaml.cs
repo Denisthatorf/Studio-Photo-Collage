@@ -3,6 +3,7 @@ using System;
 using Windows.ApplicationModel.Core;
 using Windows.UI;
 using Windows.UI.Core;
+using Windows.UI.Input.Inking;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -20,7 +21,11 @@ namespace Studio_Photo_Collage.Views
     {
         public MainPage()
         {
-            this.InitializeComponent(); 
+            this.InitializeComponent();
+            InkDrawingAttributes inkDrawingAttributes = new InkDrawingAttributes();
+            inkDrawingAttributes.Color = Windows.UI.Colors.Blue;
+            InkCanv.InkPresenter.UpdateDefaultDrawingAttributes(inkDrawingAttributes);
+            InkCanv.InkPresenter.InputDeviceTypes = Windows.UI.Core.CoreInputDeviceTypes.Mouse | Windows.UI.Core.CoreInputDeviceTypes.Pen;
         }
 
         private void Save_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)

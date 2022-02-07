@@ -1,8 +1,10 @@
-﻿using GalaSoft.MvvmLight;
+﻿using CommonServiceLocator;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Views;
 using Studio_Photo_Collage.Models;
+using Studio_Photo_Collage.Views.PopUps;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -29,9 +31,22 @@ namespace Studio_Photo_Collage.ViewModels
         public TemplatesPageViewModel(INavigationService navigationService)
         {
             NavigationService = navigationService;
-            TemplateClickCommand = new RelayCommand<Project>((parameter) => {
-                NavigationService.NavigateTo("MainPage");
-                Messenger.Default.Send(parameter);
+            TemplateClickCommand = new RelayCommand<Project>(async(parameter) => {
+                var currentPage = ViewModelLocator.GetStringCurrentPage();
+                if (currentPage == "MainPage")
+                {
+                    var dialog = new SaveDialog("collage");
+                    var result = await dialog.ShowAsync();
+                    if (result == ContentDialogResult.Primary) //yes
+                    {
+                        Messenger.Default.Send(parameter);
+                    }
+                }
+                else
+                {
+                    NavigationService.NavigateTo("MainPage");
+                    Messenger.Default.Send(parameter);
+                }
             });
 
             TemplateCollection = GroupedTemplates.FillByGroupedTemplate();

@@ -3,6 +3,7 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using Microsoft.Toolkit.Uwp;
 using Studio_Photo_Collage.Infrastructure.Helpers;
+using Studio_Photo_Collage.Views.PopUps;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -73,7 +74,7 @@ namespace Studio_Photo_Collage.ViewModels.PopUps
             set { Set(ref _versionDescription, value); }
         }
 
-        public List<SolidColorBrush> Colors {get; }
+        public List<Brush> Colors {get; }
 
         private ElementTheme _themeOfSettings;
         public ElementTheme ThemeOfSettings { get => _themeOfSettings; set => Set(ref _themeOfSettings, value); }
@@ -84,36 +85,35 @@ namespace Studio_Photo_Collage.ViewModels.PopUps
         {
             _navigationService = navigationService;
 
-
             var frame = Window.Current.Content as Frame; 
 
             LanguageComBox_SelectedItm = CultureInfo.CurrentCulture;
             ThemeComBox_SelectedItem = frame.RequestedTheme;
             VersionDescription = GetVersionDescription();
 
-            Colors = new List<SolidColorBrush>()
+            Colors = new List<Brush>()
             {
-            ColorGenerator.GetSolidColorBrush("FFBA00"),
-            ColorGenerator.GetSolidColorBrush("F76304"),
-            ColorGenerator.GetSolidColorBrush("DB3800"),
-            ColorGenerator.GetSolidColorBrush("D23135"),
-            ColorGenerator.GetSolidColorBrush("E9091E"),
-            ColorGenerator.GetSolidColorBrush("C40051"),
-            ColorGenerator.GetSolidColorBrush("E4008D"),
-            ColorGenerator.GetSolidColorBrush("C336B5"),
-            ColorGenerator.GetSolidColorBrush("891099"),
-            ColorGenerator.GetSolidColorBrush("754CAB"),
-            ColorGenerator.GetSolidColorBrush("8F8DD9"),
-            ColorGenerator.GetSolidColorBrush("6B69D7"),
-            ColorGenerator.GetSolidColorBrush("0063B3"),
-            ColorGenerator.GetSolidColorBrush("0079D8"),
-            ColorGenerator.GetSolidColorBrush("009ABD"),
-            ColorGenerator.GetSolidColorBrush("00B8C4"),
-            ColorGenerator.GetSolidColorBrush("00B395"),
-            ColorGenerator.GetSolidColorBrush("008675"),
-            ColorGenerator.GetSolidColorBrush("078A3C"),
-            ColorGenerator.GetSolidColorBrush("505C6B"),
-            ColorGenerator.GetSolidColorBrush("7F745F")
+            BrushGenerator.GetSolidColorBrush("FFBA00"),
+            BrushGenerator.GetSolidColorBrush("F76304"),
+            BrushGenerator.GetSolidColorBrush("DB3800"),
+            BrushGenerator.GetSolidColorBrush("D23135"),
+            BrushGenerator.GetSolidColorBrush("E9091E"),
+            BrushGenerator.GetSolidColorBrush("C40051"),
+            BrushGenerator.GetSolidColorBrush("E4008D"),
+            BrushGenerator.GetSolidColorBrush("C336B5"),
+            BrushGenerator.GetSolidColorBrush("891099"),
+            BrushGenerator.GetSolidColorBrush("754CAB"),
+            BrushGenerator.GetSolidColorBrush("8F8DD9"),
+            BrushGenerator.GetSolidColorBrush("6B69D7"),
+            BrushGenerator.GetSolidColorBrush("0063B3"),
+            BrushGenerator.GetSolidColorBrush("0079D8"),
+            BrushGenerator.GetSolidColorBrush("009ABD"),
+            BrushGenerator.GetSolidColorBrush("00B8C4"),
+            BrushGenerator.GetSolidColorBrush("00B395"),
+            BrushGenerator.GetSolidColorBrush("008675"),
+            BrushGenerator.GetSolidColorBrush("078A3C"),
+            BrushGenerator.GetSolidColorBrush("505C6B"),
+            BrushGenerator.GetSolidColorBrush("7F745F")
             };
         }
 

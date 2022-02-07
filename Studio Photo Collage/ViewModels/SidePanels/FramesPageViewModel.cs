@@ -13,7 +13,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
     {
         public FramesPageViewModel()
         {
-            Colors = ColorGenerator.GenerateColors();
+            Colors = BrushGenerator.GenerateBrushes();
         }
 
         public List<SolidColorBrush> Colors { get; set; }

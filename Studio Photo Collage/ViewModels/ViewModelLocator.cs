@@ -31,11 +31,13 @@ namespace Studio_Photo_Collage.ViewModels
 
         public const string FiltersPageKey = "FiltersPage";
         public const string BackgroundPageKey = "BackgroundPage";
-        public const string SettingstDialogKey = "SettingsContentDialog";
         public const string TransformPageKey = "TransformPage";
         public const string RecentPageKey = "RecentPage";
         public const string FramesPadeKey = "FramesPage";
         public const string TemplatesSidePanelPageKey = "TemplatesSidePagePage";
+
+        public const string PaintPopUpPageKey = "PaintPopUpPage";
+        public const string SettingstDialogKey = "SettingsContentDialog";
 
         /// <summary>
         /// Initializes a new instance of the ViewModelLocator class.
@@ -53,10 +55,12 @@ namespace Studio_Photo_Collage.ViewModels
 
             nav.Configure(FiltersPageKey, typeof(FiltersPage));
             nav.Configure(BackgroundPageKey, typeof(BackgroundPage));
-            nav.Configure(SettingstDialogKey, typeof(SettingsDialog));
             nav.Configure(TransformPageKey, typeof(TransformPage));
             nav.Configure(RecentPageKey, typeof(ResentsPage));
             nav.Configure(FramesPadeKey, typeof(FramesPage));
+
+            nav.Configure(PaintPopUpPageKey, typeof(PaintPopUpPage));
+            nav.Configure(SettingstDialogKey, typeof(SettingsDialog));
             // nav.Configure(TemplatesSidePanelPageKey, typeof(TemplatesSidePanelPage));
 
             if (ViewModelBase.IsInDesignModeStatic)
@@ -76,12 +80,13 @@ namespace Studio_Photo_Collage.ViewModels
 
             SimpleIoc.Default.Register<FiltersPageViewModel>();
             SimpleIoc.Default.Register<BackgroundPageViewModel>();
-            SimpleIoc.Default.Register<SettingsDialogViewModel>();
             SimpleIoc.Default.Register<TransformPageViewModel>();
             SimpleIoc.Default.Register<RecentPageViewModel>();
             SimpleIoc.Default.Register<FramesPageViewModel>();
             SimpleIoc.Default.Register<TemplatesSidePanelPageViewModel>();
-            // SimpleIoc.Default.Register<SettingsPageViewModel>();
+
+            SimpleIoc.Default.Register<PaintPopUpPageViewModel>();
+            SimpleIoc.Default.Register<SettingsDialogViewModel>();
 
         }
 
@@ -98,11 +103,13 @@ namespace Studio_Photo_Collage.ViewModels
 
         public FiltersPageViewModel FiltersPageInstance => ServiceLocator.Current.GetInstance<FiltersPageViewModel>();
         public BackgroundPageViewModel BackgroundPageInstance => ServiceLocator.Current.GetInstance<BackgroundPageViewModel>();
-        public SettingsDialogViewModel SettingsDialogInstance => ServiceLocator.Current.GetInstance<SettingsDialogViewModel>();
         public TransformPageViewModel TransformPageInstance => ServiceLocator.Current.GetInstance<TransformPageViewModel>();
         public RecentPageViewModel RecentPageInstance => ServiceLocator.Current.GetInstance<RecentPageViewModel>();
         public FramesPageViewModel FramesPageInstanse => ServiceLocator.Current.GetInstance<FramesPageViewModel>();
-        public TemplatesSidePanelPageViewModel TemplatesSidePanelPageInstance => ServiceLocator.Current.GetInstance<TemplatesSidePanelPageViewModel>();
+    //    public TemplatesSidePanelPageViewModel TemplatesSidePanelPageInstance => ServiceLocator.Current.GetInstance<TemplatesSidePanelPageViewModel>();
+
+        public SettingsDialogViewModel SettingsDialogInstance => ServiceLocator.Current.GetInstance<SettingsDialogViewModel>();
+        public PaintPopUpPageViewModel PaintPopUppageInstance => ServiceLocator.Current.GetInstance<PaintPopUpPageViewModel>();
 
 
         public static void ReloadCurrentPage()
@@ -115,14 +122,17 @@ namespace Studio_Photo_Collage.ViewModels
 
             navigation.NavigateTo(arr[arr.Length - 1], "reload");
         }
-
-        public static void GoBack()
+        public static string GetStringCurrentPage()
         {
-            var navigation = ServiceLocator.Current.GetInstance<INavigationService>();
             var pageFullType = (Window.Current.Content as Frame).Content.ToString();
             var arr = pageFullType.Split('.');
             var currentPage = arr[arr.Length - 1];
-
+            return currentPage;
+        }
+        public static void GoBack()
+        {
+            var navigation = ServiceLocator.Current.GetInstance<INavigationService>();
+            var currentPage = GetStringCurrentPage();
             if (currentPage == "MainPage")
             {
                 var mainPage =ServiceLocator.Current.GetInstance<MainPageViewModel>();

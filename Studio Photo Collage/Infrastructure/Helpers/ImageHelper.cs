@@ -63,11 +63,13 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             return await picker.PickSingleFileAsync();
         }
 
+
+        private static Random rnd = new Random();
         public static async Task<String> SaveToBytesAsync(ImageSource imageSource)
         {
             byte[] imageBuffer;
             var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            var file = await localFolder.CreateFileAsync("temp.jpg", CreationCollisionOption.ReplaceExisting);
+            var file = await localFolder.CreateFileAsync($"temp{rnd.Next()}.jpg", CreationCollisionOption.ReplaceExisting);
             using (var ras = await file.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.None))
             {
                 WriteableBitmap bitmap = imageSource as WriteableBitmap;

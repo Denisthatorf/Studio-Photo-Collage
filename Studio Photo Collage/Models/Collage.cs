@@ -18,9 +18,9 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Studio_Photo_Collage.Models
 {
-    public class Collage
+    public class Collage : INotifyPropertyChanged
     {
-        private List<Image> ImageCollection = new List<Image>();
+        //private List<Image> ImageCollection = new List<Image>();
 
         private Project _myProject;
         public Project Project
@@ -32,8 +32,8 @@ namespace Studio_Photo_Collage.Models
         private UIElement _collageGrid;
         public UIElement CollageGrid
         {
-            get {  return _collageGrid; }
-            set { _collageGrid = value; }
+            get { return _collageGrid; }
+            set { _collageGrid = value; NotifyPropertyChanged("CollageGrid"); }
         }
 
         public UIElement BackgroundGrid => (CollageGrid as Grid).Children[0];
@@ -53,17 +53,31 @@ namespace Studio_Photo_Collage.Models
                 return null;
             }
         }
+        public int SelectedImageNumberInList
+        {
+            get
+            {
+                var grid = MainGrid as Grid;
+                for (int i = 0; i < grid.Children.Count; i++)
+                {
+                    var gridInGrid = grid.Children[i] as Grid;
+                    var ToggleBtn = gridInGrid.Children[0] as ToggleButton;
+                    if ((bool)ToggleBtn.IsChecked)
+                        return i;
+                }
+                return -1;
+            }
+        }
 
 
         public Collage(Project _proj)
         {
             Project = _proj;
-            InitializeGrid();
-            //CollageGrid = CreateCollage();
+            CollageGrid = CreateCollage();
         }
         public Collage() { }
 
-        public void UpdateAll()
+        public async void UpdateUIAsync()
         {
             var grid = this.MainGrid as Grid;
             for (int i = 0; i < grid.Children.Count; i++)
@@ -73,13 +87,14 @@ namespace Studio_Photo_Collage.Models
             }
 
             var background = this.BackgroundGrid as Grid;
-            background.Background = ColorGenerator.GetSolidColorBrush(this.Project.BorderColor);
+            var brush = await BrushGenerator.GetBrushForCollageAcync(this.Project.BorderColor);
+            background.Background = brush;
             background.Opacity = this.Project.BorderOpacity;
         }
-
-        private void InitializeGrid()
+        public async void UpdateProjectInfoAsync()
         {
-            CollageGrid = CreateCollage();
+            if (SelectedImage?.Source != null)
+                Project.ImageArr[SelectedImageNumberInList] = await ImageHelper.SaveToBytesAsync(SelectedImage.Source);
         }
 
         #region UIElement creation
@@ -94,14 +109,16 @@ namespace Studio_Photo_Collage.Models
 
             for (int i = 0; i < maingird.Children.Count; i++)
             {
-                var gridInsideOfGrid = maingird.Children[i] as Grid;
-                gridInsideOfGrid.BorderThickness = new Thickness(Project.BorderThickness);
-                gridInsideOfGrid.Background = new SolidColorBrush(Colors.Transparent);
+                var borderGridInGrid = maingird.Children[i] as Grid;
+                borderGridInGrid.BorderThickness = new Thickness(Project.BorderThickness);
+                borderGridInGrid.Background = new SolidColorBrush(Colors.Transparent);
 
                 var btn = GetToggleBtnWithImg(i);
-                gridInsideOfGrid.Children.Add(btn); ;
+                borderGridInGrid.Children.Add(btn); ;
             }
-            backgroundgrid.Background = ColorGenerator.GetSolidColorBrush(this.Project.BorderColor);
+
+            backgroundgrid.Background = BrushGenerator.GetSolidColorBrush(this.Project.BorderColor);
+            backgroundgrid.Opacity = this.Project.BorderOpacity;    
 
 
             collageGrid.Children.Add(backgroundgrid);
@@ -116,7 +133,7 @@ namespace Studio_Photo_Collage.Models
 
             var img = new Image();
             img.Stretch = Windows.UI.Xaml.Media.Stretch.Fill;
-            
+
             // if (Project.ImageArr[numberInList] != null)
              //  img.Source = await ImageHelper.FromBase64(Project.ImageArr[numberInList]);
             SetImageSourceAsync(img, numberInList);
@@ -164,7 +181,7 @@ namespace Studio_Photo_Collage.Models
 
         private async void SetImageSourceAsync(Image img, int numberInList)
         {
-            if (Project.ImageArr[numberInList] != null)
+            if (!String.IsNullOrEmpty(Project.ImageArr[numberInList]))
                 img.Source = await ImageHelper.FromBase64(Project.ImageArr[numberInList]);
         }
 
@@ -182,5 +199,16 @@ namespace Studio_Photo_Collage.Models
             }
         }
         #endregion
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
     }
 }

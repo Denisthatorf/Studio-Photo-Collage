@@ -141,7 +141,7 @@
     <Compile Include="Infrastructure\Converters\EnumValueConverter.cs" />
     <Compile Include="Infrastructure\FromThemeToStringConverter.cs" />
     <Compile Include="Infrastructure\Helpers\BtnNameEnum.cs" />
-    <Compile Include="Infrastructure\Helpers\ColorGenerator.cs" />
+    <Compile Include="Infrastructure\Helpers\BrushGenerator.cs" />
     <Compile Include="Infrastructure\Helpers\GroupTemplateSelector.cs" />
     <Compile Include="Infrastructure\Helpers\ImageHelper.cs" />
     <Compile Include="Infrastructure\Helpers\JsonHelper.cs" />
@@ -156,6 +156,7 @@
       <DependentUpon>BtnWithBluring.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\MainPageViewModel.cs" />
+    <Compile Include="ViewModels\PopUps\PaintPopUpPageViewModel.cs" />
     <Compile Include="ViewModels\PopUps\SettingsDialogViewModel.cs" />
     <Compile Include="ViewModels\SidePanels\BackgroundPageViewModel.cs" />
     <Compile Include="ViewModels\SidePanels\FramesPageViewModel.cs" />

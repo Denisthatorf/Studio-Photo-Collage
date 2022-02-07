@@ -9,9 +9,9 @@ using Windows.UI.Xaml.Data;
 
 namespace Studio_Photo_Collage.Infrastructure.Converters
 {
-    public class StringToFrameConverter : IValueConverter
+    public static class StringToFrameConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string language)
+        public static Frame Convert(object value)
         {
             if (value != null)
             {
@@ -40,11 +40,6 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
                 }
             }
             return null;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotImplementedException();
         }
     }
 }

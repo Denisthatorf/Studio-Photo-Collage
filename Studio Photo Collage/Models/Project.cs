@@ -11,6 +11,8 @@ namespace Studio_Photo_Collage.Models
     [JsonObject(MemberSerialization.Fields)]
     public class Project : INotifyPropertyChanged
     {
+        private static Random rnd = new Random();
+
         private int Uid;
 
         private byte[,] _photoArray;
@@ -75,7 +77,6 @@ namespace Studio_Photo_Collage.Models
 
         public Project(byte[,] photoArr)
         {
-            var rnd = new Random();
             Uid = rnd.Next();
             SaveFormat = "png";
             _photoArray = photoArr;

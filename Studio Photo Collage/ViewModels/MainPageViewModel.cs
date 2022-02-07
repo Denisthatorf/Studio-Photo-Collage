@@ -61,7 +61,7 @@ namespace Studio_Photo_Collage.ViewModels
         }
         #endregion
 
-        private BtnNameEnum? _checkBoxesEnum = null;
+        private BtnNameEnum? _checkBoxesEnum;
         public BtnNameEnum? CheckBoxesEnum
         {
             get => _checkBoxesEnum;
@@ -77,6 +77,9 @@ namespace Studio_Photo_Collage.ViewModels
                 }
                 else
                     Set(ref _checkBoxesEnum, null);
+
+                SidePanelFrame = StringToFrameConverter.Convert(_checkBoxesEnum);
+                if (_checkBoxesEnum == BtnNameEnum.Background) { } 
             }
         }
 
@@ -86,10 +89,17 @@ namespace Studio_Photo_Collage.ViewModels
             set => Set(ref _currentCollage, value); }
 
         public Frame PaintFrame { get; }
-         
+
+        private Frame _sidePanelFrame;
+        public Frame SidePanelFrame { 
+            get => _sidePanelFrame;
+            set => Set(ref _sidePanelFrame, value); }
+
 
         public MainPageViewModel(INavigationService _navigationService)
         {
+            _checkBoxesEnum = null;
+
             PaintFrame = new Frame();
             PaintFrame.Navigate(typeof(PaintPopUpPage));
 
@@ -106,12 +116,14 @@ namespace Studio_Photo_Collage.ViewModels
             {
                 CurrentCollage.Project.ProjectName = dialog.ProjectName;
                 SaveProject();
-                NavigationService.NavigateTo("TemplatesPage");
                 CurrentCollage = null;
+                NavigationService.NavigateTo("TemplatesPage");
             }
             else if (result == ContentDialogResult.Secondary)
+            {
+                CurrentCollage = null;
                 NavigationService.NavigateTo("TemplatesPage");
-            CurrentCollage = null;
+            }
         }
 
         private void MessengersRegistration()
@@ -120,24 +132,28 @@ namespace Studio_Photo_Collage.ViewModels
            CurrentCollage = new Collage(parameter));
 
             Messenger.Default.Register<Thickness>(this, (Action<Thickness>)((parameter) => {
-                CurrentCollage.Project.BorderThickness = parameter.Top;
-                CurrentCollage.UpdateAll();
+                CurrentCollage.Project.BorderThickness = parameter.Top; //everywhere is one parameter
+                CurrentCollage.UpdateUIAsync();
             }));
 
             Messenger.Default.Register<double>(this, (Action<double>)((parameter) => {
                 CurrentCollage.Project.BorderOpacity = parameter;
-                CurrentCollage.UpdateAll();
+                CurrentCollage.UpdateUIAsync();
             }));
 
-            Messenger.Default.Register<SolidColorBrush>(this, (Action<SolidColorBrush>)((parameter) => {
-                CurrentCollage.Project.BorderColor = parameter.Color.ToString();
-                CurrentCollage.UpdateAll();
+            Messenger.Default.Register<Brush>(this, (Action<Brush>)(async (parameter) => {
+                if(parameter is SolidColorBrush solidBrush)
+                    CurrentCollage.Project.BorderColor = solidBrush.Color.ToString();
+                if (parameter is ImageBrush imageBrush)
+                    CurrentCollage.Project.BorderColor = await ImageHelper.SaveToBytesAsync(imageBrush.ImageSource);
+                CurrentCollage.UpdateUIAsync();
             }));
 
             Messenger.Default.Register<NotificationMessageAction<Image>>(this, (messageAct) => {
                 var image = CurrentCollage.SelectedImage;
                 if (image?.Source != null)
                     messageAct.Execute(image);
+                CurrentCollage.UpdateProjectInfoAsync();
             });
         }
 

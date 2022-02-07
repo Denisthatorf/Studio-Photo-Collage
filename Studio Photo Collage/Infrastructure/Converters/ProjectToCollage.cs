@@ -42,7 +42,7 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
                     SetmageSourceAsync(img, proj, i);
                 }
 
-                backgroundGrid.Background = ColorGenerator.GetSolidColorBrush(proj.BorderColor);
+                backgroundGrid.Background = BrushGenerator.GetSolidColorBrush(proj.BorderColor);
 
                 collageGrid.Children.Add(backgroundGrid);
                 collageGrid.Children.Add(mainGrid);
