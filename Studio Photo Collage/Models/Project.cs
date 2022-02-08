@@ -11,6 +11,7 @@ namespace Studio_Photo_Collage.Models
     [JsonObject(MemberSerialization.Fields)]
     public class Project : INotifyPropertyChanged
     {
+        [NonSerialized]
         private static Random rnd = new Random();
 
         private int Uid;
@@ -26,7 +27,7 @@ namespace Studio_Photo_Collage.Models
 
         public string ProjectName { get; set; }
 
-        public string SaveFormat { get; set; }
+        public string SaveFormat { get;  set; }
 
         public int CountOfPhotos
         {
@@ -124,8 +125,7 @@ namespace Studio_Photo_Collage.Models
              return hashCode;*/
             return Uid;
         }
-
-
+        [field: NonSerializedAttribute()]
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void NotifyPropertyChanged(string propertyName)

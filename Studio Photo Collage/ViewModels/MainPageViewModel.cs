@@ -9,6 +9,7 @@ using Studio_Photo_Collage.Infrastructure.Helpers;
 using Studio_Photo_Collage.Models;
 using Studio_Photo_Collage.Views.PopUps;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -116,7 +117,6 @@ namespace Studio_Photo_Collage.ViewModels
             {
                 CurrentCollage.Project.ProjectName = dialog.ProjectName;
                 SaveProject();
-                CurrentCollage = null;
                 NavigationService.NavigateTo("TemplatesPage");
             }
             else if (result == ContentDialogResult.Secondary)
@@ -160,9 +160,11 @@ namespace Studio_Photo_Collage.ViewModels
         private async Task SaveProject()
         {
             var str = await JsonHelper.DeserializeFileAsync("projects.json");
-            var projects = await JsonHelper.ToObjectAsync<ObservableCollection<Project>>(str);
+            var projects = new List<Project>();
+            if (!String.IsNullOrEmpty(str))
+                projects = await JsonHelper.ToObjectAsync<List<Project>>(str);
             if (projects == null)
-                projects = new ObservableCollection<Project>();
+                projects = new List<Project>();
 
             int index = projects.IndexOf(CurrentCollage.Project);
             if (index == -1)

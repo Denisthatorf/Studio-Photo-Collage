@@ -39,7 +39,6 @@ namespace Studio_Photo_Collage.ViewModels
 
         public StartPageViewModel(INavigationService navigationService)
         {
-
             _navigationService = navigationService;
 
             SettingsCommand = new RelayCommand(async () =>

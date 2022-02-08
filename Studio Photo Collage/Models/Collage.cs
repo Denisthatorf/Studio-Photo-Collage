@@ -181,7 +181,7 @@ namespace Studio_Photo_Collage.Models
 
         private async void SetImageSourceAsync(Image img, int numberInList)
         {
-            if (!String.IsNullOrEmpty(Project.ImageArr[numberInList]))
+            if (!String.IsNullOrEmpty(Project.ImageArr?[numberInList]))
                 img.Source = await ImageHelper.FromBase64(Project.ImageArr[numberInList]);
         }
 
