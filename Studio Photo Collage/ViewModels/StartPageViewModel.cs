@@ -61,7 +61,8 @@ namespace Studio_Photo_Collage.ViewModels
             });
             TemplateClickCommand = new RelayCommand<Project>((parameter) =>
                 {
-                    m(parameter);
+                    _navigationService.NavigateTo("MainPage");
+                    Messenger.Default.Send(parameter);
                 });
 
             DesserializeProjects();
@@ -74,11 +75,6 @@ namespace Studio_Photo_Collage.ViewModels
                     IsGreetingTextVisible = Visibility.Collapsed;
                 }
             };
-        }
-        void m(Project parameter)
-        {
-            _navigationService.NavigateTo("MainPage");
-            Messenger.Default.Send(parameter);
         }
         private async void DesserializeProjects()
         {

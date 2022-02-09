@@ -110,6 +110,7 @@ namespace Studio_Photo_Collage.Models
             for (int i = 0; i < maingird.Children.Count; i++)
             {
                 var borderGridInGrid = maingird.Children[i] as Grid;
+
                 borderGridInGrid.BorderThickness = new Thickness(Project.BorderThickness);
                 borderGridInGrid.Background = new SolidColorBrush(Colors.Transparent);
 

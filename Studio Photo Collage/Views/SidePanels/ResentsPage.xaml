@@ -36,13 +36,14 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Command="{Binding ElementName=Templates, 
+                        <Button    Command="{Binding ElementName=Templates, 
                                     Path=DataContext.ProjectCommand}"
-                                CommandParameter="{Binding}"
-                                    Content="{Binding Converter={StaticResource ProjToCollageConv}}" 
+                                    CommandParameter="{Binding}"
+                                
+                                    Content="{Binding Converter={StaticResource ProjToCollageConv}, ConverterParameter=99}" 
                                     Background="Transparent" Padding="0"
                                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                                    Width="50" Height="50" Margin="0,0,0,8"/>
+                                    Width="99" Height="99" Margin="0,0,0,8"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

@@ -1,4 +1,8 @@
-﻿using Studio_Photo_Collage.Models;
+﻿using CommonServiceLocator;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
+using GalaSoft.MvvmLight.Views;
+using Studio_Photo_Collage.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -46,23 +50,17 @@ namespace Studio_Photo_Collage.UserControles
             DependencyProperty.Register("MyCommand", typeof(ICommand), typeof(BtnWithBluring), new PropertyMetadata(null));
 
 
-
-        public object MyCommandParameter
-        {
-            get { return (object)GetValue(MyCommandParametrProperty); }
-            set { SetValue(MyCommandParametrProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for MyCommandParametr.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty MyCommandParametrProperty =
-            DependencyProperty.Register("MyCommandParametr", typeof(object), typeof(BtnWithBluring), new PropertyMetadata(0));
-
-
+        public ICommand TemplateClickCommand { get; private set; }
 
         public BtnWithBluring()
         {
             this.InitializeComponent();
-            this.DataContextChanged += (o, e) => {  };
+            TemplateClickCommand = new RelayCommand<Project>((parameter) =>
+            {
+                var navigation = ServiceLocator.Current.GetInstance<INavigationService>();
+                navigation.NavigateTo("MainPage");
+                Messenger.Default.Send(parameter);
+            });
         }
     }
 }

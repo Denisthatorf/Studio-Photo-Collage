@@ -59,7 +59,8 @@
                 <Grid>
                     <Rectangle x:Name="ClassicTempaleBorder"
                         StrokeThickness="1" Stroke="Black" 
-                               StrokeDashArray="6 6"/>
+                               StrokeDashArray="6 6"
+                               Fill="Transparent"/>
                     <StackPanel Margin="26">
                         <Grid Width="200" Height="254">
                             <Grid.Resources>
@@ -105,7 +106,7 @@
                     </Button>
                 </StackPanel>
 
-                <ItemsControl x:Name="Template1" ItemsSource="{Binding RecentProjects}" >
+                <ItemsControl x:Name="T1" ItemsSource="{Binding RecentProjects}" >
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal"/>
@@ -115,9 +116,9 @@
                         <DataTemplate>
                             <usercontrole:BtnWithBluring 
                                    Project="{Binding Item1}" 
-                                   Margin="0,0,8,0"/>
-                            <!--MyCommand="{Binding ElementName=Template1, 
-                                Path=DataContext.TemplateClickCommand}"-->
+                                   Margin="0,0,8,0"
+                                MyCommand="{Binding ElementName=T1, 
+                                Path=DataContext.TemplateClickCommand, Mode=OneWay}"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

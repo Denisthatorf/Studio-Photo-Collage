@@ -23,6 +23,9 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
         {
             if (value as Project != null)
             {
+                if(parameter == null)
+                    throw new ArgumentNullException(nameof(parameter));
+
                 var proj = value as Project;
                 var arr = proj.PhotoArray;
                 var collageGrid = new Grid();
@@ -35,13 +38,14 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
 
                     var img = new Image();
                     img.Stretch = Windows.UI.Xaml.Media.Stretch.Fill;
-                    gridInGrid.Children.Add(img);
-                    gridInGrid.BorderThickness = new Windows.UI.Xaml.Thickness(proj.BorderThickness);
-
                     SetImageSourceAsync(img, proj, i);
+
+                    gridInGrid.Children.Add(img);
+                    gridInGrid.BorderThickness = new Windows.UI.Xaml.Thickness(proj.BorderThickness * (int.Parse(parameter as string) / 480.0));
                 }
 
-               // backgroundGrid.Background = BrushGenerator.GetSolidColorBrush(proj.BorderColor);
+                backgroundGrid.Background = BrushGenerator.GetSolidColorBrush(proj.BorderColor);
+                backgroundGrid.Opacity = proj.BorderOpacity;
 
                 collageGrid.Children.Add(backgroundGrid);
                 collageGrid.Children.Add(mainGrid);
@@ -61,6 +65,7 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
             if (!string.IsNullOrEmpty(str))
             {
                 var source = await ImageHelper.FromBase64(str);
+                img.Source = source;
             }
         }
     }
