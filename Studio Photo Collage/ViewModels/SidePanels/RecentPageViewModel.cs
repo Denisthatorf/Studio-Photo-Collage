@@ -28,7 +28,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
             get
             {
                 if (_projectCommand == null)
-                    _projectCommand = new RelayCommand<Project>((parametr) => { });
+                    _projectCommand = new RelayCommand<Project>((parametr) => { MessengerInstance.Send(parametr); });
                 return _projectCommand;
             }
         }

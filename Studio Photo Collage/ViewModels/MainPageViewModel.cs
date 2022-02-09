@@ -237,27 +237,29 @@ namespace Studio_Photo_Collage.ViewModels
 
         private async void TakePthoto()
         {
-            CameraCaptureUI captureUI = new CameraCaptureUI();
-            captureUI.PhotoSettings.Format = CameraCaptureUIPhotoFormat.Jpeg;
-            captureUI.PhotoSettings.CroppedSizeInPixels = new Size(200, 200);
-            // Open the Camera to capture the Image
-            StorageFile photo = await captureUI.CaptureFileAsync(CameraCaptureUIMode.Photo);
-            // If the capture gets cancelled by user, do nothing
-            if (photo == null)
+         if(CurrentCollage.SelectedImage != null)
             {
-                // User cancelled photo capture
-                return;
-            }
-            // Else, display the captured Image in the Placeholder
-            else
-            {
-                BitmapImage bitmapImage = new BitmapImage();
-                using (IRandomAccessStream photoStream = await photo.OpenAsync(FileAccessMode.Read))
+                CameraCaptureUI captureUI = new CameraCaptureUI();
+                captureUI.PhotoSettings.Format = CameraCaptureUIPhotoFormat.Jpeg;
+                captureUI.PhotoSettings.CroppedSizeInPixels = new Size(200, 200);
+                // Open the Camera to capture the Image
+                StorageFile photo = await captureUI.CaptureFileAsync(CameraCaptureUIMode.Photo);
+                // If the capture gets cancelled by user, do nothing
+                if (photo == null)
                 {
-                    bitmapImage.SetSource(photoStream);
+                    // User cancelled photo capture
+                    return;
                 }
-                //CapturedImage.Source = bitmapImage;
-                CurrentCollage.SelectedImage.Source = bitmapImage;
+                // Else, display the captured Image in the Placeholder
+                else
+                {
+                    BitmapImage bitmapImage = new BitmapImage();
+                    using (IRandomAccessStream photoStream = await photo.OpenAsync(FileAccessMode.Read))
+                    {
+                        bitmapImage.SetSource(photoStream);
+                    }
+                    CurrentCollage.SelectedImage.Source = bitmapImage;
+                }
             }
             CheckBoxesEnum = null;
 
