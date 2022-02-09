@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using Microsoft.Toolkit.Uwp;
+using Studio_Photo_Collage.Infrastructure;
 using Studio_Photo_Collage.Infrastructure.Helpers;
 using Studio_Photo_Collage.Views.PopUps;
 using System;
@@ -24,9 +25,9 @@ namespace Studio_Photo_Collage.ViewModels.PopUps
 {
     public class SettingsDialogViewModel : ViewModelBase
     {
-        private CultureInfo _languageComBox_SelectedItm;
         private readonly INavigationService _navigationService;
 
+        private CultureInfo _languageComBox_SelectedItm;
         public CultureInfo LanguageComBox_SelectedItm
         {
             get { return _languageComBox_SelectedItm; }
@@ -35,8 +36,8 @@ namespace Studio_Photo_Collage.ViewModels.PopUps
                 Set(ref _languageComBox_SelectedItm, value);
                 Thread.CurrentThread.CurrentCulture = value;
                 ApplicationLanguages.PrimaryLanguageOverride = value?.ToString();
-                ResourceContext.GetForCurrentView().Reset();
-                ResourceContext.GetForViewIndependentUse().Reset();
+                //ResourceContext.GetForCurrentView().Reset();
+                //ResourceContext.GetForViewIndependentUse().Reset();
                 ViewModelLocator.ReloadCurrentPage();
             }
         }
@@ -77,7 +78,9 @@ namespace Studio_Photo_Collage.ViewModels.PopUps
         public List<Brush> Colors {get; }
 
         private ElementTheme _themeOfSettings;
-        public ElementTheme ThemeOfSettings { get => _themeOfSettings; set => Set(ref _themeOfSettings, value); }
+        public ElementTheme ThemeOfSettings { 
+            get => _themeOfSettings;
+            set => Set(ref _themeOfSettings, value); }
 
 
 
@@ -85,10 +88,10 @@ namespace Studio_Photo_Collage.ViewModels.PopUps
         {
             _navigationService = navigationService;
 
-            var frame = Window.Current.Content as Frame; 
+            var frame = Window.Current.Content as Frame;
 
-            LanguageComBox_SelectedItm = CultureInfo.CurrentCulture;
-            ThemeComBox_SelectedItem = frame.RequestedTheme;
+            _languageComBox_SelectedItm = GetStartLanguage();
+            _themeComBox_SelectedItem = frame.RequestedTheme;
             VersionDescription = GetVersionDescription();
 
             Colors = new List<Brush>()
@@ -123,7 +126,13 @@ namespace Studio_Photo_Collage.ViewModels.PopUps
             ThemeOfSettings = newtheme;
         }
 
-
+        private CultureInfo GetStartLanguage()
+        { 
+            var selectedLanguage = ApplicationLanguages.PrimaryLanguageOverride;
+            var conv = new CultureInfoToFullStringNameConverter();
+            var culture = (CultureInfo)conv.ConvertBack(selectedLanguage, null, null, null);
+            return culture;
+        }
        /*  public async Task InitializeAsync()
          {
                   VersionDescription = GetVersionDescription();

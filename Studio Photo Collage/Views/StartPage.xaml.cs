@@ -36,6 +36,5 @@ namespace Studio_Photo_Collage.Views
         {
             this.InitializeComponent();
         }
-       
     }
 }

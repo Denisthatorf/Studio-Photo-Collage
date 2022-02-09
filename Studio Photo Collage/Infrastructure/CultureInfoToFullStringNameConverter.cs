@@ -12,7 +12,7 @@ namespace Studio_Photo_Collage.Infrastructure
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var culture = parameter as CultureInfo;
+            var culture = value as CultureInfo;
             if (culture != null)
             {
                 var strCulture = culture.ToString();
@@ -22,6 +22,8 @@ namespace Studio_Photo_Collage.Infrastructure
                     case "en-US":
                         return "English";
                     case "ru-RU":
+                        return "Russian";
+                    case "ru":
                         return "Russian";
                     default:
                         return "English";
@@ -41,7 +43,15 @@ namespace Studio_Photo_Collage.Infrastructure
                         return new CultureInfo("en-US");
                     case "Russian":
                         return new CultureInfo("ru-RU");
-                    default:
+
+                    case "en-US":
+                          return new CultureInfo("en-US");
+                    case "ru-RU":
+                        return new CultureInfo("ru-RU");
+                     case "ru":
+                    return new CultureInfo("ru-RU");
+
+                     default:
                         return new CultureInfo("en-US");
                 }
         }

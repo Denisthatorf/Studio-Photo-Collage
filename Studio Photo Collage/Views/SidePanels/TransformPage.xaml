@@ -8,11 +8,13 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" >
+    mc:Ignorable="d">
 
     <StackPanel  Style="{ThemeResource SidePanelPopUp}"
+                 Padding="0"
                 Background="{ThemeResource MainBackgroundColor}">
-        <TextBlock Text="Transform" 
+        <TextBlock Text="Transform" x:Uid="Transform"
+                   Margin="20"
                    Style="{StaticResource Header}"/>
 
         <ListView x:Name="ListView"
@@ -35,30 +37,30 @@
                         </TransformGroup>
                     </FontIcon.RenderTransform>
                 </FontIcon>
-                <TextBlock Text="Rotate Left"/>
+                <TextBlock Text="Rotate left" x:Uid="RotateLeft"/>
             </StackPanel>
             
             <StackPanel Orientation="Horizontal" x:Name="RotateRight">
                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;"/>
-                <TextBlock Text="Rotate Right"/>
+                <TextBlock Text="Rotate right" x:Uid="RotateRight"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" x:Name="HorizontalFlip">
                 <muxc:ImageIcon Source="/Assets/HorizontalFlip.png"
                                 Width="{Binding ElementName=RotateLeftIcon, Path=ActualWidth}"/>
-                <TextBlock Text="Horizontal flip"/>
+                <TextBlock Text="Horizontal flip" x:Uid="HorizontalFlip"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" x:Name="VerticalFlip">
                     <muxc:ImageIcon Source="/Assets/VerticalFlip.png"
                                 Width="{Binding ElementName=RotateLeftIcon, Path=ActualWidth}"/>
-                    <TextBlock Text="Vertical flip"/>
+                    <TextBlock Text="Vertical flip" x:Uid="VerticalFlip"/>
                 </StackPanel>
              <StackPanel Orientation="Horizontal" x:Name="ZoomIn">
                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71E;"/>
-                <TextBlock Text="Zoom in"/>
+                <TextBlock Text="Zoom in" x:Uid="ZoomIn"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" x:Name="ZoomOut">
                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71F;"/>
-                <TextBlock Text="Zoom out"/>
+                <TextBlock Text="Zoom out" x:Uid="ZoomOut"/>
             </StackPanel>
         </ListView>
     </StackPanel>

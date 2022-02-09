@@ -44,10 +44,11 @@ namespace Studio_Photo_Collage.ViewModels
             {
                 var dialog = new SaveDialog("collage");
                 var result = await dialog.ShowAsync();
+
                 if (result == ContentDialogResult.Primary) //yes
-                {
                     Messenger.Default.Send(parameter);
-                }
+                else if(result == ContentDialogResult.Secondary)//no
+                    Messenger.Default.Send(parameter);
             }
             else
             {

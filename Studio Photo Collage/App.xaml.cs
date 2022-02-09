@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Globalization;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -32,7 +33,6 @@ namespace Studio_Photo_Collage
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
-            CultureInfo.CurrentCulture = new CultureInfo("en-US");
         }
 
         /// <summary>

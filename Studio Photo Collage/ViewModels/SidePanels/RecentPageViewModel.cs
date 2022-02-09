@@ -13,6 +13,7 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.UI.Xaml.Controls;
 
 namespace Studio_Photo_Collage.ViewModels.SidePanels
 {
@@ -28,7 +29,17 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
             get
             {
                 if (_projectCommand == null)
-                    _projectCommand = new RelayCommand<Project>((parametr) => { MessengerInstance.Send(parametr); });
+                    _projectCommand = new RelayCommand<Project>(async(parametr) => 
+                    {
+                        var dialog = new SaveDialog("collage");
+                        var result = await dialog.ShowAsync();
+
+                        if (result == ContentDialogResult.Primary) //yes
+                            MessengerInstance.Send(parametr);
+                        else if (result == ContentDialogResult.Secondary)//no
+
+                            MessengerInstance.Send(parametr);
+                    });
                 return _projectCommand;
             }
         }

@@ -19,10 +19,76 @@
         <converters:EnumValueConverter x:Key="EnumValueConverter"/>
         <converters:ProjectToCollage x:Key="ToCollageConverter"/>
         <infrastruct:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <Style TargetType="AppBarToggleButton">
+        <Style TargetType="AppBarToggleButton" >
             <Setter Property="Width" Value="48"/>
             <Setter Property="Height" Value="48"/>
+
+            <!--<Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="AppBarToggleButton">
+                        <Grid x:Name="Root" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" MaxWidth="{TemplateBinding MaxWidth}" MinWidth="{TemplateBinding MinWidth}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Checked">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <SolidColorBrush Color="Red"/>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ToggleButtonForegroundChecked}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Red"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="Root">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarButtonBackgroundDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="Root">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarButtonBorderBrushDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="Content">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarButtonForegroundDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="TextLabel">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarButtonForegroundDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="OverflowTextLabel">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarButtonForegroundDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+
+                            <Grid x:Name="ContentRoot" MinHeight="{ThemeResource AppBarThemeMinHeight}" 
+                                  VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter x:Name="Content" 
+                                                  Content="{TemplateBinding Icon}" 
+                                                  AutomationProperties.AccessibilityView="Raw"
+                                                  Foreground="{TemplateBinding Foreground}" 
+                                                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                  Margin="22"/>
+                                 <TextBlock x:Name="TextLabel" Foreground="{TemplateBinding Foreground}" FontSize="12" FontFamily="{TemplateBinding FontFamily}" Margin="5,0" Grid.Row="0" Grid.Column="1" TextAlignment="Center" TextWrapping="Wrap" Text="{TemplateBinding Label}" VerticalAlignment="Center"/>
+                            </Grid>
+                              <TextBlock x:Name="OverflowTextLabel" Foreground="{TemplateBinding Foreground}" FontSize="15" FontFamily="{TemplateBinding FontFamily}" HorizontalAlignment="Stretch" Margin="12,0,12,0" Padding="0,5,0,7" TextAlignment="Left" TextWrapping="NoWrap" Text="{TemplateBinding Label}" TextTrimming="Clip" Visibility="Collapsed" VerticalAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>-->
         </Style>
+        
         <Style TargetType="AppBarButton">
             <Setter Property="Width" Value="48"/>
             <Setter Property="Height" Value="48"/>
@@ -133,7 +199,8 @@
                         <AppBarToggleButton x:Name="Filters" 
                                              IsChecked="{Binding CheckBoxesEnum, 
                                             Converter={StaticResource EnumValueConverter},
-                                            ConverterParameter=Filters , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                            ConverterParameter=Filters , Mode=TwoWay,
+                                            UpdateSourceTrigger=PropertyChanged}">
                             <AppBarToggleButton.Icon>
                                 <muxc:ImageIcon Source="/Assets/Icons/Wand-256.png"/>
                             </AppBarToggleButton.Icon>
@@ -206,8 +273,8 @@
                 </Grid.ColumnDefinitions>
 
                 <Popup  Grid.Column="1" IsOpen="True" Width="245" Grid.RowSpan="2">
-                    <Frame x:Name="SidePanel" Height="{Binding ElementName=Page, Path=ActualHeight}"
-                    Content="{Binding SidePanelFrame}"/>
+                    <Frame x:Name="SidePanel"
+                           Height="{Binding ElementName=Page, Path=ActualHeight}"/>
                 </Popup>
 
                 <!--<Popup IsOpen="{Binding ElementName=Settings, Path=IsChecked}" 
@@ -222,7 +289,7 @@
                    Width="380" Height="64"
                    VerticalAlignment="Bottom" HorizontalAlignment="Center" 
                        Grid.Row="1"  Grid.ColumnSpan="2">
-                    <Frame Content="{Binding PaintFrame}"/>
+                    <ContentPresenter Content="{Binding PaintFrame}"/>
                 </Popup>
             </Grid>
         </Grid>

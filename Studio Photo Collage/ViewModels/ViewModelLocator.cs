@@ -120,7 +120,8 @@ namespace Studio_Photo_Collage.ViewModels
             var strContent = rootFrame.Content.ToString();
             var arr = strContent.Split('.');
 
-            navigation.NavigateTo(arr[arr.Length - 1], "reload");
+            //rootFrame.Navigate(rootFrame.CurrentSourcePageType, "reload");
+            navigation.NavigateTo(GetStringCurrentPage(), "reload");
         }
         public static string GetStringCurrentPage()
         {

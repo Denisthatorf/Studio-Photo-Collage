@@ -5,6 +5,7 @@ using GalaSoft.MvvmLight.Views;
 using Studio_Photo_Collage.Infrastructure.Converters;
 using Studio_Photo_Collage.Infrastructure.Helpers;
 using Studio_Photo_Collage.Models;
+using Studio_Photo_Collage.Views;
 using Studio_Photo_Collage.Views.PopUps;
 using System;
 using System.Collections.Generic;
@@ -92,18 +93,25 @@ namespace Studio_Photo_Collage.ViewModels
             set => Set(ref _currentCollage, value); }
 
         public Frame PaintFrame { get; }
+        public Frame SidePanelFrame
+        {
+            get
+            {
+                var rootFrame = (Window.Current.Content as Frame).Content as MainPage;
+                return rootFrame.SidePanelFrame;
+            }
+        }
 
-        private Frame _sidePanelFrame;
+/*      private Frame _sidePanelFrame;
         public Frame SidePanelFrame { 
             get => _sidePanelFrame;
-            set => Set(ref _sidePanelFrame, value); }
+            set => Set(ref _sidePanelFrame, value); }*/
 
 
         public MainPageViewModel(INavigationService _navigationService)
         {
             _checkBoxesEnum = null;
 
-            SidePanelFrame = new Frame();
             PaintFrame = new Frame();
             PaintFrame.Navigate(typeof(PaintPopUpPage));
 
@@ -268,8 +276,6 @@ namespace Studio_Photo_Collage.ViewModels
                     CurrentCollage.SelectedImage.Source = bitmapImage;
                 }
             }
-            CheckBoxesEnum = null;
-
         }
     }
 }

@@ -142,6 +142,7 @@
     <Compile Include="Infrastructure\FromThemeToStringConverter.cs" />
     <Compile Include="Infrastructure\Helpers\BtnNameEnum.cs" />
     <Compile Include="Infrastructure\Helpers\BrushGenerator.cs" />
+    <Compile Include="Infrastructure\Helpers\AppSettings.cs" />
     <Compile Include="Infrastructure\Helpers\GroupTemplateSelector.cs" />
     <Compile Include="Infrastructure\Helpers\ImageHelper.cs" />
     <Compile Include="Infrastructure\Helpers\JsonHelper.cs" />

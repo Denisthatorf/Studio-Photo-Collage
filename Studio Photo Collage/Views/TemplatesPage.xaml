@@ -114,10 +114,10 @@
         <GridView.ItemTemplate >
             <DataTemplate x:DataType="models:Project" >
                 <Button Command="{Binding ElementName=Template3, 
-                                    Path=DataContext.TemplateClickCommand}"
-                                    CommandParameter="{Binding}"
-                                    Content="{Binding PhotoArray,
-                    Converter={StaticResource FromArrToGridConverter}}"/>
+                        Path=DataContext.TemplateClickCommand}"
+                        CommandParameter="{Binding}"
+                        Content="{Binding PhotoArray,
+                        Converter={StaticResource FromArrToGridConverter}}"/>
             </DataTemplate>
         </GridView.ItemTemplate>
     </GridView>

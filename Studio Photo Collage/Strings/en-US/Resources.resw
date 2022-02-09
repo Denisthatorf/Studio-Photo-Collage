@@ -120,7 +120,43 @@
   <data name="BackgroudHeader.Text" xml:space="preserve">
     <value>Backgroud</value>
   </data>
+  <data name="ClassicTemplate.Text" xml:space="preserve">
+    <value>Classic Template</value>
+  </data>
+  <data name="CountOfPicturesRun.Text" xml:space="preserve">
+    <value>Pictures:</value>
+  </data>
+  <data name="Greeting.Text" xml:space="preserve">
+    <value>Welcome to Studio Photo Collages</value>
+  </data>
+  <data name="HorizontalFlip.Text" xml:space="preserve">
+    <value>Horizontal flip</value>
+  </data>
   <data name="LanguageCBox.Header" xml:space="preserve">
     <value>Language</value>
+  </data>
+  <data name="RecentCollages.Text" xml:space="preserve">
+    <value>Recent Collages</value>
+  </data>
+  <data name="RotateLeft.Text" xml:space="preserve">
+    <value>Rotate left</value>
+  </data>
+  <data name="RotateRight.Text" xml:space="preserve">
+    <value>Rotate right</value>
+  </data>
+  <data name="TitleBarHeaderInStartPage.Text" xml:space="preserve">
+    <value>Studio Collages</value>
+  </data>
+  <data name="Transform.Text" xml:space="preserve">
+    <value>Transform</value>
+  </data>
+  <data name="VerticalFlip.Text" xml:space="preserve">
+    <value>Vertical flip</value>
+  </data>
+  <data name="ZoomIn.Text" xml:space="preserve">
+    <value>Zoom in</value>
+  </data>
+  <data name="ZoomOut.Text" xml:space="preserve">
+    <value>Zoom out</value>
   </data>
 </root>
