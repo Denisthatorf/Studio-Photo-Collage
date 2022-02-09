@@ -96,9 +96,9 @@
               SelectionMode="None"
               IsItemClickEnabled="True">
         
-        <GridView.GroupStyle >
+        <GridView.GroupStyle>
             <GroupStyle>
-                <GroupStyle.HeaderTemplate >
+                <GroupStyle.HeaderTemplate>
                     <DataTemplate x:DataType="models:GroupedTemplates" >
                         <TextBlock>
                             <Run x:Uid="CountOfPicturesRun">

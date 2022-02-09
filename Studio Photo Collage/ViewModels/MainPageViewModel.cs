@@ -2,27 +2,21 @@
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Views;
-using Microsoft.Toolkit.Uwp.Notifications;
-using Newtonsoft.Json;
 using Studio_Photo_Collage.Infrastructure.Converters;
 using Studio_Photo_Collage.Infrastructure.Helpers;
 using Studio_Photo_Collage.Models;
 using Studio_Photo_Collage.Views.PopUps;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Windows.Graphics.Imaging;
+using Windows.Foundation;
+using Windows.Media.Capture;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using Windows.UI;
-using Windows.UI.Core;
-using Windows.UI.Notifications;
 using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -75,6 +69,8 @@ namespace Studio_Photo_Collage.ViewModels
                         ShowSettingDialog();
                     if (value == BtnNameEnum.Print)
                         PinCollageToSecondaryTile();
+                    if (value == BtnNameEnum.Photo)
+                        TakePthoto();
                 }
                 else
                     Set(ref _checkBoxesEnum, null);
@@ -236,6 +232,34 @@ namespace Studio_Photo_Collage.ViewModels
                 // And then update it
                 await tile.UpdateAsync();
             }
+
+        }
+
+        private async void TakePthoto()
+        {
+            CameraCaptureUI captureUI = new CameraCaptureUI();
+            captureUI.PhotoSettings.Format = CameraCaptureUIPhotoFormat.Jpeg;
+            captureUI.PhotoSettings.CroppedSizeInPixels = new Size(200, 200);
+            // Open the Camera to capture the Image
+            StorageFile photo = await captureUI.CaptureFileAsync(CameraCaptureUIMode.Photo);
+            // If the capture gets cancelled by user, do nothing
+            if (photo == null)
+            {
+                // User cancelled photo capture
+                return;
+            }
+            // Else, display the captured Image in the Placeholder
+            else
+            {
+                BitmapImage bitmapImage = new BitmapImage();
+                using (IRandomAccessStream photoStream = await photo.OpenAsync(FileAccessMode.Read))
+                {
+                    bitmapImage.SetSource(photoStream);
+                }
+                //CapturedImage.Source = bitmapImage;
+                CurrentCollage.SelectedImage.Source = bitmapImage;
+            }
+            CheckBoxesEnum = null;
 
         }
     }

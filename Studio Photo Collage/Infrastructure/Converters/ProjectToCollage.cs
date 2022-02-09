@@ -32,17 +32,16 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
                 for (int i = 0; i < mainGrid.Children.Count; i++)
                 {
                     var gridInGrid = mainGrid.Children[i] as Grid;
-                    gridInGrid.Background = new SolidColorBrush(Colors.Gray);
 
                     var img = new Image();
                     img.Stretch = Windows.UI.Xaml.Media.Stretch.Fill;
                     gridInGrid.Children.Add(img);
                     gridInGrid.BorderThickness = new Windows.UI.Xaml.Thickness(proj.BorderThickness);
 
-                    SetmageSourceAsync(img, proj, i);
+                    SetImageSourceAsync(img, proj, i);
                 }
 
-                backgroundGrid.Background = BrushGenerator.GetSolidColorBrush(proj.BorderColor);
+               // backgroundGrid.Background = BrushGenerator.GetSolidColorBrush(proj.BorderColor);
 
                 collageGrid.Children.Add(backgroundGrid);
                 collageGrid.Children.Add(mainGrid);
@@ -56,7 +55,7 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
             throw new NotImplementedException();
         }
 
-        private async void SetmageSourceAsync(Image img, Project project, int numberInArr)
+        private async void SetImageSourceAsync(Image img, Project project, int numberInArr)
         {
             string str = project.ImageArr[numberInArr];
             if (!string.IsNullOrEmpty(str))

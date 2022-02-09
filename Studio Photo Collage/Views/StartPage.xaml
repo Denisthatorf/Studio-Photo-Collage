@@ -114,8 +114,10 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <usercontrole:BtnWithBluring 
-                                MyCommand="{Binding ElementName=Template1, Path=DataContext.TemplateClickCommand }"
-                                Project="{Binding}" Margin="0,0,8,0"/>
+                                   Project="{Binding Item1}" 
+                                   Margin="0,0,8,0"/>
+                            <!--MyCommand="{Binding ElementName=Template1, 
+                                Path=DataContext.TemplateClickCommand}"-->
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

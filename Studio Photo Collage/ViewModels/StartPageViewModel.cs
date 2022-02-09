@@ -8,6 +8,7 @@ using Studio_Photo_Collage.Views.PopUps;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.UI;
@@ -34,8 +35,8 @@ namespace Studio_Photo_Collage.ViewModels
         private Visibility _isGreetingTextVisible;
         public Visibility IsGreetingTextVisible { get => _isGreetingTextVisible; set => Set(ref _isGreetingTextVisible, value); }
 
-        private ObservableCollection<Project> _recentProjects;
-        public ObservableCollection<Project> RecentProjects { get => _recentProjects; set => Set(ref _recentProjects, value); }
+        private ObservableCollection<Tuple<Project>> _recentProjects;
+        public ObservableCollection<Tuple<Project>> RecentProjects { get => _recentProjects; set => Set(ref _recentProjects, value); }
 
         public StartPageViewModel(INavigationService navigationService)
         {
@@ -50,7 +51,6 @@ namespace Studio_Photo_Collage.ViewModels
             RecentCollCloseCommand = new RelayCommand(async () =>
             {
                 var dialog = new ConfirmDialog();
-                //dialog.RequestedTheme = (Window.Current.Content as FrameworkElement).RequestedTheme;
                 var result = await dialog.ShowAsync();
                 if (result.ToString() == "Primary") //yes
                 {
@@ -64,7 +64,7 @@ namespace Studio_Photo_Collage.ViewModels
                     m(parameter);
                 });
 
-            _ = DesserializeProjects();
+            DesserializeProjects();
             Windows.UI.Xaml.Window.Current.CoreWindow.KeyDown += (sender, arg) =>
             {
                 if (arg.VirtualKey == Windows.System.VirtualKey.Space ||
@@ -80,13 +80,19 @@ namespace Studio_Photo_Collage.ViewModels
             _navigationService.NavigateTo("MainPage");
             Messenger.Default.Send(parameter);
         }
-        private async Task DesserializeProjects()
+        private async void DesserializeProjects()
         {
+            RecentProjects = new ObservableCollection<Tuple<Project>>();
             var jsonStr = await JsonHelper.DeserializeFileAsync("projects.json");
-            if (String.IsNullOrEmpty(jsonStr))
-                RecentProjects = await JsonHelper.ToObjectAsync<ObservableCollection<Project>>(jsonStr);
-            else
-                RecentProjects = new ObservableCollection<Project>();
+
+            ObservableCollection<Project> projects = new ObservableCollection<Project>();
+            if (!String.IsNullOrEmpty(jsonStr))
+                projects = await JsonHelper.ToObjectAsync<ObservableCollection<Project>>(jsonStr);
+
+                foreach (var proj in projects)
+                {
+                   RecentProjects.Add(new Tuple<Project>(proj));
+                }
         }
     }
 }

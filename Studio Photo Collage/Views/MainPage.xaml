@@ -95,6 +95,7 @@
                                   Content="{Binding CurrentCollage.CollageGrid}"
                                   Grid.Column="1" Grid.Row="1"
                                   Width="400" Height="400"/>
+            
             <InkCanvas x:Name="InkCanv"
                        Visibility="{Binding ElementName=Paint, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Grid.Column="1" Grid.Row="1"

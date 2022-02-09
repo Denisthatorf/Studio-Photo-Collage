@@ -19,7 +19,6 @@
                 CommandParameter="{x:Bind Project}"
                 Background="Transparent"
             Width="120" Height="120" Padding="0"
-            Content="{x:Bind Project, Converter={StaticResource ProjToCollage}}"
             HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <Interactivity:Interaction.Behaviors>
                 <Core:EventTriggerBehavior EventName="PointerEntered">
@@ -27,6 +26,10 @@
                                                PropertyName="Visibility" Value="Visible" />
                 </Core:EventTriggerBehavior>
             </Interactivity:Interaction.Behaviors>
+            <ContentPresenter 
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Stretch"
+            Content="{x:Bind Project, Converter={StaticResource ProjToCollage}}"/>
         </Button>
 
 

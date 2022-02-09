@@ -133,9 +133,6 @@ namespace Studio_Photo_Collage.Models
 
             var img = new Image();
             img.Stretch = Windows.UI.Xaml.Media.Stretch.Fill;
-
-            // if (Project.ImageArr[numberInList] != null)
-             //  img.Source = await ImageHelper.FromBase64(Project.ImageArr[numberInList]);
             SetImageSourceAsync(img, numberInList);
 
             ToggleBtn.Content = img;
