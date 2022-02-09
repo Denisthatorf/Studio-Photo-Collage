@@ -11,7 +11,9 @@
         <StaticResource x:Key="ContentDialogLightDismissOverlayBackground" ResourceKey="SystemControlPageBackgroundMediumAltMediumBrush" />
 
         <SolidColorBrush x:Key="BlackAndWhite" Color="White"/>
+        <SolidColorBrush x:Key="WhiteInLightAndBlackInDark" Color="Black"/>
     <SolidColorBrush x:Key="NoBtnPopUpBtnBrush" Color="#535250"/>
+    
     
     <Style TargetType="StackPanel" BasedOn="{StaticResource SidePanelStackPanel}" x:Key="SidePanelPopUp">
         <Setter Property="Background" Value="{ThemeResource MainBackgroundColor}"/>

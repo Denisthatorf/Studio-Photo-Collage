@@ -18,15 +18,46 @@ namespace Studio_Photo_Collage.Models
         public static ObservableCollection<GroupedTemplates> FillByGroupedTemplate()
         {
             var collection = new ObservableCollection<GroupedTemplates>();
-            var newgroup = new GroupedTemplates();
 
-            newgroup.Projects.Add(new Project(new byte[,] { { 1, 1, 1, 1 }, { 3, 2, 4, 5} }));
-            newgroup.Projects.Add(new Project(new byte[,] { { 3 }, { 4 } }));
-            newgroup.CountOfPhotos = 1;
+            #region 1 Group
+            var group1 = new GroupedTemplates();
+            group1.CountOfPhotos = 1;
+            AddProjects(ref group1, new Project(new byte[,] { { 1 } }), 1);
+            collection.Add(group1);
+            #endregion
 
-            AddProjects(ref newgroup, newgroup.Projects[0], 4);
-            collection.Add(newgroup);
+            #region 2 Group
+            var group2 = new GroupedTemplates();
+            group2.CountOfPhotos = 2;
 
+            AddProjects(ref group2, new Project(new byte[,] { { 1 }, { 2 } }), 2);
+
+            AddProjects(ref group2, new Project(new byte[,] { { 1,2,2 }}), 4);
+            collection.Add(group2);
+            #endregion
+
+            #region 3 Group
+            var group3 = new GroupedTemplates();
+            group3.CountOfPhotos = 3;
+
+            AddProjects(ref group3, new Project(new byte[,] { { 1,2 },
+                                                              { 1,3 }}), 4);
+
+            AddProjects(ref group3, new Project(new byte[,] { { 1,2,3 } }), 2);
+
+            AddProjects(ref group3, new Project(new byte[,] { { 1,2,2,3 }}), 2);
+
+            AddProjects(ref group3, new Project(new byte[,] { { 1,1 },
+                                                              { 2,3 },
+                                                              { 2,3 } }), 4);
+
+            AddProjects(ref group3, new Project(new byte[,] { { 1,1 },
+                                                              { 1,1 },
+                                                              { 2,3 } }), 4);
+            collection.Add(group3);
+            #endregion
+
+            //newgroup.Projects.Add(new Project(new byte[,] { { 1, 1, 1, 1 }, { 3, 2, 4, 5} }));
             return collection;
         }
 

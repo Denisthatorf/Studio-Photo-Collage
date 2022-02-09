@@ -50,10 +50,6 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
                 grid.ColumnDefinitions.Add(new ColumnDefinition());
             }
 
-
-            // grid.RenderTransformOrigin = new Windows.Foundation.Point(0.5, 0.5);
-            //  grid.RenderTransform = new Windows.UI.Xaml.Media.RotateTransform() { Angle = 90 * j };
-
             return grid;
         }
 
@@ -70,30 +66,32 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
 
             T element = new T();
 
-            for (int i = columnPosition + 1; i < countofColumn; i++) //all column after
+            //all column after 
+            for (int i = columnPosition + 1; i < countofColumn; i++) 
             {
                 if (number == arr[rowPosition, i])
-                {
-                    arr[rowPosition, i] = 0;
                     columnspan++;
-                }
                 else
                     break;
             }
 
-            for (int i = rowPosition + 1; i < countofRow; i++) //all row aftr
+            //all row after
+            for (int i = rowPosition + 1; i < countofRow; i++)
             {
                 if (number == arr[i, columnPosition])
-                {
-                    arr[i, columnPosition] = 0;
                     rowspan++;
-                }
                 else
                     break;
             }
 
-            // if (rowspan > 1 && columnspan > 1)
-            //throw new Exception();
+            //clean
+            for (int i = rowPosition; i < rowPosition + rowspan; i++)
+            {
+                for (int j = columnPosition; j < columnPosition + columnspan; j++)
+                {
+                    arr[i,j] = 0;
+                }
+            }
 
             arr[rowPosition, columnPosition] = 0;
 
@@ -102,7 +100,6 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
             element.SetValue(Grid.RowSpanProperty, rowspan);
             element.SetValue(Grid.ColumnSpanProperty, columnspan);
 
-           // rect.Fill = new SolidColorBrush(Colors.Aqua);
             return element;
         }
 
