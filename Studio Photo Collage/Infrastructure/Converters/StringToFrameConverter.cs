@@ -11,7 +11,7 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
 {
     public static class StringToFrameConverter
     {
-        public static Frame Convert(object value)
+        public static Type Convert(object value)
         {
             if (value != null)
             {
@@ -20,23 +20,17 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
                 switch (strEnum)
                 {
                     case "Filters":
-                        frame.Navigate(typeof(FiltersPage));
-                        return frame;
+                        return typeof(FiltersPage);
                     case "Templates":
-                        frame.Navigate(typeof(TemplatesSidePage));
-                        return frame;
+                       return typeof(TemplatesSidePage);
                     case "Background":
-                        frame.Navigate(typeof(BackgroundPage));
-                        return frame;
+                        return typeof(BackgroundPage);
                     case "Transform":
-                        frame.Navigate(typeof(TransformPage));
-                        return frame;
+                        return typeof(TransformPage);
                     case "Frames":
-                        frame.Navigate(typeof(FramesPage));
-                        return frame;
+                        return typeof(FramesPage);
                     case "Resents":
-                        frame.Navigate(typeof(ResentsPage));
-                        return frame;
+                        return typeof(ResentsPage);
                 }
             }
             return null;

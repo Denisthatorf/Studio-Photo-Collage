@@ -75,8 +75,14 @@ namespace Studio_Photo_Collage.ViewModels
                 else
                     Set(ref _checkBoxesEnum, null);
 
-                SidePanelFrame = StringToFrameConverter.Convert(_checkBoxesEnum);
-                if (_checkBoxesEnum == BtnNameEnum.Background) { } 
+                var type = StringToFrameConverter.Convert(_checkBoxesEnum);
+                if (type != null)
+                {
+                    SidePanelFrame.Visibility = Visibility.Visible;
+                    SidePanelFrame.Navigate(type);
+                }
+                else
+                    SidePanelFrame.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -97,6 +103,7 @@ namespace Studio_Photo_Collage.ViewModels
         {
             _checkBoxesEnum = null;
 
+            SidePanelFrame = new Frame();
             PaintFrame = new Frame();
             PaintFrame.Navigate(typeof(PaintPopUpPage));
 
