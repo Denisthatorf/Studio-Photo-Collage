@@ -45,7 +45,7 @@ namespace Studio_Photo_Collage.ViewModels
             get
             {
                 if (_saveProjectCommand == null)
-                    _saveProjectCommand = new RelayCommand<object>(async(parametr) => 
+                    _saveProjectCommand = new RelayCommand<object>(async (parametr) =>
                     {
                         var dialog = new SaveDialog("project");
                         var result = await dialog.ShowAsync();
@@ -88,9 +88,11 @@ namespace Studio_Photo_Collage.ViewModels
         }
 
         private Collage _currentCollage;
-        public Collage CurrentCollage {
+        public Collage CurrentCollage
+        {
             get => _currentCollage;
-            set => Set(ref _currentCollage, value); }
+            set => Set(ref _currentCollage, value);
+        }
 
         public Frame PaintFrame { get; }
         public Frame SidePanelFrame
@@ -101,12 +103,6 @@ namespace Studio_Photo_Collage.ViewModels
                 return rootFrame.SidePanelFrame;
             }
         }
-
-/*      private Frame _sidePanelFrame;
-        public Frame SidePanelFrame { 
-            get => _sidePanelFrame;
-            set => Set(ref _sidePanelFrame, value); }*/
-
 
         public MainPageViewModel(INavigationService _navigationService)
         {
@@ -142,25 +138,29 @@ namespace Studio_Photo_Collage.ViewModels
             Messenger.Default.Register<Project>(this, (parameter) =>
            CurrentCollage = new Collage(parameter));
 
-            Messenger.Default.Register<Thickness>(this, (Action<Thickness>)((parameter) => {
+            Messenger.Default.Register<Thickness>(this, (Action<Thickness>)((parameter) =>
+            {
                 CurrentCollage.Project.BorderThickness = parameter.Top; //everywhere is one parameter
                 CurrentCollage.UpdateUIAsync();
             }));
 
-            Messenger.Default.Register<double>(this, (Action<double>)((parameter) => {
+            Messenger.Default.Register<double>(this, (Action<double>)((parameter) =>
+            {
                 CurrentCollage.Project.BorderOpacity = parameter;
                 CurrentCollage.UpdateUIAsync();
             }));
 
-            Messenger.Default.Register<Brush>(this, (Action<Brush>)(async (parameter) => {
-                if(parameter is SolidColorBrush solidBrush)
+            Messenger.Default.Register<Brush>(this, (Action<Brush>)(async (parameter) =>
+            {
+                if (parameter is SolidColorBrush solidBrush)
                     CurrentCollage.Project.BorderColor = solidBrush.Color.ToString();
                 if (parameter is ImageBrush imageBrush)
-                    CurrentCollage.Project.BorderColor = await ImageHelper.SaveToBytesAsync(imageBrush.ImageSource);
+                    CurrentCollage.Project.BorderColor = await ImageHelper.SaveToStringBase64Async(imageBrush.ImageSource);
                 CurrentCollage.UpdateUIAsync();
             }));
 
-            Messenger.Default.Register<NotificationMessageAction<Image>>(this, (messageAct) => {
+            Messenger.Default.Register<NotificationMessageAction<Image>>(this, (messageAct) =>
+            {
                 var image = CurrentCollage.SelectedImage;
                 if (image?.Source != null)
                     messageAct.Execute(image);
@@ -206,10 +206,10 @@ namespace Studio_Photo_Collage.ViewModels
                 SaveProject();
 
                 var source = await ImageHelper.SaveCollageUIAsImage(CurrentCollage);
-                
+
                 var zipCode = CurrentCollage.Project.GetHashCode().ToString();
                 string tileId = zipCode;
-                string displayName = CurrentCollage.Project.ProjectName != null ? 
+                string displayName = CurrentCollage.Project.ProjectName != null ?
                                             CurrentCollage.Project.ProjectName : "Test";
                 string arguments = zipCode;
                 // Initialize the tile with required arguments
@@ -234,8 +234,8 @@ namespace Studio_Photo_Collage.ViewModels
             if (isPinned)
             {
                 var path = $"{CurrentCollage.Project.ProjectName}.{CurrentCollage.Project.SaveFormat}";
-                    var file =await ApplicationData.Current.LocalFolder.GetFileAsync(path);
-                    await file.DeleteAsync();
+                var file = await ApplicationData.Current.LocalFolder.GetFileAsync(path);
+                await file.DeleteAsync();
 
                 var source = await ImageHelper.SaveCollageUIAsImage(CurrentCollage);
 
@@ -252,7 +252,7 @@ namespace Studio_Photo_Collage.ViewModels
 
         private async void TakePthoto()
         {
-         if(CurrentCollage.SelectedImage != null)
+            if (CurrentCollage.SelectedImage != null)
             {
                 CameraCaptureUI captureUI = new CameraCaptureUI();
                 captureUI.PhotoSettings.Format = CameraCaptureUIPhotoFormat.Jpeg;

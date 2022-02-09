@@ -1,20 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 
 namespace Studio_Photo_Collage.Infrastructure.Converters
 {
     public class FromArrToGridConverter : IValueConverter
     {
-        public static Grid GetGridWith<T>(byte[,] _photoArray) where T: UIElement, new()
+        public static Grid GetGridWith<T>(byte[,] _photoArray) where T : UIElement, new()
         {
             if (_photoArray == null)
                 return null;
@@ -67,7 +61,7 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
             T element = new T();
 
             //all column after 
-            for (int i = columnPosition + 1; i < countofColumn; i++) 
+            for (int i = columnPosition + 1; i < countofColumn; i++)
             {
                 if (number == arr[rowPosition, i])
                     columnspan++;
@@ -89,7 +83,7 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
             {
                 for (int j = columnPosition; j < columnPosition + columnspan; j++)
                 {
-                    arr[i,j] = 0;
+                    arr[i, j] = 0;
                 }
             }
 
@@ -103,7 +97,7 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
             return element;
         }
 
-        public object ConvertFromProjectTo<T>(object value) where T: UIElement, new()
+        public object ConvertFromProjectTo<T>(object value) where T : UIElement, new()
         {
             var grid = GetGridWith<T>(value as byte[,]);
             return grid;

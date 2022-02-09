@@ -1,11 +1,6 @@
 ﻿using Studio_Photo_Collage.Views.SidePanels;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 
 namespace Studio_Photo_Collage.Infrastructure.Converters
 {
@@ -22,7 +17,7 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
                     case "Filters":
                         return typeof(FiltersPage);
                     case "Templates":
-                       return typeof(TemplatesSidePage);
+                        return typeof(TemplatesSidePage);
                     case "Background":
                         return typeof(BackgroundPage);
                     case "Transform":

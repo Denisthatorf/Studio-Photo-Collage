@@ -7,10 +7,8 @@ using Studio_Photo_Collage.ViewModels;
 using Studio_Photo_Collage.Views;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Globalization;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -122,7 +120,7 @@ namespace Studio_Photo_Collage
             var jsonStr = await JsonHelper.DeserializeFileAsync("projects.json");
             var projectList = await JsonHelper.ToObjectAsync<List<Project>>(jsonStr);
 
-            if(projectList != null)
+            if (projectList != null)
             {
                 foreach (var proj in projectList)
                 {

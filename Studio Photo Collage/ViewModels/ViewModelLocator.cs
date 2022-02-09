@@ -1,15 +1,12 @@
 ﻿using CommonServiceLocator;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
-using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Views;
 using Studio_Photo_Collage.ViewModels.PopUps;
 using Studio_Photo_Collage.ViewModels.SidePanels;
 using Studio_Photo_Collage.Views;
 using Studio_Photo_Collage.Views.PopUps;
 using Studio_Photo_Collage.Views.SidePanels;
-using System;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -106,7 +103,7 @@ namespace Studio_Photo_Collage.ViewModels
         public TransformPageViewModel TransformPageInstance => ServiceLocator.Current.GetInstance<TransformPageViewModel>();
         public RecentPageViewModel RecentPageInstance => ServiceLocator.Current.GetInstance<RecentPageViewModel>();
         public FramesPageViewModel FramesPageInstanse => ServiceLocator.Current.GetInstance<FramesPageViewModel>();
-    //    public TemplatesSidePanelPageViewModel TemplatesSidePanelPageInstance => ServiceLocator.Current.GetInstance<TemplatesSidePanelPageViewModel>();
+        //    public TemplatesSidePanelPageViewModel TemplatesSidePanelPageInstance => ServiceLocator.Current.GetInstance<TemplatesSidePanelPageViewModel>();
 
         public SettingsDialogViewModel SettingsDialogInstance => ServiceLocator.Current.GetInstance<SettingsDialogViewModel>();
         public PaintPopUpPageViewModel PaintPopUppageInstance => ServiceLocator.Current.GetInstance<PaintPopUpPageViewModel>();
@@ -136,10 +133,10 @@ namespace Studio_Photo_Collage.ViewModels
             var currentPage = GetStringCurrentPage();
             if (currentPage == "MainPage")
             {
-                var mainPage =ServiceLocator.Current.GetInstance<MainPageViewModel>();
-               mainPage.GoBack();
+                var mainPage = ServiceLocator.Current.GetInstance<MainPageViewModel>();
+                mainPage.GoBack();
             }
-            else if(currentPage == "TemplatesPage")
+            else if (currentPage == "TemplatesPage")
             {
                 navigation.NavigateTo("StartPage");
             }

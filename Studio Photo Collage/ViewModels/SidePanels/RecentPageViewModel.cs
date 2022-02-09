@@ -1,17 +1,10 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using Studio_Photo_Collage.Infrastructure;
 using Studio_Photo_Collage.Infrastructure.Helpers;
 using Studio_Photo_Collage.Models;
 using Studio_Photo_Collage.Views.PopUps;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization.Json;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.UI.Xaml.Controls;
 
@@ -29,7 +22,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
             get
             {
                 if (_projectCommand == null)
-                    _projectCommand = new RelayCommand<Project>(async(parametr) => 
+                    _projectCommand = new RelayCommand<Project>(async (parametr) =>
                     {
                         var dialog = new SaveDialog("collage");
                         var result = await dialog.ShowAsync();
@@ -76,6 +69,6 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
                 await JsonHelper.WriteToFile("projects.json", string.Empty);
             }
         }
-    
+
     }
 }

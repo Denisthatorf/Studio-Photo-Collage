@@ -61,9 +61,9 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
                 return myBrush;
             }
             else
-               throw new NotImplementedException();
+                throw new NotImplementedException();
         }
-        public static async Task<Brush> GetBrushForCollageAcync( string colourOrImage)
+        public static async Task<Brush> GetBrushForCollageAcync(string colourOrImage)
         {
             if (string.IsNullOrEmpty(colourOrImage))
                 return null;

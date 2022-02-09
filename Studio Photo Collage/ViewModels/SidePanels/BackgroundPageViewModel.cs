@@ -25,7 +25,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
             get
             {
                 if (_uploadBtnCommand == null)
-                    _uploadBtnCommand = new RelayCommand(async () => 
+                    _uploadBtnCommand = new RelayCommand(async () =>
                     {
                         var imageBrush = new ImageBrush();
                         StorageFile file = await ImageHelper.OpenFilePicker();
@@ -66,17 +66,21 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
 
 
         private int _bordersThickness;
-        public int BordersThickness 
-        { 
-            get => _bordersThickness; 
-            set { 
+        public int BordersThickness
+        {
+            get => _bordersThickness;
+            set
+            {
                 Set(ref _bordersThickness, value);
-                Messenger.Default.Send(new Thickness(value)); }
+                Messenger.Default.Send(new Thickness(value));
+            }
         }
 
         private int _borderOpacity;
-        public int BorderOpacity { get => _borderOpacity;
-            set 
+        public int BorderOpacity
+        {
+            get => _borderOpacity;
+            set
             {
                 Set(ref _borderOpacity, value);
                 Messenger.Default.Send(value / 100.0);

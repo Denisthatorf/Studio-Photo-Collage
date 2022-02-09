@@ -1,20 +1,15 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
-using Microsoft.Toolkit.Uwp;
 using Studio_Photo_Collage.Infrastructure;
 using Studio_Photo_Collage.Infrastructure.Helpers;
-using Studio_Photo_Collage.Views.PopUps;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.ApplicationModel;
-using Windows.ApplicationModel.Resources.Core;
 using Windows.Globalization;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -59,7 +54,8 @@ namespace Studio_Photo_Collage.ViewModels.PopUps
             get
             {
                 if (_changeMainColorCommand == null)
-                    _changeMainColorCommand = new RelayCommand<Color>((parametr) => {
+                    _changeMainColorCommand = new RelayCommand<Color>((parametr) =>
+                    {
                         (App.Current.Resources["MainBorderBrush"] as SolidColorBrush).Color = parametr;
                         _navigationService.NavigateTo(_navigationService.CurrentPageKey.ToString(), DateTime.Now.Ticks);
                     });
@@ -75,12 +71,14 @@ namespace Studio_Photo_Collage.ViewModels.PopUps
             set { Set(ref _versionDescription, value); }
         }
 
-        public List<Brush> Colors {get; }
+        public List<Brush> Colors { get; }
 
         private ElementTheme _themeOfSettings;
-        public ElementTheme ThemeOfSettings { 
+        public ElementTheme ThemeOfSettings
+        {
             get => _themeOfSettings;
-            set => Set(ref _themeOfSettings, value); }
+            set => Set(ref _themeOfSettings, value);
+        }
 
 
 
@@ -127,17 +125,17 @@ namespace Studio_Photo_Collage.ViewModels.PopUps
         }
 
         private CultureInfo GetStartLanguage()
-        { 
+        {
             var selectedLanguage = ApplicationLanguages.PrimaryLanguageOverride;
             var conv = new CultureInfoToFullStringNameConverter();
             var culture = (CultureInfo)conv.ConvertBack(selectedLanguage, null, null, null);
             return culture;
         }
-       /*  public async Task InitializeAsync()
-         {
-                  VersionDescription = GetVersionDescription();
-                  await Task.CompletedTask;
-         }*/
+        /*  public async Task InitializeAsync()
+          {
+                   VersionDescription = GetVersionDescription();
+                   await Task.CompletedTask;
+          }*/
 
         private string GetVersionDescription()
         {

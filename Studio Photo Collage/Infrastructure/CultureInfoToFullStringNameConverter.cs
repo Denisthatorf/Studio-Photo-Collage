@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
 
 namespace Studio_Photo_Collage.Infrastructure
@@ -37,23 +33,23 @@ namespace Studio_Photo_Collage.Infrastructure
             var culture = value?.ToString();
             var strCulture = culture?.ToString();
 
-                switch (strCulture)
-                {
-                    case "English":
-                        return new CultureInfo("en-US");
-                    case "Russian":
-                        return new CultureInfo("ru-RU");
-
-                    case "en-US":
-                          return new CultureInfo("en-US");
-                    case "ru-RU":
-                        return new CultureInfo("ru-RU");
-                     case "ru":
+            switch (strCulture)
+            {
+                case "English":
+                    return new CultureInfo("en-US");
+                case "Russian":
                     return new CultureInfo("ru-RU");
 
-                     default:
-                        return new CultureInfo("en-US");
-                }
+                case "en-US":
+                    return new CultureInfo("en-US");
+                case "ru-RU":
+                    return new CultureInfo("ru-RU");
+                case "ru":
+                    return new CultureInfo("ru-RU");
+
+                default:
+                    return new CultureInfo("en-US");
+            }
         }
     }
 }

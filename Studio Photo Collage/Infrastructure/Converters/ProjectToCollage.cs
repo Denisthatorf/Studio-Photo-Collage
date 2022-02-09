@@ -1,19 +1,8 @@
-﻿using GalaSoft.MvvmLight.Command;
-using Studio_Photo_Collage.Infrastructure.Helpers;
+﻿using Studio_Photo_Collage.Infrastructure.Helpers;
 using Studio_Photo_Collage.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Storage.Pickers;
-using Windows.System;
-using Windows.UI;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
 
 namespace Studio_Photo_Collage.Infrastructure.Converters
 {
@@ -23,7 +12,7 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
         {
             if (value as Project != null)
             {
-                if(parameter == null)
+                if (parameter == null)
                     throw new ArgumentNullException(nameof(parameter));
 
                 var proj = value as Project;

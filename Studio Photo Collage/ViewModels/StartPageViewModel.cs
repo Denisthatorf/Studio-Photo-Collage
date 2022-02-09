@@ -7,16 +7,8 @@ using Studio_Photo_Collage.Models;
 using Studio_Photo_Collage.Views.PopUps;
 using System;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using Windows.UI;
-using Windows.UI.Core;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 
 namespace Studio_Photo_Collage.ViewModels
 {
@@ -85,10 +77,10 @@ namespace Studio_Photo_Collage.ViewModels
             if (!String.IsNullOrEmpty(jsonStr))
                 projects = await JsonHelper.ToObjectAsync<ObservableCollection<Project>>(jsonStr);
 
-                foreach (var proj in projects)
-                {
-                   RecentProjects.Add(new Tuple<Project>(proj));
-                }
+            foreach (var proj in projects)
+            {
+                RecentProjects.Add(new Tuple<Project>(proj));
+            }
         }
     }
 }

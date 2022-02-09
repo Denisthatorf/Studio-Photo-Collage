@@ -1,10 +1,6 @@
 ﻿using Studio_Photo_Collage.Infrastructure.Helpers;
 using Studio_Photo_Collage.ViewModels.PopUps;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
 
 namespace Studio_Photo_Collage.Infrastructure.Converters
@@ -28,7 +24,7 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
                 object returnEnum = Enum.Parse(typeof(BtnNameEnum), rtnValue);
                 return returnEnum;
             }
-            catch(ArgumentException) { }
+            catch (ArgumentException) { }
             try
             {
                 object returnEnum = Enum.Parse(typeof(PaintClearEnum), rtnValue);

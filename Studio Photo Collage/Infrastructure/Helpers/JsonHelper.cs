@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Windows.Storage;
 
 namespace Studio_Photo_Collage.Infrastructure.Helpers
@@ -49,7 +49,7 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
         public static async Task WriteToFile(string fileNameString, string textToSave)
         {
             var appFolder = ApplicationData.Current.LocalFolder;
-            
+
             var file = await appFolder.CreateFileAsync(fileNameString,
                 CreationCollisionOption.OpenIfExists);
             // await Windows.Storage.FileIO.AppendTextAsync(file, textToSave + Environment.NewLine);

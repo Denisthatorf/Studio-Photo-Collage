@@ -1,10 +1,7 @@
 ﻿using Studio_Photo_Collage.Infrastructure.Converters;
 using Studio_Photo_Collage.Infrastructure.Helpers;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
@@ -94,7 +91,7 @@ namespace Studio_Photo_Collage.Models
         public async void UpdateProjectInfoAsync()
         {
             if (SelectedImage?.Source != null)
-                Project.ImageArr[SelectedImageNumberInList] = await ImageHelper.SaveToBytesAsync(SelectedImage.Source);
+                Project.ImageArr[SelectedImageNumberInList] = await ImageHelper.SaveToStringBase64Async(SelectedImage.Source);
         }
 
         #region UIElement creation
@@ -119,7 +116,7 @@ namespace Studio_Photo_Collage.Models
             }
 
             backgroundgrid.Background = BrushGenerator.GetSolidColorBrush(this.Project.BorderColor);
-            backgroundgrid.Opacity = this.Project.BorderOpacity;    
+            backgroundgrid.Opacity = this.Project.BorderOpacity;
 
 
             collageGrid.Children.Add(backgroundgrid);
@@ -168,7 +165,7 @@ namespace Studio_Photo_Collage.Models
                         WriteableBitmap source = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
                         await source.SetSourceAsync(fileStream);
                         img.Source = source;
-                        Project.ImageArr[numberInList] = await ImageHelper.SaveToBytesAsync(source);
+                        Project.ImageArr[numberInList] = await ImageHelper.SaveToStringBase64Async(source);
                     }
                     catch (Exception)
                     {

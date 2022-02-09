@@ -1,10 +1,7 @@
 ﻿using Newtonsoft.Json;
-using Studio_Photo_Collage.Infrastructure.Helpers;
-using Studio_Photo_Collage.ViewModels.SidePanels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Windows.UI.Xaml.Media.Imaging;
 
 namespace Studio_Photo_Collage.Models
 {
@@ -27,7 +24,7 @@ namespace Studio_Photo_Collage.Models
 
         public string ProjectName { get; set; }
 
-        public string SaveFormat { get;  set; }
+        public string SaveFormat { get; set; }
 
         public int CountOfPhotos
         {
@@ -56,14 +53,14 @@ namespace Studio_Photo_Collage.Models
         public double BorderThickness
         {
             get { return _borderThickness; }
-            set { _borderThickness = value;  }
+            set { _borderThickness = value; }
         }
 
         private double _borderOpacity;
         public double BorderOpacity
         {
             get { return _borderOpacity; }
-            set { _borderOpacity = value;  }
+            set { _borderOpacity = value; }
         }
 
         private string[] _arrayOfImages;
@@ -96,7 +93,7 @@ namespace Studio_Photo_Collage.Models
         {
             if (obj == null)
                 return false;
-           return Equals(obj as Project);
+            return Equals(obj as Project);
         }
 
         public bool Equals(Project other)
