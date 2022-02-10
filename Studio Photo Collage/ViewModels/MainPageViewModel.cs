@@ -141,6 +141,7 @@ namespace Studio_Photo_Collage.ViewModels
             else if (result == ContentDialogResult.Secondary)
                 NavigationService.NavigateTo("TemplatesPage");
         }
+
         public async Task<ContentDialogResult> SaveProjectAsync()
         {
             var dialog = new SaveDialog();
@@ -151,19 +152,17 @@ namespace Studio_Photo_Collage.ViewModels
             {
                 CurrentCollage.Project.ProjectName = dialog.ProjectName;
                 await SaveProjectInJsonAsync();
-                CurrentCollage = null;
-            }
-            else if (result == ContentDialogResult.Secondary)
-            {
-                CurrentCollage = null;
             }
             return result;
         }
 
         private void MessengersRegistration()
         {
-            Messenger.Default.Register<Project>(this, (parameter) =>
-           CurrentCollage = new Collage(parameter));
+
+            Messenger.Default.Register<Project>(this, (parameter) => CurrentCollage = new Collage(parameter));
+
+            #region Have To update Ui
+            // use this CurrentCollage.UpdateUIAsync();
 
             Messenger.Default.Register<Thickness>(this, (Action<Thickness>)((parameter) =>
             {
@@ -176,8 +175,14 @@ namespace Studio_Photo_Collage.ViewModels
                 CurrentCollage.Project.BorderOpacity = parameter;
                 CurrentCollage.UpdateUIAsync();
             }));
+            #endregion
 
-            Messenger.Default.Register<Brush>(this, (Action<Brush>)(async (brush) =>
+            #region Have to update Project information
+
+            // use this  CurrentCollage.UpdateProjectInfoAsync();
+            // for image updation 
+
+            Messenger.Default.Register<Brush>(this, (Action<Brush>)((brush) =>
             {
                 (CurrentCollage.BackgroundGrid as Grid).Background = brush;
                 CurrentCollage.UpdateProjectInfoAsync();
@@ -190,6 +195,7 @@ namespace Studio_Photo_Collage.ViewModels
                     messageAct.Execute(image);
                 CurrentCollage.UpdateProjectInfoAsync();
             });
+            #endregion
         }
 
         private async Task SaveProjectInJsonAsync()
@@ -211,43 +217,6 @@ namespace Studio_Photo_Collage.ViewModels
             await JsonHelper.WriteToFile("projects.json", projectsAsList);
 
             await UpdateSecondaryTile();
-        }
-
-        private async void ShowSettingDialog()
-        {
-            var dialog = new SettingsDialog();
-            await dialog.ShowAsync();
-            CheckBoxesEnum = null;
-        }
-
-        private async void PinCollageToSecondaryTile()
-        {
-            var dialog = new SaveDialog();
-            var result = await dialog.ShowAsync();
-            if (result == ContentDialogResult.Primary) // Yes
-            {
-                CurrentCollage.Project.ProjectName = dialog.ProjectName;
-                SaveProjectInJsonAsync();
-
-                var source = await ImageHelper.SaveCollageUIAsImage(CurrentCollage);
-
-                var zipCode = CurrentCollage.Project.GetHashCode().ToString();
-                string tileId = zipCode;
-                string displayName = CurrentCollage.Project.ProjectName != null ?
-                                            CurrentCollage.Project.ProjectName : "Test";
-                string arguments = zipCode;
-                // Initialize the tile with required arguments
-                SecondaryTile tile = new SecondaryTile(
-                    tileId,
-                    displayName,
-                    arguments,
-                    new Uri(source),
-                    Windows.UI.StartScreen.TileSize.Default);
-
-                var p = await tile.RequestCreateAsync();
-            }
-
-
         }
 
         private async Task UpdateSecondaryTile()
@@ -299,6 +268,38 @@ namespace Studio_Photo_Collage.ViewModels
                     }
                     CurrentCollage.SelectedImage.Source = bitmapImage;
                 }
+            }
+        }
+
+        private async void ShowSettingDialog()
+        {
+            var dialog = new SettingsDialog();
+            await dialog.ShowAsync();
+            CheckBoxesEnum = null;
+        }
+
+        private async void PinCollageToSecondaryTile()
+        {
+            var result = await SaveProjectAsync();
+
+            if (result == ContentDialogResult.Primary) // Yes
+            {
+                var source = await ImageHelper.SaveCollageUIAsImage(CurrentCollage);
+
+                var zipCode = CurrentCollage.Project.GetHashCode().ToString();
+                string tileId = zipCode;
+                string displayName = CurrentCollage.Project.ProjectName != null ?
+                                            CurrentCollage.Project.ProjectName : "Test";
+                string arguments = zipCode;
+                // Initialize the tile with required arguments
+                SecondaryTile tile = new SecondaryTile(
+                    tileId,
+                    displayName,
+                    arguments,
+                    new Uri(source),
+                    Windows.UI.StartScreen.TileSize.Default);
+
+                var p = await tile.RequestCreateAsync();
             }
         }
     }

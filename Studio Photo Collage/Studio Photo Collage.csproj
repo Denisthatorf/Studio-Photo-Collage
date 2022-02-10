@@ -160,7 +160,7 @@
     <Compile Include="ViewModels\PopUps\SettingsDialogViewModel.cs" />
     <Compile Include="ViewModels\SidePanels\BackgroundPageViewModel.cs" />
     <Compile Include="ViewModels\SidePanels\FramesPageViewModel.cs" />
-    <Compile Include="ViewModels\SidePanels\StringHashCodeExtension.cs" />
+    <Compile Include="Infrastructure\Helpers\StringHashCodeExtension.cs" />
     <Compile Include="ViewModels\SidePanels\TemplatesSidePanelPageViewModel.cs" />
     <Compile Include="ViewModels\SidePanels\FiltersPageViewModel.cs" />
     <Compile Include="ViewModels\SidePanels\TransformPageViewModel.cs" />

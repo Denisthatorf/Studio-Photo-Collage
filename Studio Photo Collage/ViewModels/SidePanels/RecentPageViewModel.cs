@@ -15,8 +15,10 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
 {
     public class RecentPageViewModel : ViewModelBase
     {
-        private ObservableCollection<Project> _projects = new ObservableCollection<Project>();
-        public ObservableCollection<Project> Projects { get => _projects; set => Set(ref _projects, value); }
+        private ObservableCollection<Project> _projects;
+        public ObservableCollection<Project> Projects {
+            get => _projects; 
+            set => Set(ref _projects, value); }
 
 
         private ICommand _projectCommand;
@@ -60,6 +62,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
 
         public RecentPageViewModel()
         {
+            _projects = new ObservableCollection<Project>();
             DesserializeProjects();
         }
         private async void DesserializeProjects()

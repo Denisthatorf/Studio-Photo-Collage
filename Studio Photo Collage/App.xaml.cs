@@ -129,7 +129,8 @@ namespace Studio_Photo_Collage
                     {
                         var navigation = ServiceLocator.Current.GetInstance<INavigationService>();
 
-                        navigation.NavigateTo("MainPage");
+                        if(ViewModelLocator.GetStringCurrentPage() != "MainPage")
+                            navigation.NavigateTo("MainPage");
                         Messenger.Default.Send(proj);
 
                         break;

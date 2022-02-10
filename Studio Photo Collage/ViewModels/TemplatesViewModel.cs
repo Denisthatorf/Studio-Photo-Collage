@@ -16,37 +16,41 @@ namespace Studio_Photo_Collage.ViewModels
     {
         private readonly INavigationService NavigationService;
 
-        public ICommand TemplateClickCommand { get; private set; }
-        public ObservableCollection<GroupedTemplates> TemplateCollection { get; set; } = new ObservableCollection<GroupedTemplates>();
+        private ICommand templateClickCommand;
+        public ICommand TemplateClickCommand
+        {
+            get
+            {
+                if (templateClickCommand == null)
+                    templateClickCommand = new RelayCommand<Project>(async (parameter) =>
+                    {
+                        var currentPage = ViewModelLocator.GetStringCurrentPage();
+                        if (currentPage == "MainPage")
+                        {
+                            var mainVM = ServiceLocator.Current.GetInstance<MainPageViewModel>();
+                            var result = await mainVM.SaveProjectAsync();
+
+                            if (result != ContentDialogResult.None)
+                                Messenger.Default.Send(parameter);
+                        }
+                        else
+                        {
+                            NavigationService.NavigateTo("MainPage");
+                            Messenger.Default.Send(parameter);
+                        }
+                    });
+                return templateClickCommand;
+            }
+        }
+
+        public ObservableCollection<GroupedTemplates> TemplateCollection { get; set; }
 
 
         public TemplatesPageViewModel(INavigationService navigationService)
         {
             NavigationService = navigationService;
-            TemplateClickCommand = new RelayCommand<Project>((parameter) =>
-            {
-                TemplateClickMethod(parameter);
-            });
+            TemplateCollection = new ObservableCollection<GroupedTemplates>();
             TemplateCollection = GroupedTemplates.FillByGroupedTemplate();
-        }
-
-        private async void TemplateClickMethod(Project parameter)
-        {
-
-            var currentPage = ViewModelLocator.GetStringCurrentPage();
-            if (currentPage == "MainPage")
-            {
-                var mainVM = ServiceLocator.Current.GetInstance<MainPageViewModel>();
-                var result = await mainVM.SaveProjectAsync();
-
-                if (result != ContentDialogResult.None) 
-                    Messenger.Default.Send(parameter);
-            }
-            else
-            {
-                NavigationService.NavigateTo("MainPage");
-                Messenger.Default.Send(parameter);
-            }
         }
     }
 }
