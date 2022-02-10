@@ -6,7 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    PrimaryButtonText="Save" 
+    
+    PrimaryButtonText="Save"
     SecondaryButtonText="Save as"
     Style="{StaticResource ContentDialog}">
     <ContentDialog.PrimaryButtonStyle>
@@ -33,12 +34,15 @@
                 Do you want to save image?
         </TextBlock>
         <TextBlock Text="Enter name, please" Margin="0,12,0,8"/>
-        <TextBox CornerRadius="0" 
+        <TextBox x:Name="NameTBox"
+                 Text="{x:Bind NameOfImg, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                 CornerRadius="0" 
                  Foreground="Gray"
-                 Background="Transparent" BorderBrush="{ThemeResource BlackAndWhite}" BorderThickness="1"
-                 DragEnter="TextBox_DragEnter"/>
+                 Background="Transparent"
+                 BorderBrush="{ThemeResource BlackAndWhite}" BorderThickness="1"/>
         <TextBlock Text="Format" Margin="0,16,0,8"/>
-        <ComboBox HorizontalAlignment="Stretch" 
+        <ComboBox x:Name="FormatCBox"
+                  HorizontalAlignment="Stretch" 
                   SelectedItem="{x:Bind }"
                   SelectedIndex="0" 
                   CornerRadius="0"
@@ -50,7 +54,8 @@
             <x:String>TIFF</x:String>
         </ComboBox>
         <TextBlock Text="Quality" Margin="0,16,0,8"/>
-        <ComboBox HorizontalAlignment="Stretch" SelectedIndex="0" 
+        <ComboBox x:Name="QualityCBox"
+                  HorizontalAlignment="Stretch" SelectedIndex="0" 
                   CornerRadius="0"
                   BorderBrush="{ThemeResource BlackAndWhite}"
                   Foreground="Gray" BorderThickness="1">

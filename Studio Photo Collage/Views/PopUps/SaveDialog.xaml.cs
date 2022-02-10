@@ -7,36 +7,32 @@ namespace Studio_Photo_Collage.Views.PopUps
 {
     public sealed partial class SaveDialog : ContentDialog
     {
-        public string ProjectName { get; set; }
 
-        private string _whatSave;
-        public string WhatSave
-        {
-            get { return _whatSave; }
+        private string projectName;
+        public string ProjectName { get => projectName; 
             set
             {
-                _whatSave = value;
-                if (WhatSave == "project")
-                    this.SecondaryButtonText = "Save";
-                else if (WhatSave == "collage")
-                {
-                    this.PrimaryButtonText = "Yes";
-                    this.SecondaryButtonText = "No";
-                }
-            }
+               projectName = value;
+
+                if (!string.IsNullOrEmpty(projectName))
+                    this.IsPrimaryButtonEnabled = true;
+                else
+                    this.IsPrimaryButtonEnabled = false;
+            } 
         }
 
-        public SaveDialog(string projectOrCollage)
+        public SaveDialog()
         {
             this.InitializeComponent();
+
+            this.IsPrimaryButtonEnabled = false;
+
             var frame = Window.Current.Content as Frame; ;
             this.RequestedTheme = frame.ActualTheme;
-            WhatSave = projectOrCollage;
         }
-
-        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private void ButtonClose_Click(object sender, RoutedEventArgs e)
         {
-
+            this.Hide();
         }
     }
 }

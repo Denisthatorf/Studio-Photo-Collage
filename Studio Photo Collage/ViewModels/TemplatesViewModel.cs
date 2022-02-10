@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight;
+﻿using CommonServiceLocator;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Views;
@@ -31,15 +32,14 @@ namespace Studio_Photo_Collage.ViewModels
 
         private async void TemplateClickMethod(Project parameter)
         {
+
             var currentPage = ViewModelLocator.GetStringCurrentPage();
             if (currentPage == "MainPage")
             {
-                var dialog = new SaveDialog("collage");
-                var result = await dialog.ShowAsync();
+                var mainVM = ServiceLocator.Current.GetInstance<MainPageViewModel>();
+                var result = await mainVM.SaveProjectAsync();
 
-                if (result == ContentDialogResult.Primary) //yes
-                    Messenger.Default.Send(parameter);
-                else if (result == ContentDialogResult.Secondary)//no
+                if (result != ContentDialogResult.None) 
                     Messenger.Default.Send(parameter);
             }
             else

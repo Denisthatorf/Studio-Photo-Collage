@@ -34,7 +34,16 @@ namespace Studio_Photo_Collage.ViewModels
             get
             {
                 if (_saveImageCommand == null)
-                    _saveImageCommand = new RelayCommand<object>((parametr) => { });
+                    _saveImageCommand = new RelayCommand<object>( async(parametr) => 
+                    { 
+                        var dialog = new SaveImageDialog();
+                        dialog.NameOfImg = CurrentCollage.Project.ProjectName;
+                        var result = await dialog.ShowAsync();
+
+                        var name = dialog.NameOfImg;
+                        var format = dialog.Format;
+                        var quality = dialog.Quality; 
+                    });
                 return _saveImageCommand;
             }
         }
@@ -47,10 +56,12 @@ namespace Studio_Photo_Collage.ViewModels
                 if (_saveProjectCommand == null)
                     _saveProjectCommand = new RelayCommand<object>(async (parametr) =>
                     {
-                        var dialog = new SaveDialog("project");
+                        var dialog = new SaveProjectDialog();
+                        dialog.ProjectName = CurrentCollage.Project.ProjectName;
                         var result = await dialog.ShowAsync();
-                        if (result != ContentDialogResult.None)
-                            SaveProject();
+                        if (result == ContentDialogResult.Primary)
+                            CurrentCollage.Project.ProjectName = dialog.ProjectName;
+                            SaveProjectInJsonAsync();
                     });
                 return _saveProjectCommand;
             }
@@ -115,22 +126,32 @@ namespace Studio_Photo_Collage.ViewModels
             MessengersRegistration();
         }
 
-
         public async void GoBack()
         {
-            var dialog = new SaveDialog("collage");
+            var result = await SaveProjectAsync();
+
+            if (result == ContentDialogResult.Primary)
+                NavigationService.NavigateTo("TemplatesPage");
+            else if (result == ContentDialogResult.Secondary)
+                NavigationService.NavigateTo("TemplatesPage");
+        }
+        public async Task<ContentDialogResult> SaveProjectAsync()
+        {
+            var dialog = new SaveDialog();
+            dialog.ProjectName = CurrentCollage.Project.ProjectName;
             var result = await dialog.ShowAsync();
+
             if (result == ContentDialogResult.Primary) // Yes
             {
                 CurrentCollage.Project.ProjectName = dialog.ProjectName;
-                SaveProject();
-                NavigationService.NavigateTo("TemplatesPage");
+                await SaveProjectInJsonAsync();
+                CurrentCollage = null;
             }
             else if (result == ContentDialogResult.Secondary)
             {
                 CurrentCollage = null;
-                NavigationService.NavigateTo("TemplatesPage");
             }
+            return result;
         }
 
         private void MessengersRegistration()
@@ -168,7 +189,7 @@ namespace Studio_Photo_Collage.ViewModels
             });
         }
 
-        private async Task SaveProject()
+        private async Task SaveProjectInJsonAsync()
         {
             var str = await JsonHelper.DeserializeFileAsync("projects.json");
             var projects = new List<Project>();
@@ -198,12 +219,12 @@ namespace Studio_Photo_Collage.ViewModels
 
         private async void PinCollageToSecondaryTile()
         {
-            var dialog = new SaveDialog("collage");
+            var dialog = new SaveDialog();
             var result = await dialog.ShowAsync();
             if (result == ContentDialogResult.Primary) // Yes
             {
                 CurrentCollage.Project.ProjectName = dialog.ProjectName;
-                SaveProject();
+                SaveProjectInJsonAsync();
 
                 var source = await ImageHelper.SaveCollageUIAsImage(CurrentCollage);
 

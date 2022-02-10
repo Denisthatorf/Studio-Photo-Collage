@@ -73,7 +73,7 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
                 byte[] buffer = new byte[stream.Length];
                 await stream.ReadAsync(buffer, 0, buffer.Length);
                 BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, ras);
-                encoder.SetPixelData(BitmapPixelFormat.Rgba8, BitmapAlphaMode.Ignore, (uint)bitmap.PixelWidth, (uint)bitmap.PixelHeight, 96.0, 96.0, buffer);
+                encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)bitmap.PixelWidth, (uint)bitmap.PixelHeight, 96.0, 96.0, buffer);
                 await encoder.FlushAsync();
 
                 var imageStream = ras.AsStream();
@@ -125,47 +125,8 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             // create bitmap
             var output = new WriteableBitmap((int)decoder.PixelHeight, (int)decoder.PixelWidth);
             await output.SetSourceAsync(image);
-            /////////////////////////
-            /* var b = ConvertToGrayScale(output);
-             var img = b.AsBuffer().AsStream().AsRandomAccessStream();
-
-             var de = await BitmapDecoder.CreateAsync(img);
-             img.Seek(0);
-             var res = new WriteableBitmap((int)de.PixelHeight, (int)de.PixelWidth);
-             await res.SetSourceAsync(img);
-             return res;*/
             return output;
         }
 
-        public static byte[] ConvertToGrayScale(ImageSource source)
-        {
-            WriteableBitmap wb = source as WriteableBitmap;               // create the WritableBitmap using the source
-
-            byte[] grayPixels = new byte[wb.PixelWidth * wb.PixelHeight];
-
-            // lets use the average algo 
-            for (int x = 0; x < wb.PixelBuffer.Length; x++)
-            {
-                // get the pixel
-                int pixel = wb.PixelBuffer.ToArray()[x];
-
-                // get the component
-                int red = (pixel & 0x00FF0000) >> 16;
-                int blue = (pixel & 0x0000FF00) >> 8;
-                int green = (pixel & 0x000000FF);
-
-                // get the average
-                int average = (byte)((red + blue + green) / 3);
-
-                // assign the gray values keep the alpha
-                unchecked
-                {
-                    grayPixels[x] = (byte)((pixel & 0xFF000000) | average << 16 | average << 8 | average);
-                }
-            }
-
-            // return Convert.ToBase64String(grayPixels);
-            return grayPixels;
-        }
     }
 }

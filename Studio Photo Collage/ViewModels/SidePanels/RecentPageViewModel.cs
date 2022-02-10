@@ -1,5 +1,8 @@
-﻿using GalaSoft.MvvmLight;
+﻿using CommonServiceLocator;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
+using GalaSoft.MvvmLight.Views;
 using Studio_Photo_Collage.Infrastructure.Helpers;
 using Studio_Photo_Collage.Models;
 using Studio_Photo_Collage.Views.PopUps;
@@ -24,14 +27,11 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
                 if (_projectCommand == null)
                     _projectCommand = new RelayCommand<Project>(async (parametr) =>
                     {
-                        var dialog = new SaveDialog("collage");
-                        var result = await dialog.ShowAsync();
+                        var mainVM = ServiceLocator.Current.GetInstance<MainPageViewModel>();
+                        var result = await mainVM.SaveProjectAsync();
 
-                        if (result == ContentDialogResult.Primary) //yes
-                            MessengerInstance.Send(parametr);
-                        else if (result == ContentDialogResult.Secondary)//no
-
-                            MessengerInstance.Send(parametr);
+                        if (result != ContentDialogResult.None)
+                             Messenger.Default.Send(parametr);
                     });
                 return _projectCommand;
             }
@@ -43,7 +43,16 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
             get
             {
                 if (_removeAllCollagesCommand == null)
-                    _removeAllCollagesCommand = new RelayCommand(() => { RemoveProjects(); });
+                    _removeAllCollagesCommand = new RelayCommand(async() => {
+                        var dialog = new ConfirmDialog();
+                        var result = await dialog.ShowAsync();
+
+                        if (result.ToString() == "Primary") //yes
+                        {
+                            Projects?.Clear();
+                            await JsonHelper.WriteToFile("projects.json", string.Empty);
+                        }
+                    });
                 return _removeAllCollagesCommand;
             }
         }
@@ -57,17 +66,6 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
         {
             var jsonStr = await JsonHelper.DeserializeFileAsync("projects.json");
             Projects = await JsonHelper.ToObjectAsync<ObservableCollection<Project>>(jsonStr);
-        }
-        private async void RemoveProjects()
-        {
-            var dialog = new ConfirmDialog();
-            var result = await dialog.ShowAsync();
-
-            if (result.ToString() == "Primary") //yes
-            {
-                Projects?.Clear();
-                await JsonHelper.WriteToFile("projects.json", string.Empty);
-            }
         }
 
     }

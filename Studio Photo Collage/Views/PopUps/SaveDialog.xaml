@@ -7,18 +7,28 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Style="{StaticResource ContentDialog}"
-    PrimaryButtonClick="ContentDialog_PrimaryButtonClick">
+    PrimaryButtonText="Yes"
+    SecondaryButtonText="No">
 
     <ContentDialog.PrimaryButtonStyle>
         <Style TargetType="Button">
             <Setter Property="Background" Value="{ThemeResource MainBorderBrush}"/>
+            <Setter Property="Foreground" Value="{ThemeResource WhiteInLightAndBlackInDark}"/>
         </Style>
     </ContentDialog.PrimaryButtonStyle>
+    <ContentDialog.SecondaryButtonStyle>
+        <Style TargetType="Button">
+            
+        </Style>
+    </ContentDialog.SecondaryButtonStyle>
     
     <StackPanel>
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Save" FontSize="20"/>
-            <Button Style="{StaticResource CloseButton}" Margin="259,0,0,0" >
+            <Button x:Name="CloseBtn" 
+                   Click="ButtonClose_Click"
+                    Style="{StaticResource CloseButton}" 
+                    Margin="259,0,0,0" >
                 <SymbolIcon Symbol="Cancel"/>
             </Button>
         </StackPanel>
@@ -26,13 +36,14 @@
             <Run>
                 Do you want to save
             </Run>
-            <Run x:Name="ProjectOrImage" Text="{x:Bind WhatSave}"/>
+            <Run > collage</Run>
             <Run>
                 ?
             </Run>
         </TextBlock>
         <TextBlock Text="Enter name, please" Margin="0,12,0,0"/>
-        <TextBox BorderBrush="{StaticResource MainBorderBrush}" 
+        <TextBox x:Name="NameTBox"
+                 BorderBrush="{StaticResource MainBorderBrush}" 
                  Background="Transparent" 
                  Margin="0,8,0,0" CornerRadius="0" 
                  Text="{x:Bind ProjectName,
