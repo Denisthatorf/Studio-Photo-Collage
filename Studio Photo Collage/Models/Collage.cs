@@ -84,14 +84,16 @@ namespace Studio_Photo_Collage.Models
             }
 
             var background = this.BackgroundGrid as Grid;
-            var brush = await BrushGenerator.GetBrushForCollageAcync(this.Project.BorderColor);
-            background.Background = brush;
             background.Opacity = this.Project.BorderOpacity;
         }
         public async void UpdateProjectInfoAsync()
         {
             if (SelectedImage?.Source != null)
                 Project.ImageArr[SelectedImageNumberInList] = await ImageHelper.SaveToStringBase64Async(SelectedImage.Source);
+
+            var background = this.BackgroundGrid as Grid;
+            var brush = background.Background;
+
         }
 
         #region UIElement creation
@@ -115,7 +117,7 @@ namespace Studio_Photo_Collage.Models
                 borderGridInGrid.Children.Add(btn); ;
             }
 
-            backgroundgrid.Background = BrushGenerator.GetSolidColorBrush(this.Project.BorderColor);
+            backgroundgrid.Background = BrushGenerator.GetBrushFromHexOrStrImgBase64(this.Project.BorderColor);
             backgroundgrid.Opacity = this.Project.BorderOpacity;
 
 
@@ -131,7 +133,7 @@ namespace Studio_Photo_Collage.Models
 
             var img = new Image();
             img.Stretch = Windows.UI.Xaml.Media.Stretch.Fill;
-            SetImageSourceAsync(img, numberInList);
+            ImageHelper.SetImgSourceFromBase64Async(img, Project.ImageArr?[numberInList]);
 
             ToggleBtn.Content = img;
             ToggleBtn.Style = Application.Current.Resources["ToggleButtonProjStyle"] as Style;
@@ -159,6 +161,7 @@ namespace Studio_Photo_Collage.Models
             {
                 using (IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read))
                 {
+                    
                     try
                     {
                         BitmapDecoder decoder = await BitmapDecoder.CreateAsync(fileStream);
@@ -172,12 +175,6 @@ namespace Studio_Photo_Collage.Models
                     }
                 }
             }
-        }
-
-        private async void SetImageSourceAsync(Image img, int numberInList)
-        {
-            if (!String.IsNullOrEmpty(Project.ImageArr?[numberInList]))
-                img.Source = await ImageHelper.FromBase64(Project.ImageArr[numberInList]);
         }
 
         private void UnCheckedAnothersBtns(int numberInList)

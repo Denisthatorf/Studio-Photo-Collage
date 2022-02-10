@@ -9,6 +9,7 @@ using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -16,6 +17,7 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
 {
     public static class ImageHelper
     {
+        private static Random rnd = new Random();
 
         public static async Task<string> SaveCollageUIAsImage(Collage collage)
         {
@@ -59,8 +61,6 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             return await picker.PickSingleFileAsync();
         }
 
-
-        private static Random rnd = new Random();
         public static async Task<String> SaveToStringBase64Async(ImageSource imageSource)
         {
             byte[] imageBuffer;
@@ -82,7 +82,8 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
                 var re = await imageStream.ReadAsync(imageBuffer, 0, imageBuffer.Length);
             }
             await file.DeleteAsync(StorageDeleteOption.Default);
-            return Convert.ToBase64String(imageBuffer);
+            var output = Convert.ToBase64String(imageBuffer);
+            return output;
         }
 
         public static async Task<byte[]> ImageToBytes(IRandomAccessStream sourceStream)
@@ -128,5 +129,21 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             return output;
         }
 
+        public static async void SetImgSourceFromBase64Async(Image img, string base64)
+        {
+            if (!string.IsNullOrEmpty(base64))
+            {
+                var source = await ImageHelper.FromBase64(base64);
+                img.Source = source;
+            }
+        }
+        public static async void SetImgSourceFromBase64Async(ImageBrush img, string base64)
+        {
+            if (!string.IsNullOrEmpty(base64))
+            {
+                var source = await ImageHelper.FromBase64(base64);
+                img.ImageSource = source;
+            }
+        }
     }
 }

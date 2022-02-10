@@ -10,6 +10,7 @@ using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -27,7 +28,6 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
                 if (_uploadBtnCommand == null)
                     _uploadBtnCommand = new RelayCommand(async () =>
                     {
-                        var imageBrush = new ImageBrush();
                         StorageFile file = await ImageHelper.OpenFilePicker();
 
                         if (file != null)
@@ -39,8 +39,11 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
                                     BitmapDecoder decoder = await BitmapDecoder.CreateAsync(fileStream);
                                     WriteableBitmap source = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
                                     await source.SetSourceAsync(fileStream);
-                                    imageBrush.ImageSource = source;
-                                    Messenger.Default.Send(imageBrush as Brush);
+
+                                    var imgBrush = new ImageBrush();
+                                    imgBrush.ImageSource = source;
+
+                                    Messenger.Default.Send(imgBrush as Brush);
                                 }
                                 catch (Exception)
                                 {

@@ -34,15 +34,16 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             return colors;
         }
 
-        public static Brush GetSolidColorBrush(string colour)
+        public static Brush GetBrushFromHexOrStrImgBase64(string colour)
         {
             if (string.IsNullOrEmpty(colour))
                 return null;
 
-            colour = colour.Replace("#", string.Empty).ToLower();
+            colour = colour.Replace("#", string.Empty);
 
             if (colour.Length == 6)
             {
+                colour = colour.ToLower();
                 var c = Color.FromArgb(255,
                         Convert.ToByte(colour.Substring(0, 2), 16),
                         Convert.ToByte(colour.Substring(2, 2), 16),
@@ -53,6 +54,7 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
 
             else if (colour.Length == 8)
             {
+                colour = colour.ToLower();
                 byte a = (byte)(Convert.ToUInt32(colour.Substring(0, 2), 16));
                 byte r = (byte)(Convert.ToUInt32(colour.Substring(2, 2), 16));
                 byte g = (byte)(Convert.ToUInt32(colour.Substring(4, 2), 16));
@@ -61,41 +63,10 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
                 return myBrush;
             }
             else
-                throw new NotImplementedException();
-        }
-        public static async Task<Brush> GetBrushForCollageAcync(string colourOrImage)
-        {
-            if (string.IsNullOrEmpty(colourOrImage))
-                return null;
-
-            colourOrImage = colourOrImage.Replace("#", string.Empty).ToLower();
-
-            if (colourOrImage.Length == 6)
-            {
-                var c = Color.FromArgb(255,
-                        Convert.ToByte(colourOrImage.Substring(0, 2), 16),
-                        Convert.ToByte(colourOrImage.Substring(2, 2), 16),
-                        Convert.ToByte(colourOrImage.Substring(4, 2), 16));
-                SolidColorBrush myBrush = new SolidColorBrush(c);
-                return myBrush;
-            }
-
-            else if (colourOrImage.Length == 8)
-            {
-                byte a = (byte)(Convert.ToUInt32(colourOrImage.Substring(0, 2), 16));
-                byte r = (byte)(Convert.ToUInt32(colourOrImage.Substring(2, 2), 16));
-                byte g = (byte)(Convert.ToUInt32(colourOrImage.Substring(4, 2), 16));
-                byte b = (byte)(Convert.ToUInt32(colourOrImage.Substring(6, 2), 16));
-                SolidColorBrush myBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(a, r, g, b));
-                return myBrush;
-            }
-
-            else
             {
                 var ImageBrush = new ImageBrush();
-                var source = await ImageHelper.FromBase64(colourOrImage);
-                ImageBrush.ImageSource = source;
-                return ImageBrush;
+                ImageHelper.SetImgSourceFromBase64Async(ImageBrush, colour); 
+                return ImageBrush; 
             }
         }
     }

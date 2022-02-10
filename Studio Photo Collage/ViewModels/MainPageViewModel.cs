@@ -77,12 +77,18 @@ namespace Studio_Photo_Collage.ViewModels
                 if (_checkBoxesEnum != value)
                 {
                     Set(ref _checkBoxesEnum, value);
-                    if (value == BtnNameEnum.Settings)
-                        ShowSettingDialog();
-                    if (value == BtnNameEnum.Print)
-                        PinCollageToSecondaryTile();
-                    if (value == BtnNameEnum.Photo)
-                        TakePthoto();
+                    switch (value)
+                    {
+                        case BtnNameEnum.Settings:
+                            ShowSettingDialog();
+                            break;
+                        case BtnNameEnum.Print:
+                            PinCollageToSecondaryTile();
+                            break;
+                        case BtnNameEnum.Photo:
+                            TakePthoto();
+                            break;
+                    }
                 }
                 else
                     Set(ref _checkBoxesEnum, null);
@@ -171,13 +177,10 @@ namespace Studio_Photo_Collage.ViewModels
                 CurrentCollage.UpdateUIAsync();
             }));
 
-            Messenger.Default.Register<Brush>(this, (Action<Brush>)(async (parameter) =>
+            Messenger.Default.Register<Brush>(this, (Action<Brush>)(async (brush) =>
             {
-                if (parameter is SolidColorBrush solidBrush)
-                    CurrentCollage.Project.BorderColor = solidBrush.Color.ToString();
-                if (parameter is ImageBrush imageBrush)
-                    CurrentCollage.Project.BorderColor = await ImageHelper.SaveToStringBase64Async(imageBrush.ImageSource);
-                CurrentCollage.UpdateUIAsync();
+                (CurrentCollage.BackgroundGrid as Grid).Background = brush;
+                CurrentCollage.UpdateProjectInfoAsync();
             }));
 
             Messenger.Default.Register<NotificationMessageAction<Image>>(this, (messageAct) =>

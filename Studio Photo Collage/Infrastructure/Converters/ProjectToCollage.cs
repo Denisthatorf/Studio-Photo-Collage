@@ -27,13 +27,13 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
 
                     var img = new Image();
                     img.Stretch = Windows.UI.Xaml.Media.Stretch.Fill;
-                    SetImageSourceAsync(img, proj, i);
+                    ImageHelper.SetImgSourceFromBase64Async(img, proj.ImageArr[i]);
 
                     gridInGrid.Children.Add(img);
                     gridInGrid.BorderThickness = new Windows.UI.Xaml.Thickness(proj.BorderThickness * (int.Parse(parameter as string) / 480.0));
                 }
 
-                backgroundGrid.Background = BrushGenerator.GetSolidColorBrush(proj.BorderColor);
+                backgroundGrid.Background = BrushGenerator.GetBrushFromHexOrStrImgBase64(proj.BorderColor);
                 backgroundGrid.Opacity = proj.BorderOpacity;
 
                 collageGrid.Children.Add(backgroundGrid);
@@ -46,16 +46,6 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
-        }
-
-        private async void SetImageSourceAsync(Image img, Project project, int numberInArr)
-        {
-            string str = project.ImageArr[numberInArr];
-            if (!string.IsNullOrEmpty(str))
-            {
-                var source = await ImageHelper.FromBase64(str);
-                img.Source = source;
-            }
         }
     }
 }
