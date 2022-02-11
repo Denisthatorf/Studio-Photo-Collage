@@ -218,11 +218,10 @@ namespace Studio_Photo_Collage.ViewModels
         private async Task SaveProjectInJsonAsync()
         {
             var str = await JsonHelper.DeserializeFileAsync("projects.json");
-            var projects = new List<Project>();
+            List<Project> projects = new List<Project>();
+
             if (!String.IsNullOrEmpty(str))
                 projects = await JsonHelper.ToObjectAsync<List<Project>>(str);
-            if (projects == null)
-                projects = new List<Project>();
 
             int index = projects.IndexOf(CurrentCollage.Project);
             if (index == -1)
@@ -248,13 +247,8 @@ namespace Studio_Photo_Collage.ViewModels
                 await file.DeleteAsync();
 
                 var source = await ImageHelper.SaveCollageUIAsImage(CurrentCollage);
-
-                // Initialize a secondary tile with the same tile ID you want to update
                 SecondaryTile tile = new SecondaryTile(tileId);
 
-                // Assign ALL properties, including ones you aren't changing
-
-                // And then update it
                 await tile.UpdateAsync();
             }
 
@@ -305,8 +299,7 @@ namespace Studio_Photo_Collage.ViewModels
 
                 var zipCode = CurrentCollage.Project.GetHashCode().ToString();
                 string tileId = zipCode;
-                string displayName = CurrentCollage.Project.ProjectName != null ?
-                                            CurrentCollage.Project.ProjectName : "Test";
+                string displayName = CurrentCollage.Project.ProjectName ;
                 string arguments = zipCode;
                 // Initialize the tile with required arguments
                 SecondaryTile tile = new SecondaryTile(
