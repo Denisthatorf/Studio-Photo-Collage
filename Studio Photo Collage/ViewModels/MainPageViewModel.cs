@@ -182,18 +182,35 @@ namespace Studio_Photo_Collage.ViewModels
             // use this  CurrentCollage.UpdateProjectInfoAsync();
             // for image updation 
 
-            Messenger.Default.Register<Brush>(this, (Action<Brush>)((brush) =>
+            Messenger.Default.Register<ImageBrush>(this, (Action<ImageBrush>)(async(imgBrush) =>
             {
-                (CurrentCollage.BackgroundGrid as Grid).Background = brush;
-                CurrentCollage.UpdateProjectInfoAsync();
+                var backgroundGrid = CurrentCollage.BackgroundGrid as Grid;
+                backgroundGrid.Background = imgBrush;
+
+                var project = CurrentCollage.Project;
+                project.BackgroundColor = await ImageHelper.SaveToStringBase64Async(imgBrush.ImageSource);
             }));
 
-            Messenger.Default.Register<NotificationMessageAction<Image>>(this, (messageAct) =>
+            Messenger.Default.Register<SolidColorBrush>(this, (Action<SolidColorBrush>)((brush) =>
+            {
+                var backgroundGrid = CurrentCollage.BackgroundGrid as Grid;
+                backgroundGrid.Background = brush;
+
+                var project = CurrentCollage.Project;
+                 project.BackgroundColor = brush.Color.ToString();
+            }));
+
+            Messenger.Default.Register<NotificationMessageAction<Image>>(this, async(messageAct) =>
             {
                 var image = CurrentCollage.SelectedImage;
                 if (image?.Source != null)
                     messageAct.Execute(image);
-                CurrentCollage.UpdateProjectInfoAsync();
+
+                var selectedimg = CurrentCollage.SelectedImage;
+
+                if (selectedimg?.Source != null)
+                    CurrentCollage.Project.ImageArr[CurrentCollage.SelectedImageNumberInList]
+                        = await ImageHelper.SaveToStringBase64Async(selectedimg.Source);
             });
             #endregion
         }

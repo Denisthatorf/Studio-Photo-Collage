@@ -43,7 +43,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
                                     var imgBrush = new ImageBrush();
                                     imgBrush.ImageSource = source;
 
-                                    Messenger.Default.Send(imgBrush as Brush);
+                                    Messenger.Default.Send(imgBrush);
                                 }
                                 catch (Exception)
                                 {
@@ -62,7 +62,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
             get
             {
                 if (_colorBtnCommand == null)
-                    _colorBtnCommand = new RelayCommand<Brush>((parametr) => { 
+                    _colorBtnCommand = new RelayCommand<SolidColorBrush>((parametr) => { 
                         Messenger.Default.Send(parametr); 
                     });
                 return _colorBtnCommand;

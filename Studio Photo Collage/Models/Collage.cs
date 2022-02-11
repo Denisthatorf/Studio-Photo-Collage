@@ -97,7 +97,6 @@ namespace Studio_Photo_Collage.Models
                 Project.BackgroundColor = await ImageHelper.SaveToStringBase64Async(imageBrush.ImageSource);
             else if (brush is SolidColorBrush solidColor)
                 Project.BackgroundColor = solidColor.Color.ToString();
-
         }
 
         #region UIElement creation
