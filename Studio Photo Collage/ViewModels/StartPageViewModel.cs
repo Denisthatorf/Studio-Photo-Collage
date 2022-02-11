@@ -41,6 +41,7 @@ namespace Studio_Photo_Collage.ViewModels
                         if (result.ToString() == "Primary") //yes
                         {
                             RecentProjects.Clear();
+                            IsRecentCollagesOpen = false;
                             JsonHelper.WriteToFile("projects.json", string.Empty);
                         }
                     });
@@ -80,11 +81,22 @@ namespace Studio_Photo_Collage.ViewModels
         #endregion
 
         private bool _isRecentCollagesOpen;
-        public bool IsRecentCollagesOpen { get => _isRecentCollagesOpen; set => Set(ref _isRecentCollagesOpen, value); }
+        public bool IsRecentCollagesOpen { 
+            get => _isRecentCollagesOpen;
+            set
+            {
+                if(!(RecentProjects.Count == 0 && value == true)) //try open
+                {
+                    Set(ref _isRecentCollagesOpen, value);
+                    IsGreetingTextVisible = !value;
+                }
+            }  
+        }
 
-
-        private Visibility _isGreetingTextVisible;
-        public Visibility IsGreetingTextVisible { get => _isGreetingTextVisible; set => Set(ref _isGreetingTextVisible, value); }
+        private bool _isGreetingTextVisible;
+        public bool IsGreetingTextVisible { 
+            get => _isGreetingTextVisible; 
+            set => Set(ref _isGreetingTextVisible, value); }
 
 
         private ObservableCollection<Tuple<Project>> _recentProjects;
@@ -95,14 +107,14 @@ namespace Studio_Photo_Collage.ViewModels
             _navigationService = navigationService;
 
             RecentProjects = new ObservableCollection<Tuple<Project>>();
+            _isGreetingTextVisible = true;
+
             DesserializeProjects();
             Windows.UI.Xaml.Window.Current.CoreWindow.KeyDown += (sender, arg) =>
             {
-                if (arg.VirtualKey == Windows.System.VirtualKey.Space ||
-                  arg.VirtualKey == Windows.System.VirtualKey.Enter)
+                if (arg.VirtualKey == Windows.System.VirtualKey.Space || arg.VirtualKey == Windows.System.VirtualKey.Enter)
                 {
                     IsRecentCollagesOpen = true;
-                    IsGreetingTextVisible = Visibility.Collapsed;
                 }
             };
         }

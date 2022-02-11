@@ -27,9 +27,9 @@ namespace Studio_Photo_Collage.Views.PopUps
             {
                 projectName = value;
                 if (!string.IsNullOrEmpty(projectName))
-                    this.IsSecondaryButtonEnabled = true;
+                    this.IsPrimaryButtonEnabled = true;
                 else
-                    this.IsSecondaryButtonEnabled = false;
+                    this.IsPrimaryButtonEnabled = false;
             }
         }
 

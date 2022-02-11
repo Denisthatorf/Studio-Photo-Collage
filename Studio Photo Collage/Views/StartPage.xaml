@@ -8,6 +8,7 @@
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:converters="using:Studio_Photo_Collage.Infrastructure.Converters"
     xmlns:usercontrole="using:Studio_Photo_Collage.UserControles"
+    xmlns:infr="using:Studio_Photo_Collage.Infrastructure"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     mc:Ignorable="d"
     ui:ApplicationViewExtensions.ExtendViewIntoTitleBar="True"
@@ -17,6 +18,7 @@
 
     <Page.Resources>
         <converters:FromArrToGridConverter x:Key="FromArrConverter"/>
+        <infr:BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
     </Page.Resources>
     
     <Grid>
@@ -89,13 +91,15 @@
             </Button>
 
             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" 
-                       Margin="50" Visibility="{Binding IsGreetingTextVisible}"
+                       Margin="50" Visibility="{Binding IsGreetingTextVisible, Converter={StaticResource BoolToVisibility}}"
                        FontSize="24" Foreground="{ThemeResource AppBarItemForegroundThemeBrush}" 
                        Text="Welcome to Studio Photo Collages" x:Uid="Greeting" />
         </Grid>
 
-        <Popup HorizontalAlignment="Left" VerticalAlignment="Bottom"
-               Height="200" IsOpen="{Binding IsRecentCollagesOpen}">
+        <Popup x:Name="RecentColl"
+               HorizontalAlignment="Left" VerticalAlignment="Bottom"
+               Height="200"
+               IsOpen="{Binding IsRecentCollagesOpen}">
             <StackPanel Orientation="Vertical" Padding="36,0">
 
                 <StackPanel Orientation="Horizontal">
