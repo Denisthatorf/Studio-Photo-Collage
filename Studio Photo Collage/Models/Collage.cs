@@ -35,6 +35,7 @@ namespace Studio_Photo_Collage.Models
 
         public UIElement BackgroundGrid => (CollageGrid as Grid).Children[0];
         public UIElement MainGrid => (CollageGrid as Grid).Children[1];
+
         public Image SelectedImage
         {
             get
@@ -111,13 +112,13 @@ namespace Studio_Photo_Collage.Models
 
             for (int i = 0; i < maingird.Children.Count; i++)
             {
-                var borderGridInGrid = maingird.Children[i] as Grid;
+                var borderMarginGridInGrid = maingird.Children[i] as Grid;
 
-                borderGridInGrid.BorderThickness = new Thickness(Project.BorderThickness);
-                borderGridInGrid.Background = new SolidColorBrush(Colors.Transparent);
+                borderMarginGridInGrid.BorderThickness = new Thickness(Project.BorderThickness);
+                borderMarginGridInGrid.Background = new SolidColorBrush(Colors.Transparent);
 
                 var btn = GetToggleBtnWithImg(i);
-                borderGridInGrid.Children.Add(btn); ;
+                borderMarginGridInGrid.Children.Add(btn); 
             }
 
             backgroundgrid.Background = BrushGenerator.GetBrushFromHexOrStrImgBase64(this.Project.BackgroundColor);
@@ -142,20 +143,29 @@ namespace Studio_Photo_Collage.Models
             ToggleBtn.Style = Application.Current.Resources["ToggleButtonProjStyle"] as Style;
 
             ToggleBtn.CommandParameter = numberInList; // number in PhotoArray
-            ToggleBtn.Checked += async (o, e) =>
+            ToggleBtn.Checked += (o, e) =>
             {
                 var Tbtn = o as ToggleButton;
-                if (Tbtn.Content != null)
+                var imgInBtn = Tbtn.Content as Image;
+                if(imgInBtn.Source == null)
                 {
                     var comPar = Tbtn.CommandParameter;
                     UnCheckedAnothersBtns((int)comPar);
-                    await LoadMediaAsync((int)comPar, Tbtn.Content);
+                    LoadMediaAsync((int)comPar, Tbtn.Content);
                 }
+            };
+            ToggleBtn.Unchecked += (o, e) => 
+            {
+                var Tbtn = o as ToggleButton;
+                var imgInBtn = Tbtn.Content as Image;
+
+                var comPar = Tbtn.CommandParameter;
+                LoadMediaAsync((int)comPar, Tbtn.Content);
             };
             return ToggleBtn;
         }
 
-        private async Task LoadMediaAsync(int numberInList, object content)
+        private async void LoadMediaAsync(int numberInList, object content)
         {
             var img = content as Image;
             StorageFile file = await ImageHelper.OpenFilePicker();
