@@ -93,6 +93,10 @@ namespace Studio_Photo_Collage.Models
 
             var background = this.BackgroundGrid as Grid;
             var brush = background.Background;
+            if (brush is ImageBrush imageBrush)
+                Project.BackgroundColor = await ImageHelper.SaveToStringBase64Async(imageBrush.ImageSource);
+            else if (brush is SolidColorBrush solidColor)
+                Project.BackgroundColor = solidColor.Color.ToString();
 
         }
 
@@ -117,7 +121,7 @@ namespace Studio_Photo_Collage.Models
                 borderGridInGrid.Children.Add(btn); ;
             }
 
-            backgroundgrid.Background = BrushGenerator.GetBrushFromHexOrStrImgBase64(this.Project.BorderColor);
+            backgroundgrid.Background = BrushGenerator.GetBrushFromHexOrStrImgBase64(this.Project.BackgroundColor);
             backgroundgrid.Opacity = this.Project.BorderOpacity;
 
 

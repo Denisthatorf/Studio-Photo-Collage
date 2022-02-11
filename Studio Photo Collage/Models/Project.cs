@@ -42,11 +42,11 @@ namespace Studio_Photo_Collage.Models
 
         #region UIelement Properties
 
-        private string _colorOfBorders; // background in grid
-        public string BorderColor
+        private string _backgroundColor; // background in grid
+        public string BackgroundColor
         {
-            get { return _colorOfBorders; }
-            set { _colorOfBorders = value; }
+            get { return _backgroundColor; }
+            set { _backgroundColor = value; }
         }
 
         private double _borderThickness;
@@ -79,7 +79,7 @@ namespace Studio_Photo_Collage.Models
             SaveFormat = "png";
             _photoArray = photoArr;
             _borderOpacity = 1;
-            _colorOfBorders = "#ffff00";
+            _backgroundColor = "#ffff00";
             _arrayOfImages = new string[CountOfPhotos];
         }
         public Project() { }

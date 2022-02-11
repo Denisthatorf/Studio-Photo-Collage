@@ -62,7 +62,9 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
             get
             {
                 if (_colorBtnCommand == null)
-                    _colorBtnCommand = new RelayCommand<Brush>((parametr) => { Messenger.Default.Send(parametr); });
+                    _colorBtnCommand = new RelayCommand<Brush>((parametr) => { 
+                        Messenger.Default.Send(parametr); 
+                    });
                 return _colorBtnCommand;
             }
         }
