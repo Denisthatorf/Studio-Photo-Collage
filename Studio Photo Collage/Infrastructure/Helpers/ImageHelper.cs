@@ -126,6 +126,7 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             // create bitmap
             var output = new WriteableBitmap((int)decoder.PixelHeight, (int)decoder.PixelWidth);
             await output.SetSourceAsync(image);
+
             return output;
         }
 
@@ -137,6 +138,7 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
                 img.Source = source;
             }
         }
+
         public static async void SetImgSourceFromBase64Async(ImageBrush img, string base64)
         {
             if (!string.IsNullOrEmpty(base64))

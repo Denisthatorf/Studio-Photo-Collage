@@ -135,32 +135,53 @@ namespace Studio_Photo_Collage.Models
         {
             var ToggleBtn = new ToggleButton();
 
+            var scrollViewer = new ScrollViewer();
             var img = new Image();
-            img.Stretch = Windows.UI.Xaml.Media.Stretch.Fill;
+
+            img.Stretch = Windows.UI.Xaml.Media.Stretch.Uniform;
             ImageHelper.SetImgSourceFromBase64Async(img, Project.ImageArr?[numberInList]);
 
-            ToggleBtn.Content = img;
+            #region Zoom settings
+            scrollViewer.ZoomMode = ZoomMode.Enabled;
+            scrollViewer.IsVerticalScrollChainingEnabled = false;
+
+            scrollViewer.HorizontalContentAlignment = HorizontalAlignment.Stretch;
+            scrollViewer.VerticalContentAlignment = VerticalAlignment.Stretch;
+
+            scrollViewer.HorizontalScrollMode = ScrollMode.Enabled;
+            scrollViewer.VerticalScrollMode = ScrollMode.Enabled;
+
+            scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
+            scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+            //scrollViewer.MinZoomFactor = 0.9f;
+            #endregion
+
+            scrollViewer.Content = img;
+
+            ToggleBtn.Content = scrollViewer;
             ToggleBtn.Style = Application.Current.Resources["ToggleButtonProjStyle"] as Style;
 
             ToggleBtn.CommandParameter = numberInList; // number in PhotoArray
             ToggleBtn.Checked += (o, e) =>
             {
                 var Tbtn = o as ToggleButton;
-                var imgInBtn = Tbtn.Content as Image;
+                var scroll = Tbtn.Content as ScrollViewer;
+                var imgInBtn = scroll.Content as Image;
                 if(imgInBtn.Source == null)
                 {
                     var comPar = Tbtn.CommandParameter;
                     UnCheckedAnothersBtns((int)comPar);
-                    LoadMediaAsync((int)comPar, Tbtn.Content);
+                    LoadMediaAsync((int)comPar, scroll.Content);
                 }
             };
             ToggleBtn.Unchecked += (o, e) => 
             {
                 var Tbtn = o as ToggleButton;
-                var imgInBtn = Tbtn.Content as Image;
+                var scroll = Tbtn.Content as ScrollViewer;
+                var imgInBtn = scroll.Content as Image;
 
                 var comPar = Tbtn.CommandParameter;
-                LoadMediaAsync((int)comPar, Tbtn.Content);
+                LoadMediaAsync((int)comPar, scroll.Content);
             };
             return ToggleBtn;
         }
