@@ -149,7 +149,7 @@
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ToggleButtonForegroundChecked}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MainBorderBrush}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CustomBrush}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
                                     </Storyboard>
@@ -164,10 +164,10 @@
                                             </DiscreteObjectKeyFrame>
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MainBorderBrush}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CustomBrush}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource MainBorderBrush}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CustomBrush}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
                                     </Storyboard>
@@ -181,7 +181,7 @@
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ToggleButtonForegroundCheckedPressed}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MainBorderBrush}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CustomBrush}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <PointerDownThemeAnimation Storyboard.TargetName="RootGrid"/>
                                     </Storyboard>
@@ -252,7 +252,7 @@
                                 <VisualState x:Name="Normal">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="Root">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MainBorderBrush}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CustomBrush}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <PointerUpThemeAnimation Storyboard.TargetName="OverflowTextLabel"/>
                                     </Storyboard>

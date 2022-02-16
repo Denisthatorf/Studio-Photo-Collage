@@ -15,7 +15,7 @@
     ui:ApplicationViewExtensions.BackButtonVisibility="Visible">
 
     <Page.DataContext>
-        <viewModels:TemplatesPageViewModel x:Name="ViewModel" />
+        <viewModels:TemplatesPageViewModel />
     </Page.DataContext>
     <Page.Resources>
         <Style TargetType="Button">
@@ -41,7 +41,7 @@
                                         <Storyboard>
 
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MainBorderBrush}" />
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CustomBrush}" />
                                             </ObjectAnimationUsingKeyFrames>
 
                                             <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />

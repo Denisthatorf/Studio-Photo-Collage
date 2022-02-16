@@ -45,6 +45,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
+
             <Grid  Grid.Row="1">
                 <StackPanel Background="{ThemeResource MainBackgroundColor}">
                     <AppBarToggleButton x:Name="AddFile" 

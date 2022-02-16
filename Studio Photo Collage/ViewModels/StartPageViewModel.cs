@@ -35,7 +35,7 @@ namespace Studio_Photo_Collage.ViewModels
                     imageClickCommand = new RelayCommand(() => 
                     {
                         var rootFrame = Window.Current.Content as Frame;
-                        rootFrame.Navigate(typeof(MainPage));
+                        rootFrame.Navigate(typeof(TemplatePage));
                         WeakReferenceMessenger.Default.Send(new Project(new byte[,] { {1} }));
                     });
                 }
