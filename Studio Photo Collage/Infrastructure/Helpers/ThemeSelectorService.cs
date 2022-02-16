@@ -1,23 +1,20 @@
 ﻿using System;
 using System.Threading.Tasks;
-
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 
-
 namespace Studio_Photo_Collage.Infrastructure.Helpers
 {
     public static class ThemeSelectorService
     {
-        private const string SettingsKey = "AppBackgroundRequestedTheme";
 
-        public static ElementTheme Theme { get; set; } = ElementTheme.Default;
+        public static ElementTheme Theme { get; set; }
 
         public static async Task InitializeAsync()
         {
-            Theme = await LoadThemeFromSettingsAsync();
+            //Theme = await LoadThemeFromSettingsAsync();
         }
 
         public static async Task SetThemeAsync(ElementTheme theme)
@@ -25,7 +22,7 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             Theme = theme;
 
             await SetRequestedThemeAsync();
-            await SaveThemeInSettingsAsync(Theme);
+            //await SaveThemeInSettingsAsync(Theme);
         }
 
         public static async Task SetRequestedThemeAsync()
@@ -42,9 +39,11 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             }
         }
 
-        private static async Task<ElementTheme> LoadThemeFromSettingsAsync()
+        //private const string SettingsKey = "AppBackgroundRequestedTheme";
+
+        /*private static async Task<ElementTheme> LoadThemeFromSettingsAsync()
         {
-            ElementTheme cacheTheme = ElementTheme.Default;
+            var cacheTheme = ElementTheme.Default;
             string themeName = await ApplicationData.Current.LocalSettings.ReadAsync<string>(SettingsKey);
 
             if (!string.IsNullOrEmpty(themeName))
@@ -53,11 +52,11 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             }
 
             return cacheTheme;
-        }
+        }*/
 
-        private static async Task SaveThemeInSettingsAsync(ElementTheme theme)
+        /*private static async Task SaveThemeInSettingsAsync(ElementTheme theme)
         {
             await ApplicationData.Current.LocalSettings.SaveAsync(SettingsKey, theme.ToString());
-        }
+        }*/
     }
 }

@@ -2,24 +2,20 @@
     x:Class="Studio_Photo_Collage.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Studio_Photo_Collage"
-     xmlns:vm="using:Studio_Photo_Collage.ViewModels">
+    xmlns:local="using:Studio_Photo_Collage">
+
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary>
-                    <vm:ViewModelLocator xmlns:vm="using:Studio_Photo_Collage.ViewModels" x:Key="Locator" />
-                </ResourceDictionary>
-                <ResourceDictionary Source="Styles/Colors.xaml"/>
-                <ResourceDictionary Source="Styles/StaticStyles.xaml"/>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>
+                <ResourceDictionary Source="Styles/StaticStylesDictionary.xaml"/>
+                <ResourceDictionary Source="Styles/ButtonsDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary Source="Styles/LightTheme.xaml" x:Key="Light"/>
-                <ResourceDictionary Source="Styles/DarkTheme.xaml" x:Key="Dark"/>
+                <ResourceDictionary Source="Styles/LightThemeDictionary.xaml" x:Key="Light"/>
+                <ResourceDictionary Source="Styles/DarkThemeDictionary.xaml" x:Key="Dark"/>
             </ResourceDictionary.ThemeDictionaries>
-
-
         </ResourceDictionary>
     </Application.Resources>
+    
 </Application>

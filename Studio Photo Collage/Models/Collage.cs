@@ -1,11 +1,7 @@
-﻿using Studio_Photo_Collage.Infrastructure.Converters;
-using Studio_Photo_Collage.Infrastructure.Helpers;
-using System;
-using System.ComponentModel;
+﻿using System;
 using System.Threading.Tasks;
+using Studio_Photo_Collage.Infrastructure.Helpers;
 using Windows.Graphics.Imaging;
-using Windows.Storage;
-using Windows.Storage.Streams;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -15,26 +11,11 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Studio_Photo_Collage.Models
 {
-    public class Collage : INotifyPropertyChanged
+    public class Collage
     {
-        //private List<Image> ImageCollection = new List<Image>();
-
-        private Project _myProject;
-        public Project Project
-        {
-            get { return _myProject; }
-            set { _myProject = value; }
-        }
-
-        private UIElement _collageGrid;
-        public UIElement CollageGrid
-        {
-            get { return _collageGrid; }
-            set { _collageGrid = value; NotifyPropertyChanged("CollageGrid"); }
-        }
-
         public UIElement BackgroundGrid => (CollageGrid as Grid).Children[0];
         public UIElement MainGrid => (CollageGrid as Grid).Children[1];
+
         public Image SelectedImage
         {
             get
@@ -45,8 +26,11 @@ namespace Studio_Photo_Collage.Models
                     var gridInGrid = grid.Children[i] as Grid;
                     var ToggleBtn = gridInGrid.Children[0] as ToggleButton;
                     if ((bool)ToggleBtn.IsChecked)
+                    {
                         return ToggleBtn.Content as Image;
+                    }
                 }
+
                 return null;
             }
         }
@@ -54,18 +38,24 @@ namespace Studio_Photo_Collage.Models
         {
             get
             {
+                var result = -1;
                 var grid = MainGrid as Grid;
                 for (int i = 0; i < grid.Children.Count; i++)
                 {
                     var gridInGrid = grid.Children[i] as Grid;
                     var ToggleBtn = gridInGrid.Children[0] as ToggleButton;
                     if ((bool)ToggleBtn.IsChecked)
-                        return i;
+                    {
+                        result = i;
+                    }
                 }
-                return -1;
+
+                return result;
             }
         }
 
+        public Project Project { get; set; }
+        public UIElement CollageGrid { get; }
 
         public Collage(Project _proj)
         {
@@ -74,7 +64,7 @@ namespace Studio_Photo_Collage.Models
         }
         public Collage() { }
 
-        public async void UpdateUIAsync()
+        public void UpdateUIAsync()
         {
             var grid = this.MainGrid as Grid;
             for (int i = 0; i < grid.Children.Count; i++)
@@ -89,14 +79,20 @@ namespace Studio_Photo_Collage.Models
         public async void UpdateProjectInfoAsync()
         {
             if (SelectedImage?.Source != null)
+            {
                 Project.ImageArr[SelectedImageNumberInList] = await ImageHelper.SaveToStringBase64Async(SelectedImage.Source);
+            }
 
             var background = this.BackgroundGrid as Grid;
             var brush = background.Background;
             if (brush is ImageBrush imageBrush)
+            {
                 Project.BackgroundColor = await ImageHelper.SaveToStringBase64Async(imageBrush.ImageSource);
+            }
             else if (brush is SolidColorBrush solidColor)
+            {
                 Project.BackgroundColor = solidColor.Color.ToString();
+            }
         }
 
         #region UIElement creation
@@ -106,7 +102,7 @@ namespace Studio_Photo_Collage.Models
             var arr = proj.PhotoArray;
 
             var collageGrid = new Grid();
-            var maingird = FromArrToGridConverter.GetGridWith<Grid>(arr);
+            var maingird = CollageGenerator.GetGridWith<Grid>(arr);
             var backgroundgrid = new Grid();
 
             for (int i = 0; i < maingird.Children.Count; i++)
@@ -120,9 +116,8 @@ namespace Studio_Photo_Collage.Models
                 borderGridInGrid.Children.Add(btn); ;
             }
 
-            backgroundgrid.Background = BrushGenerator.GetBrushFromHexOrStrImgBase64(this.Project.BackgroundColor);
+            backgroundgrid.Background = BrushHelper.GetBrushFromHexOrStrImgBase64(Project.BackgroundColor);
             backgroundgrid.Opacity = this.Project.BorderOpacity;
-
 
             collageGrid.Children.Add(backgroundgrid);
             collageGrid.Children.Add(maingird);
@@ -139,7 +134,7 @@ namespace Studio_Photo_Collage.Models
             ImageHelper.SetImgSourceFromBase64Async(img, Project.ImageArr?[numberInList]);
 
             ToggleBtn.Content = img;
-            ToggleBtn.Style = Application.Current.Resources["ToggleButtonProjStyle"] as Style;
+            ToggleBtn.Style = Application.Current.Resources["TemplatesToggleButton"] as Style;
 
             ToggleBtn.CommandParameter = numberInList; // number in PhotoArray
             ToggleBtn.Checked += async (o, e) =>
@@ -147,9 +142,9 @@ namespace Studio_Photo_Collage.Models
                 var Tbtn = o as ToggleButton;
                 if (Tbtn.Content != null)
                 {
-                    var comPar = Tbtn.CommandParameter;
-                    UnCheckedAnothersBtns((int)comPar);
-                    await LoadMediaAsync((int)comPar, Tbtn.Content);
+                    var comPar = (int)Tbtn.CommandParameter;
+                    UnCheckedAnothersBtns(comPar);
+                    await LoadMediaAsync(comPar, Tbtn.Content);
                 }
             };
             return ToggleBtn;
@@ -158,17 +153,17 @@ namespace Studio_Photo_Collage.Models
         private async Task LoadMediaAsync(int numberInList, object content)
         {
             var img = content as Image;
-            StorageFile file = await ImageHelper.OpenFilePicker();
+            var file = await ImageHelper.OpenFilePicker();
 
             if (file != null)
             {
-                using (IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read))
+                using (var fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read))
                 {
-                    
+
                     try
                     {
-                        BitmapDecoder decoder = await BitmapDecoder.CreateAsync(fileStream);
-                        WriteableBitmap source = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
+                        var decoder = await BitmapDecoder.CreateAsync(fileStream);
+                        var source = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
                         await source.SetSourceAsync(fileStream);
                         img.Source = source;
                         Project.ImageArr[numberInList] = await ImageHelper.SaveToStringBase64Async(source);
@@ -194,16 +189,5 @@ namespace Studio_Photo_Collage.Models
             }
         }
         #endregion
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void NotifyPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
     }
 }

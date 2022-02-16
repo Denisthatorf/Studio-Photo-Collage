@@ -1,115 +1,134 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
-using GalaSoft.MvvmLight.Views;
-using Studio_Photo_Collage.Infrastructure.Helpers;
-using Studio_Photo_Collage.Models;
-using Studio_Photo_Collage.Views.PopUps;
+﻿
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.Messaging;
+using Studio_Photo_Collage.Infrastructure.Helpers;
+using Studio_Photo_Collage.Models;
+using Studio_Photo_Collage.Views;
+using Studio_Photo_Collage.Views.PopUps;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace Studio_Photo_Collage.ViewModels
 {
-    public class StartPageViewModel : ViewModelBase
+    public class StartPageViewModel : ObservableObject
     {
-        private readonly INavigationService _navigationService;
+        private ObservableCollection<Tuple<Project>> recentProjects;
 
-        #region Commands
-        private ICommand _imageClickCommand;
+        private bool isGreetingTextVisible;
+        private bool isRecentCollagesOpen;
+
+        private ICommand imageClickCommand;
+        private ICommand recentCollCloseCommand;
+        private ICommand settingsCommand;
+        private ICommand templateClickCommand;
+
         public ICommand ImageClickCommand
         {
             get
             {
-                if (_imageClickCommand == null)
-                    _imageClickCommand = new RelayCommand(() => _navigationService.NavigateTo("TemplatesPage"));
-                return _imageClickCommand;
+                if (imageClickCommand == null)
+                {
+                    imageClickCommand = new RelayCommand(() => 
+                    {
+                        var rootFrame = Window.Current.Content as Frame;
+                        rootFrame.Navigate(typeof(MainPage));
+                        WeakReferenceMessenger.Default.Send(new Project(new byte[,] { {1} }));
+                    });
+                }
+
+                return imageClickCommand;
             }
         }
-
-        private ICommand recentCollCloseCommand;
         public ICommand RecentCollCloseCommand
         {
             get
             {
                 if (recentCollCloseCommand == null)
+                {
                     recentCollCloseCommand = new RelayCommand<object>(async (parametr) =>
                     {
                         var dialog = new ConfirmDialog();
-                        var result = await dialog.ShowAsync();
-                        if (result.ToString() == "Primary") //yes
-                        {
-                            RecentProjects.Clear();
-                            IsRecentCollagesOpen = false;
-                            JsonHelper.WriteToFile("projects.json", string.Empty);
-                        }
+                         var result = await dialog.ShowAsync();
+                         if (result.ToString() == "Primary") //yes
+                         {
+                             RecentProjects.Clear();
+                             IsRecentCollagesOpen = false;
+                            _ = JsonHelper.WriteToFile("projects.json", string.Empty);
+                         }
                     });
+                }
+
                 return recentCollCloseCommand;
             }
         }
-
-        private ICommand settingsCommand;
         public ICommand SettingsCommand
         {
             get
             {
                 if (settingsCommand == null)
+                {
                     settingsCommand = new RelayCommand(async () =>
                     {
                         var dialog = new SettingsDialog();
                         await dialog.ShowAsync();
                     });
+                }
+
                 return settingsCommand;
             }
         }
-
-        private ICommand templateClickCommand;
         public ICommand TemplateClickCommand
         {
             get
             {
                 if (templateClickCommand == null)
+                {
                     templateClickCommand = new RelayCommand<Project>((parameter) =>
                     {
-                        _navigationService.NavigateTo("MainPage");
-                        Messenger.Default.Send(parameter);
+                        //_navigationService.NavigateTo("MainPage");
+                        // Messenger.Default.Send(parameter);
                     });
+                }
+
                 return templateClickCommand;
             }
         }
-        #endregion
 
-        private bool _isRecentCollagesOpen;
-        public bool IsRecentCollagesOpen { 
-            get => _isRecentCollagesOpen;
-            set
-            {
-                if(!(RecentProjects.Count == 0 && value == true)) //try open
-                {
-                    Set(ref _isRecentCollagesOpen, value);
-                    IsGreetingTextVisible = !value;
-                }
-            }  
+        public ObservableCollection<Tuple<Project>> RecentProjects
+        {
+            get => recentProjects;
+            set => SetProperty(ref recentProjects, value);
         }
 
-        private bool _isGreetingTextVisible;
-        public bool IsGreetingTextVisible { 
-            get => _isGreetingTextVisible; 
-            set => Set(ref _isGreetingTextVisible, value); }
-
-
-        private ObservableCollection<Tuple<Project>> _recentProjects;
-        public ObservableCollection<Tuple<Project>> RecentProjects { get => _recentProjects; set => Set(ref _recentProjects, value); }
-
-        public StartPageViewModel(INavigationService navigationService)
+        public bool IsRecentCollagesOpen
         {
-            _navigationService = navigationService;
+            get => isRecentCollagesOpen;
+            set
+            {
+                if (!(RecentProjects.Count == 0 && value == true))
+                {
+                    SetProperty(ref isRecentCollagesOpen, value);
+                    IsGreetingTextVisible = !value;
+                }
+            }
+        }
+        public bool IsGreetingTextVisible
+        {
+            get => isGreetingTextVisible;
+            set => SetProperty(ref isGreetingTextVisible, value);
+        }
 
+        public StartPageViewModel()
+        {
             RecentProjects = new ObservableCollection<Tuple<Project>>();
-            _isGreetingTextVisible = true;
+            isGreetingTextVisible = true;
 
             DesserializeProjects();
+
             Windows.UI.Xaml.Window.Current.CoreWindow.KeyDown += (sender, arg) =>
             {
                 if (arg.VirtualKey == Windows.System.VirtualKey.Space || arg.VirtualKey == Windows.System.VirtualKey.Enter)
@@ -123,9 +142,11 @@ namespace Studio_Photo_Collage.ViewModels
         {
             var jsonStr = await JsonHelper.DeserializeFileAsync("projects.json");
 
-            ObservableCollection<Project> projects = new ObservableCollection<Project>();
-            if (!String.IsNullOrEmpty(jsonStr))
+            var projects = new ObservableCollection<Project>();
+            if (!string.IsNullOrEmpty(jsonStr))
+            {
                 projects = await JsonHelper.ToObjectAsync<ObservableCollection<Project>>(jsonStr);
+            }
 
             foreach (var proj in projects)
             {

@@ -1,86 +1,50 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using Newtonsoft.Json;
 
 namespace Studio_Photo_Collage.Models
 {
     [JsonObject(MemberSerialization.Fields)]
-    public class Project : INotifyPropertyChanged
+    public class Project
     {
         [NonSerialized]
-        private static Random rnd = new Random();
-
-        private int Uid;
-
-        private byte[,] _photoArray;
-        public byte[,] PhotoArray
-        {
-            get { return _photoArray; }
-            set { _photoArray = value; }
-        }
-
-        public DateTime DateOfLastEditing { get; set; }
-
-        public string ProjectName { get; set; }
-
-        public string SaveFormat { get; set; }
+        private static readonly Random rnd = new Random();
+        private readonly int uid;
 
         public int CountOfPhotos
         {
             get
             {
                 var list = new List<byte>();
-                foreach (var item in _photoArray)
+                foreach (var item in PhotoArray)
                 {
                     if (!list.Contains(item))
+                    {
                         list.Add(item);
+                    }
                 }
+
                 return list.Count;
             }
         }
+        public byte[,] PhotoArray { get; set; }
+        public DateTime DateOfLastEditing { get; set; }
+        public string ProjectName { get; set; }
 
-        #region UIelement Properties
-
-        private string _backgroundColor; // background in grid
-        public string BackgroundColor
-        {
-            get { return _backgroundColor; }
-            set { _backgroundColor = value; }
-        }
-
-        private double _borderThickness;
-        public double BorderThickness
-        {
-            get { return _borderThickness; }
-            set { _borderThickness = value; }
-        }
-
-        private double _borderOpacity;
-        public double BorderOpacity
-        {
-            get { return _borderOpacity; }
-            set { _borderOpacity = value; }
-        }
-
-        private string[] _arrayOfImages;
-        public string[] ImageArr
-        {
-            get { return _arrayOfImages; }
-            set { _arrayOfImages = value; }
-        }
-
-
+        #region UIelement
+        public string BackgroundColor { get; set; }
+        public double BorderThickness { get; set; }
+        public double BorderOpacity { get; set; }
+        public string[] ImageArr { get; set; }
         #endregion
 
         public Project(byte[,] photoArr)
         {
-            Uid = rnd.Next();
-            SaveFormat = "png";
-            _photoArray = photoArr;
-            _borderOpacity = 1;
-            _backgroundColor = "#ffff00";
-            _arrayOfImages = new string[CountOfPhotos];
+            uid = rnd.Next();
+            PhotoArray = photoArr;
+            BorderOpacity = 1;
+            BackgroundColor = "#ffff00";
+            ImageArr = new string[CountOfPhotos];
         }
         public Project() { }
 
@@ -92,15 +56,16 @@ namespace Studio_Photo_Collage.Models
         public override bool Equals(object obj)
         {
             if (obj == null)
+            {
                 return false;
+            }
+
             return Equals(obj as Project);
         }
 
         public bool Equals(Project other)
         {
-            if (other == null)
-                return false;
-            return other.GetHashCode() == this.GetHashCode();
+            return other != null && other.GetHashCode() == this.GetHashCode();
         }
 
         public override int GetHashCode()
@@ -120,17 +85,7 @@ namespace Studio_Photo_Collage.Models
                     hashCode = hashCode * -1521134295 + item.GetDeterministicHashCode();
              }
              return hashCode;*/
-            return Uid;
-        }
-        [field: NonSerializedAttribute()]
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void NotifyPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            return uid;
         }
     }
 }

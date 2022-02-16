@@ -14,7 +14,6 @@ namespace Studio_Photo_Collage.Models
 
         public int CountOfPhotos { get; set; }
 
-
         public static ObservableCollection<GroupedTemplates> FillByGroupedTemplate()
         {
             var collection = new ObservableCollection<GroupedTemplates>();
@@ -57,7 +56,6 @@ namespace Studio_Photo_Collage.Models
             collection.Add(group3);
             #endregion
 
-            //newgroup.Projects.Add(new Project(new byte[,] { { 1, 1, 1, 1 }, { 3, 2, 4, 5} }));
             return collection;
         }
 
@@ -65,23 +63,21 @@ namespace Studio_Photo_Collage.Models
         {
             for (int i = 0; i < countOfRotation; i++)
             {
-                Project newproj = GetRotatedProject(project.PhotoArray, i);
+                var newproj = GetRotatedProject(project.PhotoArray, i);
                 groupedTemplates.Projects.Add(newproj);
             }
         }
+
         public static Project GetRotatedProject(byte[,] arr, int countOfRotation)
         {
-            var width = arr.GetUpperBound(0) + 1;
-            var height = arr.GetUpperBound(1) + 1;
-            //byte[,] arr = new byte[width, height];
-
-            //Array.Copy(_photoArray, arr, _photoArray.Length);
             for (int i = 0; i < countOfRotation; i++)
             {
                 arr = RotateRight(arr);
             }
+
             return new Project(arr);
         }
+
         public static byte[,] RotateRight(byte[,] arr)
         {
             int width;
@@ -113,5 +109,4 @@ namespace Studio_Photo_Collage.Models
             return dst;
         }
     }
-
 }

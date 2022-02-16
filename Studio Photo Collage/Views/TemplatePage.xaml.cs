@@ -7,9 +7,9 @@ namespace Studio_Photo_Collage.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class TemplatePage : Page
     {
-        public MainPage()
+        public TemplatePage()
         {
             this.InitializeComponent();
         }

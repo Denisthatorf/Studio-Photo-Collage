@@ -1,0 +1,47 @@
+﻿<ContentDialog
+    x:Class="Studio_Photo_Collage.Views.PopUps.ConfirmDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Studio_Photo_Collage.Views.PopUps"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+     x:Name="ConfirmContentDialog"
+    PrimaryButtonText="Yes"
+    SecondaryButtonText="No"
+    Style="{StaticResource ContentDialog}">
+    
+    <ContentDialog.SecondaryButtonStyle>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{ThemeResource NoBtnPopUpBtnBrush}"/>
+            <Setter Property="Foreground" Value="{ThemeResource WhiteInLightAndBlackInDark}"/>
+        </Style>
+    </ContentDialog.SecondaryButtonStyle>
+    <ContentDialog.PrimaryButtonStyle>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{ThemeResource CustomColor}"/>
+            <Setter Property="Foreground" Value="{ThemeResource WhiteInLightAndBlackInDark}"/>
+        </Style>
+    </ContentDialog.PrimaryButtonStyle>
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Confirmation" FontSize="20"/>
+            <Button Margin="185,0,0,0" 
+                    Click="Button_Click"
+                    Background="Transparent" BorderBrush="Transparent"
+                          Padding="0">
+                <SymbolIcon Symbol="Cancel"/>
+            </Button>
+        </StackPanel>
+
+        <TextBlock Margin="0,14,0,0" >
+            <Run>
+                Do you really want to remove
+            </Run>
+            <Run Text="{x:Bind AllOrThis}"/>
+            <Run>
+                collage?
+            </Run>
+        </TextBlock>
+    </StackPanel>
+</ContentDialog>
