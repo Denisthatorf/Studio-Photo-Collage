@@ -14,11 +14,9 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     ui:ApplicationViewExtensions.ExtendViewIntoTitleBar="True"
     ui:ApplicationViewExtensions.BackButtonVisibility="Collapsed"
-    ui:TitleBarExtensions.ButtonBackgroundColor="Transparent">
+    ui:TitleBarExtensions.ButtonBackgroundColor="Transparent"
+    DataContext="{Binding StarPageInstance, Source={StaticResource Locator}}">
 
-    <Page.DataContext>
-        <viewModels:StartPageViewModel x:Name="ViewModel" />
-    </Page.DataContext>
     <Page.Resources>
         <converters:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </Page.Resources>

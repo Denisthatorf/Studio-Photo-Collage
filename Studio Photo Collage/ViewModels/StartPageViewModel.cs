@@ -6,6 +6,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Studio_Photo_Collage.Infrastructure.Helpers;
+using Studio_Photo_Collage.Infrastructure.Services;
 using Studio_Photo_Collage.Models;
 using Studio_Photo_Collage.Views;
 using Studio_Photo_Collage.Views.PopUps;
@@ -14,8 +15,10 @@ using Windows.UI.Xaml.Controls;
 
 namespace Studio_Photo_Collage.ViewModels
 {
-    public class StartPageViewModel : ObservableObject
+    public class StartPageViewModel : ObservableRecipient
     {
+        private readonly INavigationService navigationService; 
+
         private ObservableCollection<Tuple<Project>> recentProjects;
 
         private bool isGreetingTextVisible;
@@ -32,12 +35,7 @@ namespace Studio_Photo_Collage.ViewModels
             {
                 if (imageClickCommand == null)
                 {
-                    imageClickCommand = new RelayCommand(() => 
-                    {
-                        var rootFrame = Window.Current.Content as Frame;
-                        rootFrame.Navigate(typeof(TemplatePage));
-                        WeakReferenceMessenger.Default.Send(new Project(new byte[,] { {1} }));
-                    });
+                    imageClickCommand = new RelayCommand(() => navigationService.Navigate(typeof(TemplatePage)));
                 }
 
                 return imageClickCommand;
@@ -89,8 +87,8 @@ namespace Studio_Photo_Collage.ViewModels
                 {
                     templateClickCommand = new RelayCommand<Project>((parameter) =>
                     {
-                        //_navigationService.NavigateTo("MainPage");
-                        // Messenger.Default.Send(parameter);
+                        navigationService.Navigate(typeof(MainPage));
+                        Messenger.Send(parameter);
                     });
                 }
 
@@ -116,14 +114,16 @@ namespace Studio_Photo_Collage.ViewModels
                 }
             }
         }
+
         public bool IsGreetingTextVisible
         {
             get => isGreetingTextVisible;
             set => SetProperty(ref isGreetingTextVisible, value);
         }
 
-        public StartPageViewModel()
+        public StartPageViewModel(INavigationService navigationService)
         {
+            this.navigationService = navigationService;
             RecentProjects = new ObservableCollection<Tuple<Project>>();
             isGreetingTextVisible = true;
 

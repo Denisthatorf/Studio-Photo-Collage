@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Studio_Photo_Collage.ViewModels;
 using Studio_Photo_Collage.ViewModels.PopUpsViewModels;
 using Studio_Photo_Collage.Views;
@@ -26,8 +27,6 @@ namespace Studio_Photo_Collage
             this.Suspending += OnSuspending;
         }
 
-        public new static App Current => (App)Application.Current;
-        public IServiceProvider Services { get; }
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
@@ -62,7 +61,7 @@ namespace Studio_Photo_Collage
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(TemplatePage), e.Arguments);
+                    rootFrame.Navigate(typeof(StartPage), e.Arguments);
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();
@@ -77,15 +76,6 @@ namespace Studio_Photo_Collage
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
-        }
-
-        private static IServiceProvider ConfigureServices()
-        {
-            var services = new ServiceCollection();
-
-           
-
-            return services.BuildServiceProvider();
         }
 
         /// <summary>

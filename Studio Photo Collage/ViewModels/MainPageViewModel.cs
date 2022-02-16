@@ -6,6 +6,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Studio_Photo_Collage.Infrastructure.Helpers;
+using Studio_Photo_Collage.Infrastructure.Services;
 using Studio_Photo_Collage.Models;
 using Studio_Photo_Collage.Views.PopUps;
 using Windows.Foundation;
@@ -19,8 +20,10 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Studio_Photo_Collage.ViewModels
 {
-    public class MainPageViewModel : ObservableObject
+    public class MainPageViewModel : ObservableRecipient
     {
+        private readonly INavigationService navigationService;
+
         private ICommand saveImageCommand;
         private ICommand saveProjectCommand;
         private BtnNameEnum? checkBoxesEnum;
@@ -93,8 +96,9 @@ namespace Studio_Photo_Collage.ViewModels
             }
         }
 
-        public MainPageViewModel()
+        public MainPageViewModel(INavigationService navigationService)
         {
+            this.navigationService = navigationService;
             checkBoxesEnum = null;
             MessengersRegistration();
         }
@@ -140,7 +144,8 @@ namespace Studio_Photo_Collage.ViewModels
         private void MessengersRegistration()
         {
 
-            WeakReferenceMessenger.Default.Register<Project>(this, (r, m) => CurrentCollage = new Collage(m));
+            Messenger.Register<Project>(this, (r, m) => 
+            CurrentCollage = new Collage(m));
 
             //WeakReferenceMessenger.Default.Register<Thickness>(this, (r, m) =>
             //{
@@ -154,7 +159,7 @@ namespace Studio_Photo_Collage.ViewModels
             //    CurrentCollage.UpdateUIAsync();
             //});
 
-            WeakReferenceMessenger.Default.Register<ImageBrush>(this, async (r, m) =>
+            Messenger.Register<ImageBrush>(this, async (r, m) =>
             {
                 var backgroundGrid = CurrentCollage.BackgroundGrid as Grid;
                 backgroundGrid.Background = m;
@@ -163,7 +168,7 @@ namespace Studio_Photo_Collage.ViewModels
                 project.BackgroundColor = await ImageHelper.SaveToStringBase64Async(m.ImageSource);
             });
 
-            WeakReferenceMessenger.Default.Register<SolidColorBrush>(this, (r, m) =>
+            Messenger.Register<SolidColorBrush>(this, (r, m) =>
              {
                  var backgroundGrid = CurrentCollage.BackgroundGrid as Grid;
                  backgroundGrid.Background = m;

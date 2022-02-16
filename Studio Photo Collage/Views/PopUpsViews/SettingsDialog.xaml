@@ -10,12 +10,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" 
-    x:Name="SettingsContentDialog">
+    x:Name="SettingsContentDialog"
+    DataContext="{Binding SettingsDialogInstance, Source={StaticResource Locator}}">
 
     <!--RequestedTheme="{Binding ThemeOfSettings}"-->
-       <ContentDialog.DataContext>
-            <viewModels:SettingsDialogViewModel x:Name="ViewModel"/>
-        </ContentDialog.DataContext>
         <ContentDialog.Resources>
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <converters:CultureInfoToFullStringNameConverter x:Key="CultureConverter"/>

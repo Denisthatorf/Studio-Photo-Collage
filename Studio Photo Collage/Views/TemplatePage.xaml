@@ -12,11 +12,9 @@
     Background="Gray"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     ui:ApplicationViewExtensions.ExtendViewIntoTitleBar="False"
-    ui:ApplicationViewExtensions.BackButtonVisibility="Visible">
+    ui:ApplicationViewExtensions.BackButtonVisibility="Visible"
+     DataContext="{Binding TemplatePageInstance, Source={StaticResource Locator}}">
 
-    <Page.DataContext>
-        <viewModels:TemplatesPageViewModel />
-    </Page.DataContext>
     <Page.Resources>
         <Style TargetType="Button">
             <Setter Property="Width" Value="120"/>

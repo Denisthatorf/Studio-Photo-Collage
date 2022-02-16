@@ -12,12 +12,9 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     ui:ApplicationViewExtensions.ExtendViewIntoTitleBar="False"
-    ui:ApplicationViewExtensions.BackButtonVisibility="Visible">
+    ui:ApplicationViewExtensions.BackButtonVisibility="Visible"
+     DataContext="{Binding MainPageInstance, Source={StaticResource Locator}}">
 
-
-    <Page.DataContext>
-        <viewModels:MainPageViewModel x:Name="ViewModel" />
-    </Page.DataContext>
     <Page.Resources>
         <converters:EnumValueConverter x:Key="EnumValueConverter"/>
         <converters:ProjectToUICollage x:Key="ProjectToUICollageConverter"/>
