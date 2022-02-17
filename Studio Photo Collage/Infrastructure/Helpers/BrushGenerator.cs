@@ -5,7 +5,7 @@ using Windows.UI.Xaml.Media;
 
 namespace Studio_Photo_Collage.Infrastructure.Helpers
 {
-    public static class BrushHelper
+    public static class BrushGenerator
     {
         public static List<SolidColorBrush> GenerateBrushes()
         {
@@ -69,6 +69,36 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             }
 
             return brush;
+        }
+
+        public static List<Brush> FillSettingByBrush()
+        {
+            var Colors = new List<Brush>
+            {
+                BrushGenerator.GetBrushFromHexOrStrImgBase64("FFBA00"),
+                BrushGenerator.GetBrushFromHexOrStrImgBase64("F76304"),
+                BrushGenerator.GetBrushFromHexOrStrImgBase64("DB3800"),
+                BrushGenerator.GetBrushFromHexOrStrImgBase64("D23135"),
+                BrushGenerator.GetBrushFromHexOrStrImgBase64("E9091E"),
+                BrushGenerator.GetBrushFromHexOrStrImgBase64("C40051"),
+                BrushGenerator.GetBrushFromHexOrStrImgBase64("E4008D"),
+                BrushGenerator.GetBrushFromHexOrStrImgBase64("C336B5"),
+                BrushGenerator.GetBrushFromHexOrStrImgBase64("891099"),
+                BrushGenerator.GetBrushFromHexOrStrImgBase64("754CAB"),
+                BrushGenerator.GetBrushFromHexOrStrImgBase64("8F8DD9"),
+                BrushGenerator.GetBrushFromHexOrStrImgBase64("6B69D7"),
+                BrushGenerator.GetBrushFromHexOrStrImgBase64("0063B3"),
+                BrushGenerator.GetBrushFromHexOrStrImgBase64("0079D8"),
+                BrushGenerator.GetBrushFromHexOrStrImgBase64("009ABD"),
+                BrushGenerator.GetBrushFromHexOrStrImgBase64("00B8C4"),
+                BrushGenerator.GetBrushFromHexOrStrImgBase64("00B395"),
+                BrushGenerator.GetBrushFromHexOrStrImgBase64("008675"),
+                BrushGenerator.GetBrushFromHexOrStrImgBase64("078A3C"),
+                BrushGenerator.GetBrushFromHexOrStrImgBase64("505C6B"),
+                BrushGenerator.GetBrushFromHexOrStrImgBase64("7F745F")
+            };
+
+            return Colors;
         }
     }
 }

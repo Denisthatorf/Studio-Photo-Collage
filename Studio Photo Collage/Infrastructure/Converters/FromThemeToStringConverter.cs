@@ -18,6 +18,7 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
                     return "Dark theme";
                 case ElementTheme.Default:
                     return "Custom theme";
+
                 default:
                     return "Custom theme";
             }
@@ -34,7 +35,15 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
                 case "Dark theme":
                     return ElementTheme.Dark;
                 case "Custom theme":
-                    return ElementTheme.Default;
+                    return Application.Current.RequestedTheme;
+
+                case "Light":
+                    return ElementTheme.Light;
+                case "Dark":
+                    return ElementTheme.Dark;
+                case "Custom":
+                    return Application.Current.RequestedTheme;
+
                 default:
                     return ElementTheme.Default;
             }

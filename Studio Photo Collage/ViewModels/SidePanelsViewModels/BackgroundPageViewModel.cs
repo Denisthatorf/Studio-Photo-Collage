@@ -13,7 +13,7 @@ using Studio_Photo_Collage.Infrastructure.Helpers;
 using System.Threading.Tasks;
 using Studio_Photo_Collage.Infrastructure.Messages;
 
-namespace Studio_Photo_Collage.ViewModels.SidePanels
+namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
 {
     public class BackgroundPageViewModel : ObservableRecipient
     {
@@ -37,14 +37,14 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
                 return uploadBtnCommand;
             }
         }
-       
+
         public ICommand ColorBtnCommand
         {
             get
             {
                 if (colorBtnCommand == null)
                 {
-                    colorBtnCommand = new RelayCommand<SolidColorBrush>((parametr) =>Messenger.Send(parametr));
+                    colorBtnCommand = new RelayCommand<SolidColorBrush>((parametr) => Messenger.Send(parametr));
                 }
 
                 return colorBtnCommand;
@@ -75,7 +75,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
 
         public BackgroundPageViewModel()
         {
-            Colors = BrushHelper.GenerateBrushes();
+            Colors = BrushGenerator.GenerateBrushes();
         }
 
         private static async void UploadBackgroundFromPhotoBtnClickMethod()
@@ -83,7 +83,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
             var file = await ImageHelper.OpenFilePicker();
             if (file != null)
             {
-                using (var fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read))
+                using (var fileStream = await file.OpenAsync(FileAccessMode.Read))
                 {
                     try
                     {

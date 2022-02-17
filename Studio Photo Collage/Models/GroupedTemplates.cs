@@ -5,14 +5,13 @@ namespace Studio_Photo_Collage.Models
 {
     public class GroupedTemplates
     {
+        public List<Project> Projects { get; }
+        public int CountOfPhotos { get; set; }
+
         public GroupedTemplates()
         {
             Projects = new List<Project>();
         }
-
-        public List<Project> Projects { get; }
-
-        public int CountOfPhotos { get; set; }
 
         public static ObservableCollection<GroupedTemplates> FillByGroupedTemplate()
         {
@@ -21,7 +20,7 @@ namespace Studio_Photo_Collage.Models
             #region 1 Group
             var group1 = new GroupedTemplates();
             group1.CountOfPhotos = 1;
-            AddProjects(ref group1, new Project(new byte[,] { { 1 } }), 1);
+            AddProjects(group1, new Project(new byte[,] { { 1 } }), 1);
             collection.Add(group1);
             #endregion
 
@@ -29,9 +28,9 @@ namespace Studio_Photo_Collage.Models
             var group2 = new GroupedTemplates();
             group2.CountOfPhotos = 2;
 
-            AddProjects(ref group2, new Project(new byte[,] { { 1 }, { 2 } }), 2);
+            AddProjects(group2, new Project(new byte[,] { { 1 }, { 2 } }), 2);
 
-            AddProjects(ref group2, new Project(new byte[,] { { 1, 2, 2 } }), 4);
+            AddProjects(group2, new Project(new byte[,] { { 1, 2, 2 } }), 4);
             collection.Add(group2);
             #endregion
 
@@ -39,18 +38,18 @@ namespace Studio_Photo_Collage.Models
             var group3 = new GroupedTemplates();
             group3.CountOfPhotos = 3;
 
-            AddProjects(ref group3, new Project(new byte[,] { { 1,2 },
+            AddProjects(group3, new Project(new byte[,] { { 1,2 },
                                                               { 1,3 }}), 4);
 
-            AddProjects(ref group3, new Project(new byte[,] { { 1, 2, 3 } }), 2);
+            AddProjects(group3, new Project(new byte[,] { { 1, 2, 3 } }), 2);
 
-            AddProjects(ref group3, new Project(new byte[,] { { 1, 2, 2, 3 } }), 2);
+            AddProjects(group3, new Project(new byte[,] { { 1, 2, 2, 3 } }), 2);
 
-            AddProjects(ref group3, new Project(new byte[,] { { 1,1 },
+            AddProjects(group3, new Project(new byte[,] { { 1,1 },
                                                               { 2,3 },
                                                               { 2,3 } }), 4);
 
-            AddProjects(ref group3, new Project(new byte[,] { { 1,1 },
+            AddProjects(group3, new Project(new byte[,] { { 1,1 },
                                                               { 1,1 },
                                                               { 2,3 } }), 4);
             collection.Add(group3);
@@ -59,7 +58,7 @@ namespace Studio_Photo_Collage.Models
             return collection;
         }
 
-        private static void AddProjects(ref GroupedTemplates groupedTemplates, Project project, int countOfRotation)
+        private static void AddProjects(GroupedTemplates groupedTemplates, Project project, int countOfRotation)
         {
             for (int i = 0; i < countOfRotation; i++)
             {
@@ -86,9 +85,6 @@ namespace Studio_Photo_Collage.Models
 
             width = arr.GetUpperBound(0) + 1;
             height = arr.GetUpperBound(1) + 1;
-
-            //var src = new byte[width, height];
-            // Array.Copy(arr, src, src.Length);
 
             dst = new byte[height, width];
 

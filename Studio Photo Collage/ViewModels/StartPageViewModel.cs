@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Studio_Photo_Collage.Infrastructure.Helpers;
+using Studio_Photo_Collage.Infrastructure.Messages;
 using Studio_Photo_Collage.Infrastructure.Services;
 using Studio_Photo_Collage.Models;
 using Studio_Photo_Collage.Views;
@@ -127,6 +128,8 @@ namespace Studio_Photo_Collage.ViewModels
             isGreetingTextVisible = true;
 
             DesserializeProjects();
+            Messenger.Register<ProjectSavedMessage>(
+                this, (r, m) => RecentProjects.Add(new Tuple<Project>(m.Value)));
 
             Windows.UI.Xaml.Window.Current.CoreWindow.KeyDown += (sender, arg) =>
             {

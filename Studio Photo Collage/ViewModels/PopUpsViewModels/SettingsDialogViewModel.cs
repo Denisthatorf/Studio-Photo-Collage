@@ -5,12 +5,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using Studio_Photo_Collage.Infrastructure.Converters;
 using Studio_Photo_Collage.Infrastructure.Helpers;
 using Studio_Photo_Collage.Infrastructure.Services;
 using Windows.ApplicationModel;
 using Windows.Globalization;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -20,13 +22,29 @@ namespace Studio_Photo_Collage.ViewModels.PopUpsViewModels
 {
     public class SettingsDialogViewModel : ObservableObject
     {
-        private readonly INavigationService navigationService;
+        private readonly SettingServise settingServise;
 
         private CultureInfo languageComBox_SelectedItm;
         private ElementTheme themeComBox_SelectedItem;
         private ElementTheme themeOfSettings;
-
         private ICommand changeMainColorCommand;
+
+        public ICommand ChangeMainColorCommand
+        {
+            get
+            {
+                if (changeMainColorCommand == null)
+                {
+                    changeMainColorCommand = new RelayCommand<SolidColorBrush>((parametr) =>
+                    {
+                        Ioc.Default.GetService<SettingServise>().CustomBrush = parametr;
+                    });
+                }
+
+                return changeMainColorCommand;
+            }
+        }
+        public List<Brush> Colors { get; }
 
         public CultureInfo LanguageComBox_SelectedItm
         {
@@ -34,11 +52,7 @@ namespace Studio_Photo_Collage.ViewModels.PopUpsViewModels
             set
             {
                 SetProperty(ref languageComBox_SelectedItm, value);
-                Thread.CurrentThread.CurrentCulture = value;
-                ApplicationLanguages.PrimaryLanguageOverride = value?.ToString();
-                //ResourceContext.GetForCurrentView().Reset();
-                //ResourceContext.GetForViewIndependentUse().Reset();
-                //ViewModelLocator.ReloadCurrentPage();
+                settingServise.Language = LanguageComBox_SelectedItm;
             }
         }
         public ElementTheme ThemeComBox_SelectedItem
@@ -47,55 +61,32 @@ namespace Studio_Photo_Collage.ViewModels.PopUpsViewModels
             set
             {
                 SetProperty(ref themeComBox_SelectedItem, value);
-                ChangeTheme(themeComBox_SelectedItem);
+                //ChangeTheme(themeComBox_SelectedItem);
+
+                settingServise.Theme = value;
+                ThemeOfSettings = value;
             }
         }
-        
-        public ICommand ChangeMainColorCommand
-        {
-            get
-            {
-                if (changeMainColorCommand == null)
-                {
-                    changeMainColorCommand = new RelayCommand<Color>((parametr) =>
-                    {
-                        var brush = (SolidColorBrush)App.Current.Resources["CustomBrush"];
-                        brush.Color = parametr;
-                        navigationService.Navigate(navigationService.CurrentPageType, DateTime.Now.Ticks);
-                    });
-                }
-
-                return changeMainColorCommand;
-            }
-        }
-
-     
-        public string VersionDescription { get; set; }
-
-        public List<Brush> Colors { get; }
-
         public ElementTheme ThemeOfSettings
         {
             get => themeOfSettings;
             set => SetProperty(ref themeOfSettings, value);
         }
+        public string VersionDescription { get; set; }
 
-        public SettingsDialogViewModel(INavigationService navigationService)
+        public SettingsDialogViewModel( SettingServise settingServise)
         {
-            this.navigationService = navigationService;
+            this.settingServise = settingServise;
 
-            var frame = Window.Current.Content as Frame;
-            Colors = FillByBrush();
-            languageComBox_SelectedItm = GetStartLanguage();
-            themeComBox_SelectedItem = frame.RequestedTheme;
+            Colors = BrushGenerator.FillSettingByBrush();
+
+            languageComBox_SelectedItm = settingServise.Language;
+            themeComBox_SelectedItem = settingServise.Theme;
             VersionDescription = GetVersionDescription();
-
         }
 
-        public async void ChangeTheme(ElementTheme newtheme)
+        public void ChangeTheme(ElementTheme newtheme)
         {
-            await ThemeSelectorService.SetThemeAsync(newtheme);
-            ThemeOfSettings = newtheme;
         }
 
         private static string GetVersionDescription()
@@ -106,44 +97,6 @@ namespace Studio_Photo_Collage.ViewModels.PopUpsViewModels
             var version = packageId.Version;
 
             return $"Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
-        }
-
-        private CultureInfo GetStartLanguage()
-        {
-            var selectedLanguage = ApplicationLanguages.PrimaryLanguageOverride;
-            var conv = new CultureInfoToFullStringNameConverter();
-            var culture = (CultureInfo)conv.ConvertBack(selectedLanguage, null, null, null);
-            return culture;
-        }
-
-        private List<Brush> FillByBrush()
-        {
-            var Colors = new List<Brush>
-            {
-                BrushHelper.GetBrushFromHexOrStrImgBase64("FFBA00"),
-                BrushHelper.GetBrushFromHexOrStrImgBase64("F76304"),
-                BrushHelper.GetBrushFromHexOrStrImgBase64("DB3800"),
-                BrushHelper.GetBrushFromHexOrStrImgBase64("D23135"),
-                BrushHelper.GetBrushFromHexOrStrImgBase64("E9091E"),
-                BrushHelper.GetBrushFromHexOrStrImgBase64("C40051"),
-                BrushHelper.GetBrushFromHexOrStrImgBase64("E4008D"),
-                BrushHelper.GetBrushFromHexOrStrImgBase64("C336B5"),
-                BrushHelper.GetBrushFromHexOrStrImgBase64("891099"),
-                BrushHelper.GetBrushFromHexOrStrImgBase64("754CAB"),
-                BrushHelper.GetBrushFromHexOrStrImgBase64("8F8DD9"),
-                BrushHelper.GetBrushFromHexOrStrImgBase64("6B69D7"),
-                BrushHelper.GetBrushFromHexOrStrImgBase64("0063B3"),
-                BrushHelper.GetBrushFromHexOrStrImgBase64("0079D8"),
-                BrushHelper.GetBrushFromHexOrStrImgBase64("009ABD"),
-                BrushHelper.GetBrushFromHexOrStrImgBase64("00B8C4"),
-                BrushHelper.GetBrushFromHexOrStrImgBase64("00B395"),
-                BrushHelper.GetBrushFromHexOrStrImgBase64("008675"),
-                BrushHelper.GetBrushFromHexOrStrImgBase64("078A3C"),
-                BrushHelper.GetBrushFromHexOrStrImgBase64("505C6B"),
-                BrushHelper.GetBrushFromHexOrStrImgBase64("7F745F")
-            };
-
-            return Colors;
         }
     }
 }

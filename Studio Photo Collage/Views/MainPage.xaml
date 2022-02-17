@@ -82,7 +82,7 @@
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE749;"/>
                     </AppBarToggleButton.Icon>
                 </AppBarToggleButton>
-                <AppBarButton  x:Name="Save" >
+                <AppBarButton  x:Name="Save" PointerEntered="Save_PointerEntered" >
                     <AppBarButton.Icon>
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74E;"/>
                     </AppBarButton.Icon>

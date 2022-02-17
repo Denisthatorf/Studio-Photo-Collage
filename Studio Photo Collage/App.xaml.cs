@@ -7,6 +7,7 @@ using Studio_Photo_Collage.ViewModels.PopUpsViewModels;
 using Studio_Photo_Collage.Views;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -71,6 +72,8 @@ namespace Studio_Photo_Collage
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
+
+            Ioc.Default.GetService<SettingServise>().LoadStartSetting();
         }
 
         /// <summary>

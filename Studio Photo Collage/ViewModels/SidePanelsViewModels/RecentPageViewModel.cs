@@ -11,18 +11,18 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Studio_Photo_Collage.Infrastructure.Messages;
 
-namespace Studio_Photo_Collage.ViewModels.SidePanels
+namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
 {
     public class RecentPageViewModel : ObservableRecipient
     {
-        private ObservableCollection<Project> projects; 
+        private ObservableCollection<Project> projects;
         private ICommand projectCommand;
         private ICommand removeAllCollagesCommand;
 
         public ObservableCollection<Project> Projects
         {
-            get => projects; 
-            set => SetProperty(ref projects, value); 
+            get => projects;
+            set => SetProperty(ref projects, value);
         }
 
         public ICommand ProjectCommand
@@ -50,8 +50,9 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
             {
                 if (removeAllCollagesCommand == null)
                 {
-                    removeAllCollagesCommand = new RelayCommand(async() => {
-                        if(Projects != null)
+                    removeAllCollagesCommand = new RelayCommand(async () =>
+                    {
+                        if (Projects != null)
                         {
                             var dialog = new ConfirmDialog();
                             var result = await dialog.ShowAsync();
@@ -72,6 +73,9 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
         public RecentPageViewModel()
         {
             DesserializeProjects();
+
+            WeakReferenceMessenger.Default.Register<ProjectSavedMessage>(
+                this, (r, m) => Projects.Add(m.Value));
         }
 
         private async void DesserializeProjects()

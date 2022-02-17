@@ -8,6 +8,7 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Studio_Photo_Collage.Infrastructure.Services;
 using Studio_Photo_Collage.ViewModels.PopUpsViewModels;
 using Studio_Photo_Collage.ViewModels.SidePanels;
+using Studio_Photo_Collage.ViewModels.SidePanelsViewModels;
 
 namespace Studio_Photo_Collage.ViewModels
 {
@@ -21,6 +22,7 @@ namespace Studio_Photo_Collage.ViewModels
 
             //services.AddTransient<MainPageViewModel>();
             services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<SettingServise>();
             services.AddSingleton<StartPageViewModel>();
             services.AddSingleton<TemplatePageViewModel>();
             services.AddSingleton<MainPageViewModel>();
@@ -47,7 +49,6 @@ namespace Studio_Photo_Collage.ViewModels
         public BackgroundPageViewModel BackgroundPageInstance => Ioc.Default.GetService<BackgroundPageViewModel>();
         public FiltersPageViewModel FiltersPageInstance => Ioc.Default.GetService<FiltersPageViewModel>();
         public RecentPageViewModel RecentPageInstance => Ioc.Default.GetService<RecentPageViewModel>();
-        public TemplatePageViewModel TemplateSidePageInstance => Ioc.Default.GetService<TemplatePageViewModel>();
         public TransformPageViewModel TransformPageInstance => Ioc.Default.GetService<TransformPageViewModel>();
 
     }

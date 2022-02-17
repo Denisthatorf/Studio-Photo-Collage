@@ -1,11 +1,11 @@
-﻿using System;
+﻿/*using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 
-namespace Studio_Photo_Collage.Infrastructure.Helpers
+namespace Studio_Photo_Collage.Infrastructure.Services
 {
     public static class ThemeSelectorService
     {
@@ -17,7 +17,7 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             //Theme = await LoadThemeFromSettingsAsync();
         }
 
-        public static async Task SetThemeAsync(ElementTheme theme)
+        public static async Task SetAppThemeAsync(ElementTheme theme)
         {
             Theme = theme;
 
@@ -41,7 +41,7 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
 
         //private const string SettingsKey = "AppBackgroundRequestedTheme";
 
-        /*private static async Task<ElementTheme> LoadThemeFromSettingsAsync()
+        *//*private static async Task<ElementTheme> LoadThemeFromSettingsAsync()
         {
             var cacheTheme = ElementTheme.Default;
             string themeName = await ApplicationData.Current.LocalSettings.ReadAsync<string>(SettingsKey);
@@ -52,11 +52,12 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             }
 
             return cacheTheme;
-        }*/
+        }*//*
 
-        /*private static async Task SaveThemeInSettingsAsync(ElementTheme theme)
+        private static async Task SaveThemeInSettingsAsync(ElementTheme theme)
         {
-            await ApplicationData.Current.LocalSettings.SaveAsync(SettingsKey, theme.ToString());
-        }*/
+            await ApplicationData.Current.LocalSettings.Values.Add(SettingsKey, theme.ToString());
+        }
     }
 }
+*/

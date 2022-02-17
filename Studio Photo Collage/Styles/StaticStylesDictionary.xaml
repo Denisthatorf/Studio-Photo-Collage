@@ -17,7 +17,7 @@
 
     <Style x:Key="ContentDialog" TargetType="ContentDialog">
         <Setter Property="Background" Value="{ThemeResource PopUpsBackground}"/>
-        <Setter Property="BorderBrush" Value="{ThemeResource MainBorderBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource CustomBrush}" />
     </Style>
     
     <SolidColorBrush x:Key="ContentDialogDimmingThemeBrush" Color="Transparent" />
@@ -39,7 +39,7 @@
                                         <ControlTemplate TargetType="Thumb">
                                             <Grid >
                                                 <Ellipse Width="20" Height="20" Fill="{ThemeResource BlackInLightAndWhiteInDark}" HorizontalAlignment="Stretch"/>
-                                                <Ellipse Width="13" Height="13" Fill="Red" HorizontalAlignment="Center"/>
+                                                <Ellipse Width="13" Height="13" Fill="{StaticResource CustomBrush}" HorizontalAlignment="Center"/>
                                             </Grid>
                                         </ControlTemplate>
                                     </Setter.Value>

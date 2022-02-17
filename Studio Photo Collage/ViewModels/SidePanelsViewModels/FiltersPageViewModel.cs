@@ -1,6 +1,6 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 
-namespace Studio_Photo_Collage.ViewModels.SidePanels
+namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
 {
     public class FiltersPageViewModel : ObservableObject
     {

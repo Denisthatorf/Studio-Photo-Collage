@@ -128,6 +128,8 @@ namespace Studio_Photo_Collage.ViewModels
 
             string projectsAsList = await JsonHelper.StringifyAsync(projects);
             await JsonHelper.WriteToFile("projects.json", projectsAsList);
+
+            Messenger.Send(new ProjectSavedMessage(CurrentCollage.Project));
         }
 
         public async Task<bool> SaveProjectBySaveDialogAsync()
