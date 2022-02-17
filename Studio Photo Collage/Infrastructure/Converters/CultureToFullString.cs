@@ -25,6 +25,7 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
                         return "English";
                 }
             }
+
             return "English";
         }
 

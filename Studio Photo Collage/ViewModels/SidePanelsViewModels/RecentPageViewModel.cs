@@ -9,14 +9,15 @@ using Studio_Photo_Collage.Views.PopUps;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using Studio_Photo_Collage.Infrastructure.Messages;
 
 namespace Studio_Photo_Collage.ViewModels.SidePanels
 {
-    public class RecentPageViewModel : ObservableObject
+    public class RecentPageViewModel : ObservableRecipient
     {
         private ObservableCollection<Project> projects; 
         private ICommand projectCommand;
-        private ICommand _removeAllCollagesCommand;
+        private ICommand removeAllCollagesCommand;
 
         public ObservableCollection<Project> Projects
         {
@@ -32,12 +33,10 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
                 {
                     projectCommand = new RelayCommand<Project>(async (parametr) =>
                     {
-                        var mainVM = Ioc.Default.GetService<MainPageViewModel>();
-                        var result = await mainVM.SaveProjectAsync();
-
-                       if (result != ContentDialogResult.None)
+                        bool permission = await Messenger.Send<SaveProjectRequestMessage>();
+                        if (permission)
                         {
-                           WeakReferenceMessenger.Default.Send(parametr);
+                            Messenger.Send(parametr);
                         }
                     });
                 }
@@ -45,34 +44,36 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
                 return projectCommand;
             }
         }
-       
         public ICommand RemoveCommand
         {
             get
             {
-                if (_removeAllCollagesCommand == null)
+                if (removeAllCollagesCommand == null)
                 {
-                    _removeAllCollagesCommand = new RelayCommand(async() => {
-                        var dialog = new ConfirmDialog();
-                        var result = await dialog.ShowAsync();
-
-                        if (result.ToString() == "Primary") //yes
+                    removeAllCollagesCommand = new RelayCommand(async() => {
+                        if(Projects != null)
                         {
-                            Projects?.Clear();
-                            await JsonHelper.WriteToFile("projects.json", string.Empty);
+                            var dialog = new ConfirmDialog();
+                            var result = await dialog.ShowAsync();
+
+                            if (result.ToString() == "Primary") //yes
+                            {
+                                Projects.Clear();
+                                await JsonHelper.WriteToFile("projects.json", string.Empty);
+                            }
                         }
                     });
                 }
 
-                return _removeAllCollagesCommand;
+                return removeAllCollagesCommand;
             }
         }
 
         public RecentPageViewModel()
         {
-            projects = new ObservableCollection<Project>();
             DesserializeProjects();
         }
+
         private async void DesserializeProjects()
         {
             var jsonStr = await JsonHelper.DeserializeFileAsync("projects.json");

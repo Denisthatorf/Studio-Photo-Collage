@@ -7,13 +7,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    DataContext="{Binding BackgroundPageInstance, Source={StaticResource Locator}}">
 
     <ScrollViewer>
         <StackPanel Padding="15" Style="{ThemeResource SidePanelPopUp}">
 
             <TextBlock Text="Background"  x:Uid="BackgroudHeader"
                        Style="{StaticResource Header}"/>
+            
             <Button Content="Upload image" 
                 Command="{Binding UploadBtnCommand}"
                 Background="Transparent" 
@@ -25,14 +27,17 @@
                 <TextBlock Text="{Binding ElementName=PictureSizeSlider, 
                                       Path=Value}"/>
             </StackPanel>
+            
             <Slider x:Name="PictureSizeSlider" Style="{StaticResource CustomSlider}" 
                     Value="{Binding BordersThickness, Mode=TwoWay,
                    UpdateSourceTrigger=PropertyChanged}"/>
+            
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Opacity: " Margin="0,0,5,0"/>
                 <TextBlock Text="{Binding ElementName=OpacitySlider, 
                                       Path=Value}"/>
             </StackPanel>
+            
             <Slider x:Name="OpacitySlider" Style="{StaticResource CustomSlider}"
                     Value="{Binding BorderOpacity, Mode=TwoWay, 
                      UpdateSourceTrigger=PropertyChanged}"/>
@@ -56,6 +61,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+            
         </StackPanel>
     </ScrollViewer>
 </Page>

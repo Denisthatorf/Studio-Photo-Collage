@@ -1,0 +1,64 @@
+﻿<Page
+    x:Class="Studio_Photo_Collage.Views.SidePanelsViews.TemplatesSidePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Studio_Photo_Collage.Views.SidePanelsViews"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:helpers="using:Studio_Photo_Collage.Infrastructure.Helpers"
+    xmlns:converters="using:Studio_Photo_Collage.Infrastructure.Converters"
+    xmlns:model="using:Studio_Photo_Collage.Models"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    x:Name="Page"
+    DataContext="{Binding Source={StaticResource Locator}, Path=TemplateSidePageInstance}">
+
+    <Page.Resources>
+        <converters:FromArrToGridConverter x:Key="FromArrToGridConverter"/>
+        <helpers:GroupTemplateSelector
+            x:Key="GroupTemplateSelector"
+             ProjectTemplate="{StaticResource Template}"
+             GroupTemplate="{StaticResource Group}"/>
+        
+        <Style TargetType="Button" BasedOn="{StaticResource TemplatesBtns}">
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+        
+        <Style TargetType="Rectangle">
+            <Setter Property="Fill" Value="White"/>
+            <Setter Property="Margin" Value="2.5"/>
+        </Style>
+
+        <DataTemplate x:Key="Group" x:DataType="model:GroupedTemplates">
+            <muxc:TreeViewItem ItemsSource="{Binding Projects}" >
+                <muxc:TreeViewItem.Content>
+                    <TextBlock>
+                <Run Text="Pictures:"/>
+                <Run Text="{Binding CountOfPhotos}"/>
+                    </TextBlock>
+                </muxc:TreeViewItem.Content>
+            </muxc:TreeViewItem>
+        </DataTemplate>
+        
+        <DataTemplate x:Key="Template" x:DataType="model:Project">
+            <Button Command="{Binding ElementName=Page, 
+                                    Path=DataContext.TemplateClickCommand}"
+                                    CommandParameter="{Binding}"
+                                    Content="{Binding PhotoArray,
+                    Converter={StaticResource FromArrToGridConverter}}"/>
+        </DataTemplate>
+    </Page.Resources>
+
+    <StackPanel  Style="{ThemeResource SidePanelPopUp}">
+        <TextBlock Style="{StaticResource Header}" Text="Templates"/>
+
+        <muxc:TreeView 
+            ItemsSource="{Binding TemplateCollection}"
+            ItemTemplateSelector="{StaticResource GroupTemplateSelector}">
+        </muxc:TreeView>
+        
+    </StackPanel>
+</Page>

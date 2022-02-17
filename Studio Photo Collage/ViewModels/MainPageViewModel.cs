@@ -5,14 +5,16 @@ using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using Studio_Photo_Collage.Infrastructure.Converters;
 using Studio_Photo_Collage.Infrastructure.Helpers;
+using Studio_Photo_Collage.Infrastructure.Messages;
 using Studio_Photo_Collage.Infrastructure.Services;
 using Studio_Photo_Collage.Models;
+using Studio_Photo_Collage.Views;
 using Studio_Photo_Collage.Views.PopUps;
 using Windows.Foundation;
 using Windows.Media.Capture;
 using Windows.Storage;
-using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -57,16 +59,7 @@ namespace Studio_Photo_Collage.ViewModels
             {
                 if (saveImageCommand == null)
                 {
-                    saveImageCommand = new RelayCommand<object>(async (parametr) =>
-                    {
-                        var dialog = new SaveImageDialog();
-                        dialog.NameOfImg = CurrentCollage.Project.ProjectName;
-                        var result = await dialog.ShowAsync();
-
-                        var name = dialog.NameOfImg;
-                        var format = dialog.Format;
-                        var quality = dialog.Quality;
-                    });
+                    saveImageCommand = new RelayCommand(() => SaveCollageAsImageAsync());
                 }
 
                 return saveImageCommand;
@@ -78,21 +71,21 @@ namespace Studio_Photo_Collage.ViewModels
             {
                 if (saveProjectCommand == null)
                 {
-                    saveProjectCommand = new RelayCommand<object>(async (parametr) =>
-                    {
-                        var dialog = new SaveProjectDialog();
-                        dialog.ProjectName = CurrentCollage.Project.ProjectName;
-                        var result = await dialog.ShowAsync();
-                        if (result == ContentDialogResult.Primary)
-                        {
-                            CurrentCollage.Project.ProjectName = dialog.ProjectName;
-                        }
-
-                        _ = SaveProjectInJsonAsync();
-                    });
+                    saveProjectCommand = new RelayCommand(() => SaveProjectBySaveProjectDialogAsync());
                 }
 
                 return saveProjectCommand;
+            }
+        }
+
+        private Frame SidePanel
+        {
+            get
+            {
+                var frame = (Frame)Window.Current.Content;
+                var page = frame.Content as MainPage;
+                var result = page?.RootFrame;
+                return result;
             }
         }
 
@@ -103,97 +96,15 @@ namespace Studio_Photo_Collage.ViewModels
             MessengersRegistration();
         }
 
-        /*  public async void GoBack()
-        {
-            var result = await SaveProjectAsync();
+        //public async void GoBack()
+        //{
+        //    var result = await SaveProjectAsync();
 
-            if (result == ContentDialogResult.Primary)
-                NavigationService.NavigateTo("TemplatesPage");
-            else if (result == ContentDialogResult.Secondary)
-                NavigationService.NavigateTo("TemplatesPage");
-        }*/
-
-        public async Task<ContentDialogResult> SaveProjectAsync()
-        {
-            var dialog = new SaveDialog();
-            dialog.ProjectName = CurrentCollage.Project.ProjectName;
-            var result = await dialog.ShowAsync();
-
-            if (result == ContentDialogResult.Primary) // Yes
-            {
-                CurrentCollage.Project.ProjectName = dialog.ProjectName;
-                await SaveProjectInJsonAsync();
-            }
-
-            return result;
-        }
-
-        private void CheckBoxesEnumValueChange()
-        {
-            switch (CheckBoxesEnum)
-            {
-                case BtnNameEnum.Settings:
-                    ShowSettingDialog();
-                    break;
-                case BtnNameEnum.Photo:
-                    TakePthoto();
-                    break;
-            }
-        }
-
-        private void MessengersRegistration()
-        {
-
-            Messenger.Register<Project>(this, (r, m) => 
-            CurrentCollage = new Collage(m));
-
-            //WeakReferenceMessenger.Default.Register<Thickness>(this, (r, m) =>
-            //{
-            //    CurrentCollage.Project.BorderThickness = m.Top; //everywhere is one parameter
-            //    CurrentCollage.UpdateUIAsync();
-            //});
-
-            //WeakReferenceMessenger.Default.Register<double>(this, (r, m) =>
-            //{
-            //    CurrentCollage.Project.BorderOpacity = m;
-            //    CurrentCollage.UpdateUIAsync();
-            //});
-
-            Messenger.Register<ImageBrush>(this, async (r, m) =>
-            {
-                var backgroundGrid = CurrentCollage.BackgroundGrid as Grid;
-                backgroundGrid.Background = m;
-
-                var project = CurrentCollage.Project;
-                project.BackgroundColor = await ImageHelper.SaveToStringBase64Async(m.ImageSource);
-            });
-
-            Messenger.Register<SolidColorBrush>(this, (r, m) =>
-             {
-                 var backgroundGrid = CurrentCollage.BackgroundGrid as Grid;
-                 backgroundGrid.Background = m;
-
-                 var project = CurrentCollage.Project;
-                 project.BackgroundColor = m.Color.ToString();
-             });
-
-            /*WeakReferenceMessenger.Default.Register<Image>(this, async (r, m) =>
-            {
-                var image = CurrentCollage.SelectedImage;
-                if (image?.Source != null)
-                {
-                    messageAct.Execute(image);
-                }
-
-                var selectedimg = CurrentCollage.SelectedImage;
-
-                if (selectedimg?.Source != null)
-                {
-                    CurrentCollage.Project.ImageArr[CurrentCollage.SelectedImageNumberInList]
-                        = await ImageHelper.SaveToStringBase64Async(selectedimg.Source);
-                }
-            });*/
-        }
+        //    if (result == ContentDialogResult.Primary)
+        //        NavigationService.NavigateTo("TemplatesPage");
+        //    else if (result == ContentDialogResult.Secondary)
+        //        NavigationService.NavigateTo("TemplatesPage");
+        //}
 
         private async Task SaveProjectInJsonAsync()
         {
@@ -219,6 +130,127 @@ namespace Studio_Photo_Collage.ViewModels
             await JsonHelper.WriteToFile("projects.json", projectsAsList);
         }
 
+        public async Task<bool> SaveProjectBySaveDialogAsync()
+        {
+            var dialog = new SaveDialog();
+            dialog.ProjectName = CurrentCollage.Project.ProjectName;
+
+            var dialogResult = await dialog.ShowAsync();
+            var result = false;
+
+            if (dialogResult == ContentDialogResult.Primary) 
+            {
+                CurrentCollage.Project.ProjectName = dialog.ProjectName;
+                await SaveProjectInJsonAsync();
+                result = true;
+            }
+
+            return result;
+        }
+
+        private async void SaveCollageAsImageAsync()
+        {
+            var dialog = new SaveImageDialog();
+            dialog.NameOfImg = CurrentCollage.Project.ProjectName;
+            var result = await dialog.ShowAsync();
+
+            var name = dialog.NameOfImg;
+            var format = dialog.Format;
+            var quality = dialog.Quality;
+        }
+
+        private async void SaveProjectBySaveProjectDialogAsync()
+        {
+            var dialog = new SaveProjectDialog();
+            dialog.ProjectName = CurrentCollage.Project.ProjectName;
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                CurrentCollage.Project.ProjectName = dialog.ProjectName;
+            }
+
+            _ = SaveProjectInJsonAsync();
+        }
+
+        private void CheckBoxesEnumValueChange()
+        {
+            switch (CheckBoxesEnum)
+            {
+                case BtnNameEnum.Settings:
+                    ShowSettingDialog();
+                    break;
+                case BtnNameEnum.Photo:
+                    TakePthoto();
+                    break;
+            }
+
+            var type = StringToFrameConverter.Convert(checkBoxesEnum);
+            if (type != null)
+            {
+                SidePanel.Visibility = Visibility.Visible;
+                SidePanel.Navigate(type);
+            }
+            else
+            {
+                SidePanel.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void MessengersRegistration()
+        {
+
+            Messenger.Register<Project>(this, (r, m) => 
+            CurrentCollage = new Collage(m));
+
+            Messenger.Register<BorderThicknessChangedMessage>(this, (r, m) =>
+            {
+                CurrentCollage.Project.BorderThickness = m.Value;
+                CurrentCollage.UpdateUIAsync();
+            });
+
+            Messenger.Register<BackgroundOpacityChangedMessage>(this, (r, m) =>
+            {
+                CurrentCollage.Project.BorderOpacity = m.Value;
+                CurrentCollage.UpdateUIAsync();
+            });
+
+            Messenger.Register<SaveProjectRequestMessage>(this, (r, m) =>
+            {
+                m.Reply(SaveProjectBySaveDialogAsync()); 
+            });
+
+            Messenger.Register<ImageBrush>(this, async (r, m) =>
+            {
+                var backgroundGrid = CurrentCollage.BackgroundGrid as Grid;
+                backgroundGrid.Background = m;
+
+                var project = CurrentCollage.Project;
+                project.BackgroundColor = await ImageHelper.SaveToStringBase64Async(m.ImageSource);
+            });
+
+            Messenger.Register<SolidColorBrush>(this, (r, m) =>
+             {
+                 var backgroundGrid = CurrentCollage.BackgroundGrid as Grid;
+                 backgroundGrid.Background = m;
+
+                 var project = CurrentCollage.Project;
+                 project.BackgroundColor = m.Color.ToString();
+             });
+
+            Messenger.Register<Action<Image>>(this, async (r, m) =>
+            {
+                var image = CurrentCollage.SelectedImage;
+                var selectedimg = CurrentCollage.SelectedImage;
+                if (image?.Source != null)
+                {
+                    m?.Invoke(image);
+
+                    CurrentCollage.Project.ImageArr[CurrentCollage.SelectedImageNumberInList]
+                        = await ImageHelper.SaveToStringBase64Async(selectedimg.Source);
+                }
+            });
+        }
+
         private async void TakePthoto()
         {
             if (CurrentCollage.SelectedImage != null)
@@ -226,15 +258,13 @@ namespace Studio_Photo_Collage.ViewModels
                 var captureUI = new CameraCaptureUI();
                 captureUI.PhotoSettings.Format = CameraCaptureUIPhotoFormat.Jpeg;
                 captureUI.PhotoSettings.CroppedSizeInPixels = new Size(200, 200);
-                // Open the Camera to capture the Image
+
                 var photo = await captureUI.CaptureFileAsync(CameraCaptureUIMode.Photo);
-                // If the capture gets cancelled by user, do nothing
                 if (photo == null)
                 {
-                    // User cancelled photo capture
                     return;
                 }
-                // Else, display the captured Image in the Placeholder
+
                 else
                 {
                     var bitmapImage = new BitmapImage();
@@ -253,9 +283,8 @@ namespace Studio_Photo_Collage.ViewModels
             var dialog = new SettingsDialog();
             await dialog.ShowAsync();
             CheckBoxesEnum = null;
-        }
+        } 
     }
-
     public enum BtnNameEnum
     {
         Background,

@@ -1,11 +1,13 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Studio_Photo_Collage.Infrastructure.Services;
 using Studio_Photo_Collage.ViewModels;
 using Studio_Photo_Collage.ViewModels.PopUpsViewModels;
 using Studio_Photo_Collage.Views;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -34,6 +36,9 @@ namespace Studio_Photo_Collage
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            var currentView = SystemNavigationManager.GetForCurrentView();
+            currentView.BackRequested += (object s, BackRequestedEventArgs ev) => Ioc.Default.GetService<INavigationService>().GoBack();
+
             var rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,

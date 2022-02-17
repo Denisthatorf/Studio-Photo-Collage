@@ -11,6 +11,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Studio_Photo_Collage.Infrastructure.Helpers;
 using System.Threading.Tasks;
+using Studio_Photo_Collage.Infrastructure.Messages;
 
 namespace Studio_Photo_Collage.ViewModels.SidePanels
 {
@@ -43,9 +44,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
             {
                 if (colorBtnCommand == null)
                 {
-                    colorBtnCommand = new RelayCommand<Brush>((parametr) => {
-                        Messenger.Send(parametr); 
-                    });
+                    colorBtnCommand = new RelayCommand<SolidColorBrush>((parametr) =>Messenger.Send(parametr));
                 }
 
                 return colorBtnCommand;
@@ -58,7 +57,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
             set
             {
                 SetProperty(ref bordersThickness, value);
-                //Messenger.Send(new Thickness(value));
+                Messenger.Send(new BorderThicknessChangedMessage(value));
             }
         }
 
@@ -68,7 +67,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
             set
             {
                 SetProperty(ref borderOpacity, value);
-                //WeakReferenceMessenger.Default.Send(value / 100.0);
+                Messenger.Send(new BackgroundOpacityChangedMessage(value / 100.0));
             }
         }
 
@@ -82,7 +81,6 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
         private static async void UploadBackgroundFromPhotoBtnClickMethod()
         {
             var file = await ImageHelper.OpenFilePicker();
-
             if (file != null)
             {
                 using (var fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read))
@@ -96,7 +94,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
                         var imgBrush = new ImageBrush();
                         imgBrush.ImageSource = source;
 
-                        WeakReferenceMessenger.Default.Send(imgBrush as Brush);
+                        //WeakReferenceMessenger.Default.Send(imgBrush);
                     }
                     catch (Exception)
                     {

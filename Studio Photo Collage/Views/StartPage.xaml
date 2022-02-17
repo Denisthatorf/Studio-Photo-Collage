@@ -6,16 +6,17 @@
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:viewModels="using:Studio_Photo_Collage.ViewModels"
+    xmlns:usercontroles="using:Studio_Photo_Collage.UserControles"
     xmlns:converters="using:Studio_Photo_Collage.Infrastructure.Converters"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     ui:ApplicationViewExtensions.ExtendViewIntoTitleBar="True"
     ui:ApplicationViewExtensions.BackButtonVisibility="Collapsed"
     ui:TitleBarExtensions.ButtonBackgroundColor="Transparent"
-    DataContext="{Binding StarPageInstance, Source={StaticResource Locator}}">
+    DataContext="{Binding StarPageInstance, Source={StaticResource Locator}}"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
         <converters:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
@@ -32,7 +33,6 @@
                 Icon="Setting"
                 Command="{Binding SettingsCommand}"/>
 
-        <Grid>
             <Button x:Name="ClassicTemplate"
                     HorizontalAlignment="Center" VerticalAlignment="Center" 
                     Background="Transparent" BorderBrush="Transparent" 
@@ -93,12 +93,12 @@
                        FontSize="24"
                        Foreground="{ThemeResource AppBarItemForegroundThemeBrush}" 
                        Text="Welcome to Studio Photo Collages" x:Uid="Greeting" />
-        </Grid>
 
-        <Popup x:Name="RecentColl"
+            <Popup x:Name="RecentColl"
                HorizontalAlignment="Left" VerticalAlignment="Bottom"
                Height="200"
                IsOpen="{Binding IsRecentCollagesOpen}">
+                
             <StackPanel Orientation="Vertical" Padding="36,0">
 
                 <StackPanel Orientation="Horizontal">
@@ -120,11 +120,11 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <!--<usercontrole:BtnWithBluring 
+                            <usercontroles:BtnWithBluring
                                    Project="{Binding Item1}" 
                                    Margin="0,0,8,0"
                                 MyCommand="{Binding ElementName=T1, 
-                                Path=DataContext.TemplateClickCommand, Mode=OneWay}"/>-->
+                                Path=DataContext.TemplateClickCommand, Mode=OneWay}"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

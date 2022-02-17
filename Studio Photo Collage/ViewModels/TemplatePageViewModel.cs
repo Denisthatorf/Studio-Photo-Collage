@@ -22,7 +22,7 @@ namespace Studio_Photo_Collage.ViewModels
             {
                 if (templateClickCommand == null)
                 {
-                    templateClickCommand = new RelayCommand<Project>(async (parameter) =>
+                    templateClickCommand = new RelayCommand<Project>((parameter) =>
                     {
                         navigationService.Navigate(typeof(MainPage));
                         WeakReferenceMessenger.Default.Send(parameter);

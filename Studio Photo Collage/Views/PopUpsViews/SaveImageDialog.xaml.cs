@@ -13,9 +13,13 @@ namespace Studio_Photo_Collage.Views.PopUps
             { 
                 nameOfImg = value;
                 if (!string.IsNullOrEmpty(nameOfImg))
+                {
                     this.IsPrimaryButtonEnabled = true;
+                }
                 else
+                {
                     this.IsPrimaryButtonEnabled = false;
+                }
             } 
         }
         public string Format => FormatCBox.SelectedItem.ToString();

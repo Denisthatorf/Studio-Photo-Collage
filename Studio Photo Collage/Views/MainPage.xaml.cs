@@ -13,6 +13,7 @@ namespace Studio_Photo_Collage.Views
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        public Frame RootFrame => SidePanel;
         public MainPage()
         {
             this.InitializeComponent();
