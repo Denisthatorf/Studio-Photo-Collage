@@ -132,6 +132,7 @@
     <Compile Include="Infrastructure\Helpers\JsonHelper.cs" />
     <Compile Include="Infrastructure\Helpers\ImageHelper.cs" />
     <Compile Include="Infrastructure\Helpers\SavingHeper.cs" />
+    <Compile Include="Infrastructure\Helpers\SettingsStorageExtensions.cs" />
     <Compile Include="Infrastructure\Services\ThemeSelectorService.cs" />
     <Compile Include="Infrastructure\Messages\BorderThicknessChangedMessage.cs" />
     <Compile Include="Infrastructure\Messages\BackgroundOpacityChangedMessage.cs" />

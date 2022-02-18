@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Studio_Photo_Collage.Infrastructure.Converters;
 using Studio_Photo_Collage.Infrastructure.Helpers;
+using Studio_Photo_Collage.ViewModels;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources.Core;
 using Windows.Globalization;
@@ -21,122 +22,51 @@ namespace Studio_Photo_Collage.Infrastructure.Services
 {
     public class SettingServise
     {
-        private INavigationService navigationService;
-        private ElementTheme theme;
-        private SolidColorBrush customBrush;
-        private CultureInfo language;
+        private const string ThemeSettingsKey = "AppBackgroundRequestedTheme";
+        private const string CustomColorSettingsKey = "CustomColor";
 
-        public ElementTheme Theme
+        public ElementTheme Theme { get; set; }
+        public Color CustomColor { get; set; }
+        public CultureInfo Language { get; set; }
+
+        public SettingServise() { }
+        public async void LoadStartSetting()
         {
-            get => theme;
-            set
-            {
-                this.theme = value;
-                SetRequestedThemeAsync();
-                LoadToLocalSettings(nameof(Theme), value.ToString());
-            }
+            await SetApplicationThemeFromSettings();
+            await SetCustomColorFromSettings();
+            SetLanguageFromSettings();
         }
-        public SolidColorBrush CustomBrush
+        public void SetLanguage(CultureInfo cultureInfo)
         {
-            get => customBrush;
-            set
-            {
-                customBrush = value;
-                SetApplicationCustomColor();
-                LoadToLocalSettings(nameof(CustomBrush), CustomBrush.Color.ToString());
-            }
-        }
-        public CultureInfo Language
-        {
-            get => language;
-            set
-            {
-                language = value;
-                SetApplicationLanguage();
-            }
-        }
-
-        private static ElementTheme ApplicationThemeFromSettings
-        {
-            get
-            {
-                var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-                localSettings.Values.TryGetValue("Theme", out object themeStr);
-
-                var converter = new ThemeToStringConverter();
-                var userTheme = Application.Current.RequestedTheme;
-                var theme = converter.ConvertBack(themeStr, null, null, null);
-
-                return (ElementTheme)(theme ?? userTheme);
-            }
-        }
-        private static SolidColorBrush CustomBrushFromSettings
-        {
-            get
-            {
-                var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-                localSettings.Values.TryGetValue("CustomBrush", out object brushStr);
-
-                var userColor = (Color)Application.Current.Resources["SystemAccentColor"];
-                var userBrush = new SolidColorBrush(userColor);
-
-                var brush = BrushGenerator.GetBrushFromHexOrStrImgBase64((string)brushStr);
-                return (SolidColorBrush)(brush ?? userBrush);
-            }
-        }
-        private static CultureInfo LanguageFromSettings
-        {
-            get
-            {
-                var selectedLanguage = ApplicationLanguages.PrimaryLanguageOverride;
-                var conv = new CultureInfoToFullStringNameConverter();
-                var culture = (CultureInfo)conv.ConvertBack(selectedLanguage, null, null, null);
-                return culture;
-            }
-        }
-
-        public SettingServise(INavigationService navigationService)
-        {
-            this.navigationService = navigationService;
-        }
-        public void LoadStartSetting()
-        {
-            Theme = ApplicationThemeFromSettings;
-            CustomBrush = CustomBrushFromSettings;
-            Language = LanguageFromSettings;
-        }
-
-        private static void LoadToLocalSettings(string key, string data)
-        {
-            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            localSettings.Values.TryGetValue(key, out object brush);
-
-            if (brush == null)
-            {
-                localSettings.Values.Add(key, data);
-            }
-            else
-            {
-                localSettings.Values[key] = data;
-            }
-        }
-
-        private void SetApplicationLanguage()
-        {
-            Thread.CurrentThread.CurrentCulture = language;
-            ApplicationLanguages.PrimaryLanguageOverride = language.ToString();
+            Language = cultureInfo;
+            Thread.CurrentThread.CurrentCulture = cultureInfo;
+            ApplicationLanguages.PrimaryLanguageOverride = cultureInfo.ToString();
             ResourceContext.GetForCurrentView().Reset();
             ResourceContext.GetForViewIndependentUse().Reset();
-            navigationService.Navigate(navigationService.CurrentPageType, "reload");
+
+            ViewModelLocator.ReloadCurrentPage();
         }
+        public async Task SetRequestedThemeAsync(ElementTheme theme)
+        {
+            Theme = theme;
+            await SetApplicationRequestedThemeAsync();
+            await ApplicationData.Current.LocalSettings.SaveAsync<ElementTheme>(ThemeSettingsKey,theme);
+        }
+        public async Task SetCutomColorAsync(Color color)
+        {
+            CustomColor = color;
+            SetApplicationCustomColor();
+            await ApplicationData.Current.LocalSettings.SaveAsync<Color>(CustomColorSettingsKey, color);
+        }
+
         private void SetApplicationCustomColor()
         {
             var brush = (SolidColorBrush)App.Current.Resources["CustomBrush"];
-            brush.Color = customBrush.Color;
+            brush.Color = CustomColor;
 
-            navigationService.Navigate(navigationService.CurrentPageType, DateTime.Now.Ticks);
+            ViewModelLocator.ReloadCurrentPage();
         }
-        private async void SetRequestedThemeAsync()
+        private async Task SetApplicationRequestedThemeAsync()
         {
             foreach (var view in CoreApplication.Views)
             {
@@ -144,10 +74,38 @@ namespace Studio_Photo_Collage.Infrastructure.Services
                 {
                     if (Window.Current.Content is FrameworkElement frameworkElement)
                     {
-                        frameworkElement.RequestedTheme = theme;
+                        frameworkElement.RequestedTheme = Theme;
                     }
                 });
             }
+        }
+
+        private async Task SetCustomColorFromSettings()
+        {
+            var localSettings = ApplicationData.Current.LocalSettings;
+            var color = await localSettings.ReadAsync<Color>(CustomColorSettingsKey);
+
+            var userColor = (Color)Application.Current.Resources["SystemAccentColor"];
+
+            CustomColor = color == default ? userColor : color;
+            await SetCutomColorAsync(CustomColor);
+        }
+        private async Task SetApplicationThemeFromSettings()
+        {
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            var theme = await localSettings.ReadAsync<ElementTheme>(ThemeSettingsKey);
+
+            Theme =  theme;
+            await SetRequestedThemeAsync(Theme);
+        }
+        private void SetLanguageFromSettings()
+        {
+            var selectedLanguage = ApplicationLanguages.PrimaryLanguageOverride;
+            var conv = new CultureInfoToFullStringNameConverter();
+            var culture = (CultureInfo)conv.ConvertBack(selectedLanguage, null, null, null);
+
+            Language = culture;
+            SetLanguage(Language);
         }
     }
 }

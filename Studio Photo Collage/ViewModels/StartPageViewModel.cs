@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
@@ -10,6 +11,7 @@ using Studio_Photo_Collage.Infrastructure.Services;
 using Studio_Photo_Collage.Models;
 using Studio_Photo_Collage.Views;
 using Studio_Photo_Collage.Views.PopUps;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -55,7 +57,7 @@ namespace Studio_Photo_Collage.ViewModels
                          {
                              RecentProjects.Clear();
                              IsRecentCollagesOpen = false;
-                            _ = JsonHelper.WriteToFile("projects.json", string.Empty);
+                            await ApplicationData.Current.LocalFolder.SaveAsync<ObservableCollection<Project>>("project", null);
                          }
                     });
                 }
@@ -142,17 +144,14 @@ namespace Studio_Photo_Collage.ViewModels
 
         private async void DesserializeProjects()
         {
-            var jsonStr = await JsonHelper.DeserializeFileAsync("projects.json");
+            var projects = await ApplicationData.Current.LocalSettings.ReadAsync<List<Project>>("projects");
 
-            var projects = new ObservableCollection<Project>();
-            if (!string.IsNullOrEmpty(jsonStr))
+            if(projects != null)
             {
-                projects = await JsonHelper.ToObjectAsync<ObservableCollection<Project>>(jsonStr);
-            }
-
-            foreach (var proj in projects)
-            {
-                RecentProjects.Add(new Tuple<Project>(proj));
+                foreach (var proj in projects)
+                {
+                    RecentProjects.Add(new Tuple<Project>(proj));
+                }
             }
         }
     }

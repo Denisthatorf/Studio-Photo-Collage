@@ -51,5 +51,10 @@ namespace Studio_Photo_Collage.ViewModels
         public RecentPageViewModel RecentPageInstance => Ioc.Default.GetService<RecentPageViewModel>();
         public TransformPageViewModel TransformPageInstance => Ioc.Default.GetService<TransformPageViewModel>();
 
+        public static void ReloadCurrentPage()
+        {
+            var navService = Ioc.Default.GetService<INavigationService>();
+            navService.Navigate(navService.CurrentPageType, "reload");
+        }
     }
 }

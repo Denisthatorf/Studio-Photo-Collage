@@ -10,6 +10,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Studio_Photo_Collage.Infrastructure.Messages;
+using Windows.Storage;
 
 namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
 {
@@ -60,7 +61,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
                             if (result.ToString() == "Primary") //yes
                             {
                                 Projects.Clear();
-                                await JsonHelper.WriteToFile("projects.json", string.Empty);
+                                await ApplicationData.Current.LocalFolder.SaveAsync<ObservableCollection<Project>>("projects.json", null);
                             }
                         }
                     });
@@ -72,16 +73,15 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
 
         public RecentPageViewModel()
         {
-            DesserializeProjects();
+            DesserializeProjectsAsync();
 
             WeakReferenceMessenger.Default.Register<ProjectSavedMessage>(
                 this, (r, m) => Projects.Add(m.Value));
         }
 
-        private async void DesserializeProjects()
+        private async void DesserializeProjectsAsync()
         {
-            var jsonStr = await JsonHelper.DeserializeFileAsync("projects.json");
-            Projects = await JsonHelper.ToObjectAsync<ObservableCollection<Project>>(jsonStr);
+            Projects = await ApplicationData.Current.LocalFolder.ReadAsync<ObservableCollection<Project>>("projects");
         }
     }
 }

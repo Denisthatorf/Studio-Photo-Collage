@@ -108,13 +108,7 @@ namespace Studio_Photo_Collage.ViewModels
 
         private async Task SaveProjectInJsonAsync()
         {
-            var str = await JsonHelper.DeserializeFileAsync("projects.json");
-            var projects = new List<Project>();
-
-            if (!string.IsNullOrEmpty(str))
-            {
-                projects = await JsonHelper.ToObjectAsync<List<Project>>(str);
-            }
+            var projects = await ApplicationData.Current.LocalSettings.ReadAsync<List<Project>>("projects");
 
             int index = projects.IndexOf(CurrentCollage.Project);
             if (index == -1)
@@ -126,8 +120,7 @@ namespace Studio_Photo_Collage.ViewModels
                 projects[index] = CurrentCollage.Project;
             }
 
-            string projectsAsList = await JsonHelper.StringifyAsync(projects);
-            await JsonHelper.WriteToFile("projects.json", projectsAsList);
+            await ApplicationData.Current.LocalSettings.SaveAsync<List<Project>>("projects", projects);
 
             Messenger.Send(new ProjectSavedMessage(CurrentCollage.Project));
         }

@@ -58,7 +58,7 @@
                                         Background="{Binding}" CornerRadius="0"
                                         Command="{Binding ElementName=ItemControle, 
                                         Path=DataContext.ChangeMainColorCommand}"
-                                        CommandParameter="{Binding}">
+                                        CommandParameter="{Binding Color}">
 
                                 </Button>
                             </DataTemplate>

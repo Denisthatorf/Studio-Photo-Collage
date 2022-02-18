@@ -35,16 +35,16 @@ namespace Studio_Photo_Collage.ViewModels.PopUpsViewModels
             {
                 if (changeMainColorCommand == null)
                 {
-                    changeMainColorCommand = new RelayCommand<SolidColorBrush>((parametr) =>
+                    changeMainColorCommand = new RelayCommand<Color>(async (parametr) =>
                     {
-                        Ioc.Default.GetService<SettingServise>().CustomBrush = parametr;
+                        await settingServise.SetCutomColorAsync(parametr);
                     });
                 }
 
                 return changeMainColorCommand;
             }
         }
-        public List<Brush> Colors { get; }
+        public List<SolidColorBrush> Colors { get; }
 
         public CultureInfo LanguageComBox_SelectedItm
         {
@@ -52,7 +52,7 @@ namespace Studio_Photo_Collage.ViewModels.PopUpsViewModels
             set
             {
                 SetProperty(ref languageComBox_SelectedItm, value);
-                settingServise.Language = LanguageComBox_SelectedItm;
+                settingServise.SetLanguage(languageComBox_SelectedItm);
             }
         }
         public ElementTheme ThemeComBox_SelectedItem
@@ -61,7 +61,7 @@ namespace Studio_Photo_Collage.ViewModels.PopUpsViewModels
             set
             {
                 SetProperty(ref themeComBox_SelectedItem, value);
-                //ChangeTheme(themeComBox_SelectedItem);
+                ChangeTheme(themeComBox_SelectedItem);
 
                 settingServise.Theme = value;
                 ThemeOfSettings = value;
@@ -85,8 +85,9 @@ namespace Studio_Photo_Collage.ViewModels.PopUpsViewModels
             VersionDescription = GetVersionDescription();
         }
 
-        public void ChangeTheme(ElementTheme newtheme)
+        public async void ChangeTheme(ElementTheme newtheme)
         {
+            await settingServise.SetRequestedThemeAsync(newtheme);
         }
 
         private static string GetVersionDescription()

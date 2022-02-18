@@ -71,31 +71,31 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             return brush;
         }
 
-        public static List<Brush> FillSettingByBrush()
+        public static List<SolidColorBrush> FillSettingByBrush()
         {
-            var Colors = new List<Brush>
+            var Colors = new List<SolidColorBrush>
             {
-                BrushGenerator.GetBrushFromHexOrStrImgBase64("FFBA00"),
-                BrushGenerator.GetBrushFromHexOrStrImgBase64("F76304"),
-                BrushGenerator.GetBrushFromHexOrStrImgBase64("DB3800"),
-                BrushGenerator.GetBrushFromHexOrStrImgBase64("D23135"),
-                BrushGenerator.GetBrushFromHexOrStrImgBase64("E9091E"),
-                BrushGenerator.GetBrushFromHexOrStrImgBase64("C40051"),
-                BrushGenerator.GetBrushFromHexOrStrImgBase64("E4008D"),
-                BrushGenerator.GetBrushFromHexOrStrImgBase64("C336B5"),
-                BrushGenerator.GetBrushFromHexOrStrImgBase64("891099"),
-                BrushGenerator.GetBrushFromHexOrStrImgBase64("754CAB"),
-                BrushGenerator.GetBrushFromHexOrStrImgBase64("8F8DD9"),
-                BrushGenerator.GetBrushFromHexOrStrImgBase64("6B69D7"),
-                BrushGenerator.GetBrushFromHexOrStrImgBase64("0063B3"),
-                BrushGenerator.GetBrushFromHexOrStrImgBase64("0079D8"),
-                BrushGenerator.GetBrushFromHexOrStrImgBase64("009ABD"),
-                BrushGenerator.GetBrushFromHexOrStrImgBase64("00B8C4"),
-                BrushGenerator.GetBrushFromHexOrStrImgBase64("00B395"),
-                BrushGenerator.GetBrushFromHexOrStrImgBase64("008675"),
-                BrushGenerator.GetBrushFromHexOrStrImgBase64("078A3C"),
-                BrushGenerator.GetBrushFromHexOrStrImgBase64("505C6B"),
-                BrushGenerator.GetBrushFromHexOrStrImgBase64("7F745F")
+                (SolidColorBrush)BrushGenerator.GetBrushFromHexOrStrImgBase64("FFBA00"),
+                (SolidColorBrush)BrushGenerator.GetBrushFromHexOrStrImgBase64("F76304"),
+                (SolidColorBrush)BrushGenerator.GetBrushFromHexOrStrImgBase64("DB3800"),
+                (SolidColorBrush)BrushGenerator.GetBrushFromHexOrStrImgBase64("D23135"),
+                (SolidColorBrush)BrushGenerator.GetBrushFromHexOrStrImgBase64("E9091E"),
+                (SolidColorBrush)BrushGenerator.GetBrushFromHexOrStrImgBase64("C40051"),
+                (SolidColorBrush)BrushGenerator.GetBrushFromHexOrStrImgBase64("E4008D"),
+                (SolidColorBrush)BrushGenerator.GetBrushFromHexOrStrImgBase64("C336B5"),
+                (SolidColorBrush)BrushGenerator.GetBrushFromHexOrStrImgBase64("891099"),
+                (SolidColorBrush)BrushGenerator.GetBrushFromHexOrStrImgBase64("754CAB"),
+                (SolidColorBrush)BrushGenerator.GetBrushFromHexOrStrImgBase64("8F8DD9"),
+                (SolidColorBrush)BrushGenerator.GetBrushFromHexOrStrImgBase64("6B69D7"),
+                (SolidColorBrush)BrushGenerator.GetBrushFromHexOrStrImgBase64("0063B3"),
+                (SolidColorBrush)BrushGenerator.GetBrushFromHexOrStrImgBase64("0079D8"),
+                (SolidColorBrush)BrushGenerator.GetBrushFromHexOrStrImgBase64("009ABD"),
+                (SolidColorBrush)BrushGenerator.GetBrushFromHexOrStrImgBase64("00B8C4"),
+                (SolidColorBrush)BrushGenerator.GetBrushFromHexOrStrImgBase64("00B395"),
+                (SolidColorBrush)BrushGenerator.GetBrushFromHexOrStrImgBase64("008675"),
+                (SolidColorBrush)BrushGenerator.GetBrushFromHexOrStrImgBase64("078A3C"),
+                (SolidColorBrush)BrushGenerator.GetBrushFromHexOrStrImgBase64("505C6B"),
+                (SolidColorBrush)BrushGenerator.GetBrushFromHexOrStrImgBase64("7F745F")
             };
 
             return Colors;
