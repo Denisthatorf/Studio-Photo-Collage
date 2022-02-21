@@ -116,7 +116,7 @@ namespace Studio_Photo_Collage.Models
                 borderGridInGrid.Children.Add(btn); ;
             }
 
-            backgroundgrid.Background = BrushGenerator.GetBrushFromHexOrStrImgBase64(Project.BackgroundColor);
+            backgroundgrid.Background = ColorGenerator.GetBrushFromHexOrStrImgBase64(Project.BackgroundColor);
             backgroundgrid.Opacity = this.Project.BorderOpacity;
 
             collageGrid.Children.Add(backgroundgrid);

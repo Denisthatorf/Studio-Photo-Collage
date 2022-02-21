@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
-using Studio_Photo_Collage.Infrastructure.Converters;
 using Studio_Photo_Collage.Infrastructure.Helpers;
 using Studio_Photo_Collage.Infrastructure.Services;
 using Windows.ApplicationModel;
-using Windows.Globalization;
-using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 
 namespace Studio_Photo_Collage.ViewModels.PopUpsViewModels
@@ -28,6 +20,7 @@ namespace Studio_Photo_Collage.ViewModels.PopUpsViewModels
         private ElementTheme themeComBox_SelectedItem;
         private ElementTheme themeOfSettings;
         private ICommand changeMainColorCommand;
+        //private Color selectedColor;
 
         public ICommand ChangeMainColorCommand
         {
@@ -44,7 +37,7 @@ namespace Studio_Photo_Collage.ViewModels.PopUpsViewModels
                 return changeMainColorCommand;
             }
         }
-        public List<SolidColorBrush> Colors { get; }
+        public List<SolidColorBrush> Brushes { get; }
 
         public CultureInfo LanguageComBox_SelectedItm
         {
@@ -74,14 +67,21 @@ namespace Studio_Photo_Collage.ViewModels.PopUpsViewModels
         }
         public string VersionDescription { get; set; }
 
-        public SettingsDialogViewModel( SettingServise settingServise)
+        //public Color SelectedColor 
+        //{ 
+        //    get => selectedColor;
+        //    set => SetProperty(ref selectedColor, value);
+        //}
+
+        public SettingsDialogViewModel(SettingServise settingServise)
         {
             this.settingServise = settingServise;
 
-            Colors = BrushGenerator.FillSettingByBrush();
+            Brushes = ColorGenerator.FillSettingByBrush();
 
             languageComBox_SelectedItm = settingServise.Language;
             themeComBox_SelectedItem = settingServise.Theme;
+            themeOfSettings = settingServise.Theme;
             VersionDescription = GetVersionDescription();
         }
 

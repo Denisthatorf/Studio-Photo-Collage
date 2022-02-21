@@ -11,14 +11,16 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" 
     x:Name="SettingsContentDialog"
-    DataContext="{Binding SettingsDialogInstance, Source={StaticResource Locator}}">
+    DataContext="{Binding SettingsDialogInstance, Source={StaticResource Locator}}"
+    RequestedTheme="{Binding ThemeOfSettings}"
+    Style="{StaticResource ContentDialog}">
 
     <!--RequestedTheme="{Binding ThemeOfSettings}"-->
         <ContentDialog.Resources>
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <converters:CultureInfoToFullStringNameConverter x:Key="CultureConverter"/>
         <converters:ThemeToStringConverter x:Key="ThemeConverter"/>
-        
+
         <Style TargetType="TextBlock">
                 <Setter Property="Margin" Value="0,8,0,0"/>
         </Style>
@@ -51,7 +53,7 @@
 
                     <TextBlock Text="Choose your color"/>
 
-                    <ItemsControl ItemsSource="{Binding Colors}" x:Name="ItemControle" Margin="0,8,0,0">
+                    <ItemsControl ItemsSource="{Binding Brushes}" x:Name="ItemControle" Margin="0,8,0,0">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Button Margin="2" Width="38" Height="38"
@@ -61,6 +63,16 @@
                                         CommandParameter="{Binding Color}">
 
                                 </Button>
+                                <!--<ToggleButton x:Name="T"
+                                        Margin="2" Width="38" Height="38"
+                                        Background="{Binding}" CornerRadius="0"
+                                              Command="{Binding ElementName=ItemControle, 
+                                        Path=DataContext.ChangeMainColorCommand}"
+                                        CommandParameter="{Binding Color}">
+                                    --><!--IsChecked="{Binding ElementName=ItemControle, 
+                                        Path=DataContext.SelectedColor,
+                                        Converter={StaticResource ColorToBoolConverter} ,UpdateSourceTrigger=PropertyChanged}"--><!--
+                                </ToggleButton>-->
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                         <ItemsControl.ItemsPanel>
@@ -85,21 +97,17 @@
             </PivotItem>
             <PivotItem x:Name="About" Header="About"  Margin="14,14,29,0">
                 <StackPanel>
-                    <TextBlock Margin="0">
+                    <TextBlock>
                     <Bold>
                         Control header
                     </Bold>
                     </TextBlock>
-                    <TextBlock Text="{Binding VersionDescription}">
-                    <!--Version 1.1.0.1-->
-                    <LineBreak/>
-                    Published by Company name
-                    <LineBreak/>
+                    <TextBlock Text="{Binding VersionDescription}"/>
+                    <TextBlock>
                     Published by Company name
                     <LineBreak/>
                     Disributed by Some Store
                     </TextBlock>
-
                     <TextBlock AllowDrop="True" TextWrapping="Wrap" >
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus euismod, urna non vehicula dignissim, nulla sem consequat quam, id dictum nisl ligula a nulla. Nunc a nisl iaculis, commodo ligula id, dignissim orci. Donec pellentesque sagittis neque, vitae sollicitudin sapien tincidunt et. Mauris mi leo, ultricies sit amet pulvinar in, malesuada in magna.
                     </TextBlock>
@@ -109,6 +117,7 @@
                                 <Setter Property="Width" Value="153"/>
                                 <Setter Property="Height" Value="32"/>
                                 <Setter Property="Margin" Value="0,8,0,0"/>
+                                <Setter Property="BorderBrush" Value="{ThemeResource BlackInLightAndWhiteInDark}"/>
                             </Style>
                         </StackPanel.Resources>
                         <Button Content="Feedback"/>

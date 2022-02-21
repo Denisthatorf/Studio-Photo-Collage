@@ -1,6 +1,6 @@
 ﻿using System;
-using Windows.UI.Xaml.Controls;
 using Studio_Photo_Collage.Views.SidePanelsViews;
+using Windows.UI.Xaml.Controls;
 
 namespace Studio_Photo_Collage.Infrastructure.Converters
 {
@@ -25,7 +25,7 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
                     case "Frames":
                         return typeof(FramesPage);
                     case "Resents":
-                        return typeof(RecentPage);
+                        return typeof(RecentsPage);
                 }
             }
 

@@ -7,12 +7,17 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    DataContext="{Binding BackgroundPageInstance, Source={StaticResource Locator}}">
+    DataContext="{Binding BackgroundPageInstance, Source={StaticResource Locator}}"
+    Style="{StaticResource SidePanelPage}"
+    d:Width="245">
+    <Page.Resources>
+        <Style TargetType="Slider" BasedOn="{StaticResource CustomSlider}">
+            <Setter Property="Margin" Value="0,0,12,12"/>
+        </Style>
+    </Page.Resources>
 
-    <ScrollViewer>
-        <StackPanel Padding="15" Style="{ThemeResource SidePanelPopUp}">
-
+    <ScrollViewer Style="{StaticResource LeftScrollViewerStyle}">
+        <StackPanel>
             <TextBlock Text="Background"  x:Uid="BackgroudHeader"
                        Style="{StaticResource Header}"/>
             
@@ -28,7 +33,7 @@
                                       Path=Value}"/>
             </StackPanel>
             
-            <Slider x:Name="PictureSizeSlider" Style="{StaticResource CustomSlider}" 
+            <Slider x:Name="PictureSizeSlider" 
                     Value="{Binding BordersThickness, Mode=TwoWay,
                    UpdateSourceTrigger=PropertyChanged}"/>
             
@@ -38,7 +43,7 @@
                                       Path=Value}"/>
             </StackPanel>
             
-            <Slider x:Name="OpacitySlider" Style="{StaticResource CustomSlider}"
+            <Slider x:Name="OpacitySlider" 
                     Value="{Binding BorderOpacity, Mode=TwoWay, 
                      UpdateSourceTrigger=PropertyChanged}"/>
 

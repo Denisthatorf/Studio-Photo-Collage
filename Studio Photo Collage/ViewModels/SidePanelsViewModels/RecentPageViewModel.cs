@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using Studio_Photo_Collage.Infrastructure.Helpers;
+using Studio_Photo_Collage.Infrastructure.Messages;
 using Studio_Photo_Collage.Models;
 using Studio_Photo_Collage.Views.PopUps;
-using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.Messaging;
-using Studio_Photo_Collage.Infrastructure.Messages;
 using Windows.Storage;
 
 namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
@@ -34,8 +32,8 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
                 {
                     projectCommand = new RelayCommand<Project>(async (parametr) =>
                     {
-                        bool permission = await Messenger.Send<SaveProjectRequestMessage>();
-                        if (permission)
+                        var dialogResult = await Messenger.Send(new SaveProjectRequestMessage());
+                        if (dialogResult != Windows.UI.Xaml.Controls.ContentDialogResult.None)
                         {
                             Messenger.Send(parametr);
                         }
@@ -75,8 +73,13 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
         {
             DesserializeProjectsAsync();
 
-            WeakReferenceMessenger.Default.Register<ProjectSavedMessage>(
-                this, (r, m) => Projects.Add(m.Value));
+            Messenger.Register<ProjectSavedMessage>(this, (r, m) =>
+            {
+                if (!Projects.Contains(m.Value))
+                {
+                    Projects.Add(m.Value);
+                }
+            });
         }
 
         private async void DesserializeProjectsAsync()

@@ -28,6 +28,7 @@ namespace Studio_Photo_Collage.ViewModels
 
         private ICommand saveImageCommand;
         private ICommand saveProjectCommand;
+        private ICommand goBackCommand;
         private BtnNameEnum? checkBoxesEnum;
         private Collage currentCollage;
 
@@ -77,6 +78,17 @@ namespace Studio_Photo_Collage.ViewModels
                 return saveProjectCommand;
             }
         }
+        public ICommand GoBackCommand
+        {
+            get
+            {
+                if (goBackCommand == null)
+                {
+                    goBackCommand = new RelayCommand(() => GoBack());
+                }
+                return goBackCommand;
+            }
+        }
 
         private Frame SidePanel
         {
@@ -96,19 +108,15 @@ namespace Studio_Photo_Collage.ViewModels
             MessengersRegistration();
         }
 
-        //public async void GoBack()
-        //{
-        //    var result = await SaveProjectAsync();
 
-        //    if (result == ContentDialogResult.Primary)
-        //        NavigationService.NavigateTo("TemplatesPage");
-        //    else if (result == ContentDialogResult.Secondary)
-        //        NavigationService.NavigateTo("TemplatesPage");
-        //}
 
         private async Task SaveProjectInJsonAsync()
         {
-            var projects = await ApplicationData.Current.LocalSettings.ReadAsync<List<Project>>("projects");
+            var projects = await ApplicationData.Current.LocalFolder.ReadAsync<List<Project>>("projects");
+            if (projects == null)
+            {
+                projects = new List<Project>();
+            }
 
             int index = projects.IndexOf(CurrentCollage.Project);
             if (index == -1)
@@ -120,27 +128,35 @@ namespace Studio_Photo_Collage.ViewModels
                 projects[index] = CurrentCollage.Project;
             }
 
-            await ApplicationData.Current.LocalSettings.SaveAsync<List<Project>>("projects", projects);
+            await ApplicationData.Current.LocalFolder.SaveAsync<List<Project>>("projects", projects);
 
             Messenger.Send(new ProjectSavedMessage(CurrentCollage.Project));
         }
 
-        public async Task<bool> SaveProjectBySaveDialogAsync()
+        public async Task<ContentDialogResult> SaveProjectBySaveDialogAsync()
         {
             var dialog = new SaveDialog();
             dialog.ProjectName = CurrentCollage.Project.ProjectName;
 
-            var dialogResult = await dialog.ShowAsync();
-            var result = false;
+            var result = await dialog.ShowAsync();
 
-            if (dialogResult == ContentDialogResult.Primary) 
+            if (result == ContentDialogResult.Primary)
             {
                 CurrentCollage.Project.ProjectName = dialog.ProjectName;
                 await SaveProjectInJsonAsync();
-                result = true;
             }
 
             return result;
+        }
+
+        public async void GoBack()
+        {
+            var result = await SaveProjectBySaveDialogAsync();
+
+            if (result != ContentDialogResult.None)
+            {
+                navigationService.Navigate(typeof(TemplatePage));
+            }
         }
 
         private async void SaveCollageAsImageAsync()
@@ -162,9 +178,8 @@ namespace Studio_Photo_Collage.ViewModels
             if (result == ContentDialogResult.Primary)
             {
                 CurrentCollage.Project.ProjectName = dialog.ProjectName;
+                _ = SaveProjectInJsonAsync();
             }
-
-            _ = SaveProjectInJsonAsync();
         }
 
         private void CheckBoxesEnumValueChange()
@@ -194,7 +209,7 @@ namespace Studio_Photo_Collage.ViewModels
         private void MessengersRegistration()
         {
 
-            Messenger.Register<Project>(this, (r, m) => 
+            Messenger.Register<Project>(this, (r, m) =>
             CurrentCollage = new Collage(m));
 
             Messenger.Register<BorderThicknessChangedMessage>(this, (r, m) =>
@@ -211,7 +226,7 @@ namespace Studio_Photo_Collage.ViewModels
 
             Messenger.Register<SaveProjectRequestMessage>(this, (r, m) =>
             {
-                m.Reply(SaveProjectBySaveDialogAsync()); 
+                m.Reply(SaveProjectBySaveDialogAsync());
             });
 
             Messenger.Register<ImageBrush>(this, async (r, m) =>
@@ -278,7 +293,7 @@ namespace Studio_Photo_Collage.ViewModels
             var dialog = new SettingsDialog();
             await dialog.ShowAsync();
             CheckBoxesEnum = null;
-        } 
+        }
     }
     public enum BtnNameEnum
     {

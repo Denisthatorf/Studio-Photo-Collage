@@ -1,13 +1,12 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Windows.UI.Xaml.Controls;
-using Studio_Photo_Collage.Models;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
-using Windows.UI.Xaml;
-using Studio_Photo_Collage.Views;
 using Studio_Photo_Collage.Infrastructure.Services;
+using Studio_Photo_Collage.Models;
+using Studio_Photo_Collage.Views;
 
 namespace Studio_Photo_Collage.ViewModels
 {
@@ -16,13 +15,14 @@ namespace Studio_Photo_Collage.ViewModels
         private readonly INavigationService navigationService;
 
         private ICommand templateClickCommand;
+        private ICommand goBackCommand;
         public ICommand TemplateClickCommand
         {
             get
             {
                 if (templateClickCommand == null)
                 {
-                    templateClickCommand = new RelayCommand<Project>((parameter) =>
+                    templateClickCommand = new RelayCommand<Project>(async (parameter) =>
                     {
                         navigationService.Navigate(typeof(MainPage));
                         WeakReferenceMessenger.Default.Send(parameter);
@@ -31,6 +31,17 @@ namespace Studio_Photo_Collage.ViewModels
 
                 return templateClickCommand;
             }
+        }
+        public ICommand GoBackCommand 
+        {
+            get 
+            {
+                if(goBackCommand == null)
+                {
+                    goBackCommand = new RelayCommand(() => navigationService.Navigate(typeof(StartPage)));
+                }
+                return goBackCommand;
+            } 
         }
 
         public ObservableCollection<GroupedTemplates> TemplateCollection { get; set; }

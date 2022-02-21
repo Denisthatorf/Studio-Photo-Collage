@@ -35,14 +35,14 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
                 case "Dark theme":
                     return ElementTheme.Dark;
                 case "Custom theme":
-                    return Application.Current.RequestedTheme;
+                    return ElementTheme.Default;
 
                 case "Light":
                     return ElementTheme.Light;
                 case "Dark":
                     return ElementTheme.Dark;
                 case "Custom":
-                    return Application.Current.RequestedTheme;
+                    return ElementTheme.Default;
 
                 default:
                     return ElementTheme.Default;

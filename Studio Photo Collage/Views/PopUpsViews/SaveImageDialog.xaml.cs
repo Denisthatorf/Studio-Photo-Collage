@@ -8,9 +8,11 @@ namespace Studio_Photo_Collage.Views.PopUps
     public sealed partial class SaveImageDialog : ContentDialog
     {
         private string nameOfImg;
-        public string NameOfImg { get => nameOfImg; 
-            set 
-            { 
+        public string NameOfImg
+        {
+            get => nameOfImg;
+            set
+            {
                 nameOfImg = value;
                 if (!string.IsNullOrEmpty(nameOfImg))
                 {
@@ -20,7 +22,7 @@ namespace Studio_Photo_Collage.Views.PopUps
                 {
                     this.IsPrimaryButtonEnabled = false;
                 }
-            } 
+            }
         }
         public string Format => FormatCBox.SelectedItem.ToString();
         public string Quality => QualityCBox.SelectedItem.ToString();

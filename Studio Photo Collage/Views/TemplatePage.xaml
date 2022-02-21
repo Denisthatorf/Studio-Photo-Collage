@@ -10,9 +10,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="Gray"
-    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
-    ui:ApplicationViewExtensions.ExtendViewIntoTitleBar="False"
-    ui:ApplicationViewExtensions.BackButtonVisibility="Visible"
     DataContext="{Binding TemplatePageInstance, Source={StaticResource Locator}}">
 
     <Page.Resources>
@@ -27,31 +24,52 @@
                    Source="{Binding TemplateCollection}"
                    IsSourceGrouped="True"
                    ItemsPath="Projects"/>
+
+
     </Page.Resources>
 
-    <GridView x:Name="Template3"
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="31"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid x:Name="MainTitleBar" 
+              Background="{ThemeResource MainBackgroundColor}"
+              HorizontalAlignment="Stretch">
+            <TextBlock Text="Studio Photo Collage"
+                       x:Uid="StudioPhotoCollageTBoxMain"
+                       VerticalAlignment="Center" Margin="56,0"/>
+        </Grid>
+
+        <Button VerticalAlignment="Top" HorizontalAlignment="Left"
+                Width="48"
+                Style="{StaticResource BackBtnStyle}"
+                Command="{Binding GoBackCommand}">
+        </Button>
+        
+        <GridView x:Name="Template3" Grid.Row="1"
               ItemsSource = "{Binding Source={StaticResource GroupedProjectList}}"
               SelectionMode="None"
               IsItemClickEnabled="False" >
 
-        <GridView.GroupStyle>
-            <GroupStyle>
-                <GroupStyle.HeaderTemplate>
-                    <DataTemplate x:DataType="models:GroupedTemplates" >
-                        <TextBlock>
+            <GridView.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate x:DataType="models:GroupedTemplates" >
+                            <TextBlock>
                             <Run x:Uid="CountOfPicturesRun">
                                 Pictures:
                             </Run>
                             <Run Text="{Binding CountOfPhotos}"/>
-                        </TextBlock>
-                    </DataTemplate >
-                </GroupStyle.HeaderTemplate >
-            </GroupStyle >
-        </GridView.GroupStyle >
+                            </TextBlock>
+                        </DataTemplate >
+                    </GroupStyle.HeaderTemplate >
+                </GroupStyle >
+            </GridView.GroupStyle >
 
-        <GridView.ItemTemplate >
-            <DataTemplate x:DataType="models:Project" >
-                <Button Style="{StaticResource TemplatesBtns}"
+            <GridView.ItemTemplate >
+                <DataTemplate x:DataType="models:Project" >
+                    <Button Style="{StaticResource TemplatesBtns}"
                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                         
@@ -60,7 +78,8 @@
                         
                         CommandParameter="{Binding}" Content="{Binding PhotoArray,
                         Converter={StaticResource FromArrToGridConverter}}"/>
-            </DataTemplate>
-        </GridView.ItemTemplate>
-    </GridView>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+    </Grid>
 </Page>

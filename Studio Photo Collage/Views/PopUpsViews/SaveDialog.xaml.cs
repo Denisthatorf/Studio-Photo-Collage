@@ -9,10 +9,12 @@ namespace Studio_Photo_Collage.Views.PopUps
     {
 
         private string projectName;
-        public string ProjectName { get => projectName; 
+        public string ProjectName
+        {
+            get => projectName;
             set
             {
-               projectName = value;
+                projectName = value;
 
                 if (!string.IsNullOrEmpty(projectName))
                 {
@@ -22,7 +24,7 @@ namespace Studio_Photo_Collage.Views.PopUps
                 {
                     this.IsPrimaryButtonEnabled = false;
                 }
-            } 
+            }
         }
 
         public SaveDialog()

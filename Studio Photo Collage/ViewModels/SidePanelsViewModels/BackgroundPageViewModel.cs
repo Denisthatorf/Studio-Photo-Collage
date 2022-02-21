@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Input;
-using Windows.Graphics.Imaging;
-using Windows.Storage;
-using Windows.Storage.Streams;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Studio_Photo_Collage.Infrastructure.Helpers;
-using System.Threading.Tasks;
 using Studio_Photo_Collage.Infrastructure.Messages;
+using Windows.Graphics.Imaging;
+using Windows.Storage;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
 {
@@ -75,7 +73,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
 
         public BackgroundPageViewModel()
         {
-            Colors = BrushGenerator.GenerateBrushes();
+            Colors = ColorGenerator.GenerateBrushes();
         }
 
         private static async void UploadBackgroundFromPhotoBtnClickMethod()
@@ -94,7 +92,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
                         var imgBrush = new ImageBrush();
                         imgBrush.ImageSource = source;
 
-                        //WeakReferenceMessenger.Default.Send(imgBrush);
+                        WeakReferenceMessenger.Default.Send(imgBrush);
                     }
                     catch (Exception)
                     {

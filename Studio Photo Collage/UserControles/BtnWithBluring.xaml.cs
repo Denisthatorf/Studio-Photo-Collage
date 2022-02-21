@@ -1,20 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Windows.Input;
-using Microsoft.Toolkit.Mvvm.Input;
+﻿using System.Windows.Input;
 using Studio_Photo_Collage.Models;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -42,18 +29,21 @@ namespace Studio_Photo_Collage.UserControles
         public static readonly DependencyProperty MyCommandProperty =
             DependencyProperty.Register("MyCommand", typeof(ICommand), typeof(BtnWithBluring), new PropertyMetadata(null));
 
-        public ICommand TemplateClickCommand { get; private set; }
+        public ICommand RemoveProjectCommand
+        {
+            get { return (ICommand)GetValue(RemoveProjectCommandProperty); }
+            set { SetValue(RemoveProjectCommandProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for RemoveProjectCommand.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty RemoveProjectCommandProperty =
+            DependencyProperty.Register("RemoveProjectCommand", typeof(ICommand), typeof(BtnWithBluring), new PropertyMetadata(null));
+
+        public string DateOfProject => Project.DateOfLastEditing.ToString( );
 
         public BtnWithBluring()
         {
             this.InitializeComponent();
-
-            TemplateClickCommand = new RelayCommand<Project>((parameter) =>
-            {
-               // var navigation = ServiceLocator.Current.GetInstance<INavigationService>();
-               // navigation.NavigateTo("MainPage");
-                //Messenger.Default.Send(parameter);
-            });
         }
     }
 }

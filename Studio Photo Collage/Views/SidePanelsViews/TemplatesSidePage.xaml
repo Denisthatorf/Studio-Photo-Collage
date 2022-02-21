@@ -12,7 +12,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     x:Name="Page"
-    DataContext="{Binding Source={StaticResource Locator}, Path=TemplateSidePageInstance}">
+    DataContext="{Binding Source={StaticResource Locator}, Path=TemplatesSidePanelPageInstance}"
+    Style="{StaticResource SidePanelPage}"
+    d:Width="245">
 
     <Page.Resources>
         <converters:FromArrToGridConverter x:Key="FromArrToGridConverter"/>
@@ -44,18 +46,20 @@
         </DataTemplate>
         
         <DataTemplate x:Key="Template" x:DataType="model:Project">
-            <Button Command="{Binding ElementName=Page, 
+            <controls:WrapPanel>
+                <Button Command="{Binding ElementName=Page, 
                                     Path=DataContext.TemplateClickCommand}"
                                     CommandParameter="{Binding}"
                                     Content="{Binding PhotoArray,
                     Converter={StaticResource FromArrToGridConverter}}"/>
+            </controls:WrapPanel>
         </DataTemplate>
     </Page.Resources>
 
-    <StackPanel  Style="{ThemeResource SidePanelPopUp}">
+    <StackPanel>
         <TextBlock Style="{StaticResource Header}" Text="Templates"/>
 
-        <muxc:TreeView 
+        <muxc:TreeView
             ItemsSource="{Binding TemplateCollection}"
             ItemTemplateSelector="{StaticResource GroupTemplateSelector}">
         </muxc:TreeView>

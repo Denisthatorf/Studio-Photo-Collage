@@ -7,7 +7,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    DataContext="{Binding FramesPageViewModel, Source={StaticResource Locator}}">
+    DataContext="{Binding FramesPageViewModel, Source={StaticResource Locator}}"
+    Style="{StaticResource SidePanelPage}"
+    d:Width="245">
     
     <Page.Resources>
         <Style TargetType="Button">
@@ -17,7 +19,8 @@
     </Page.Resources>
     
     <ScrollViewer VerticalScrollBarVisibility="Visible">
-        <StackPanel Padding="21,21,14,0"  Style="{ThemeResource SidePanelPopUp}">
+        <StackPanel 
+                    Padding="21,21,14,0" >
             <TextBlock Text="Frame" Style="{StaticResource Header}"/>
             <Grid>
                 <Grid.RowDefinitions>

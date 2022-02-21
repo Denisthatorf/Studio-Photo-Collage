@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Windows.UI.Xaml.Media;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Studio_Photo_Collage.Infrastructure.Helpers;
+using Windows.UI.Xaml.Media;
 
 namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
 {
@@ -9,7 +9,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
     {
         public FramesPageViewModel()
         {
-            Colors = BrushGenerator.GenerateBrushes();
+            Colors = ColorGenerator.GenerateBrushes();
         }
 
         public List<SolidColorBrush> Colors { get; set; }

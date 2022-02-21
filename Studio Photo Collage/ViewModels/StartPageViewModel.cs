@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -12,14 +13,12 @@ using Studio_Photo_Collage.Models;
 using Studio_Photo_Collage.Views;
 using Studio_Photo_Collage.Views.PopUps;
 using Windows.Storage;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 namespace Studio_Photo_Collage.ViewModels
 {
     public class StartPageViewModel : ObservableRecipient
     {
-        private readonly INavigationService navigationService; 
+        private readonly INavigationService navigationService;
 
         private ObservableCollection<Tuple<Project>> recentProjects;
 
@@ -30,7 +29,29 @@ namespace Studio_Photo_Collage.ViewModels
         private ICommand recentCollCloseCommand;
         private ICommand settingsCommand;
         private ICommand templateClickCommand;
+        private ICommand recentCollageDeleteCommand;
 
+        public ICommand RecentCollageDeleteCommand
+        {
+            get
+            {
+                if (recentCollageDeleteCommand == null)
+                {
+                    recentCollageDeleteCommand = new RelayCommand<Project>(async (parameter) =>
+                    {
+                        var projectList = RecentProjects.Select((x) => x.Item1).ToList();
+                        if (projectList != null && projectList.Contains(parameter))
+                        {
+                            projectList.Remove(parameter);
+                            await ApplicationData.Current.LocalFolder.SaveAsync("projects", projectList);
+                        }
+                        RecentProjects.Remove(RecentProjects.Where(x => x.Item1 == parameter).First());
+                    });
+                }
+
+                return recentCollageDeleteCommand;
+            }
+        }
         public ICommand ImageClickCommand
         {
             get
@@ -52,13 +73,13 @@ namespace Studio_Photo_Collage.ViewModels
                     recentCollCloseCommand = new RelayCommand<object>(async (parametr) =>
                     {
                         var dialog = new ConfirmDialog();
-                         var result = await dialog.ShowAsync();
-                         if (result.ToString() == "Primary") //yes
-                         {
-                             RecentProjects.Clear();
-                             IsRecentCollagesOpen = false;
+                        var result = await dialog.ShowAsync();
+                        if (result.ToString() == "Primary") //yes
+                        {
+                            RecentProjects.Clear();
+                            IsRecentCollagesOpen = false;
                             await ApplicationData.Current.LocalFolder.SaveAsync<ObservableCollection<Project>>("project", null);
-                         }
+                        }
                     });
                 }
 
@@ -130,8 +151,13 @@ namespace Studio_Photo_Collage.ViewModels
             isGreetingTextVisible = true;
 
             DesserializeProjects();
-            Messenger.Register<ProjectSavedMessage>(
-                this, (r, m) => RecentProjects.Add(new Tuple<Project>(m.Value)));
+            Messenger.Register<ProjectSavedMessage>(this, (r, m) =>
+            {
+                if (!RecentProjects.Any((x) => x.Item1 == m.Value))
+                {
+                    RecentProjects.Add(new Tuple<Project>(m.Value));
+                }
+            });
 
             Windows.UI.Xaml.Window.Current.CoreWindow.KeyDown += (sender, arg) =>
             {
@@ -144,9 +170,9 @@ namespace Studio_Photo_Collage.ViewModels
 
         private async void DesserializeProjects()
         {
-            var projects = await ApplicationData.Current.LocalSettings.ReadAsync<List<Project>>("projects");
+            var projects = await ApplicationData.Current.LocalFolder.ReadAsync<List<Project>>("projects");
 
-            if(projects != null)
+            if (projects != null)
             {
                 foreach (var proj in projects)
                 {

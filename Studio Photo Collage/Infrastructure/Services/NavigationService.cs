@@ -1,9 +1,6 @@
 ﻿using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Studio_Photo_Collage.Views;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Studio_Photo_Collage.ViewModels;
 
 namespace Studio_Photo_Collage.Infrastructure.Services
 {
@@ -75,6 +72,7 @@ namespace Studio_Photo_Collage.Infrastructure.Services
         {
             var previousPage = GetStringCurrentPage;
             var rootFrame = (Frame)Window.Current.Content;
+
             string currentPage = string.Empty;
             do
             {

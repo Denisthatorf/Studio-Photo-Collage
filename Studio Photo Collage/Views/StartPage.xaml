@@ -8,15 +8,12 @@
     xmlns:viewModels="using:Studio_Photo_Collage.ViewModels"
     xmlns:usercontroles="using:Studio_Photo_Collage.UserControles"
     xmlns:converters="using:Studio_Photo_Collage.Infrastructure.Converters"
-    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    ui:ApplicationViewExtensions.ExtendViewIntoTitleBar="True"
-    ui:ApplicationViewExtensions.BackButtonVisibility="Collapsed"
-    ui:TitleBarExtensions.ButtonBackgroundColor="Transparent"
     DataContext="{Binding StarPageInstance, Source={StaticResource Locator}}"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    x:Name="Page">
 
     <Page.Resources>
         <converters:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
@@ -60,7 +57,7 @@
                                StrokeDashArray="6 6"
                                Fill="Transparent"/>
                     <StackPanel Margin="26">
-                        <Grid Width="200" Height="254">
+                        <Grid Width="288" Height="354">
                             <Grid.Resources>
                                 <Style TargetType="Rectangle">
                                     <Setter Property="Fill" Value="Aquamarine"/>
@@ -75,13 +72,13 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
 
-                            <Rectangle Grid.Column="0" Margin="0,0,0,5"/>
+                            <Rectangle Grid.Column="0" Margin="0,0,0,15"/>
                             <Rectangle Grid.Column="0" Grid.Row="1"/>
-                            <Rectangle Grid.Column="1" Grid.RowSpan="2" Margin="5,0,0,0"/>
+                            <Rectangle Grid.Column="1" Grid.RowSpan="2" Margin="15,0,0,0"/>
                         </Grid>
                         <TextBlock Text="Classic Template" x:Uid="ClassicTemplate"
                                    HorizontalAlignment="Center"
-                                   Margin="0,24,0,0" FontSize="24"/>
+                                   Margin="0,24,0,0" FontSize="26"/>
                     </StackPanel>
                 </Grid>
             </Button>
@@ -90,22 +87,26 @@
                        Margin="50" 
                        Visibility="{Binding IsGreetingTextVisible, 
                        Converter={StaticResource BoolToVisibilityConverter}}"
-                       FontSize="24"
+                       FontSize="48"
                        Foreground="{ThemeResource AppBarItemForegroundThemeBrush}" 
                        Text="Welcome to Studio Photo Collages" x:Uid="Greeting" />
 
-            <Popup x:Name="RecentColl"
+            <!--<Popup x:Name="RecentColl"
                HorizontalAlignment="Left" VerticalAlignment="Bottom"
                Height="200"
                IsOpen="{Binding IsRecentCollagesOpen}">
-                
+            <Frame x:Name="PopUpFrame" Background="Transparent"
+                   Height="200" Width="{Binding ElementName=Page, Path=ActualWidth}"/>
+        </Popup>-->
+        <Popup x:Name="RecentColl"
+               HorizontalAlignment="Left" VerticalAlignment="Bottom"
+               Height="200"
+               IsOpen="{Binding IsRecentCollagesOpen}">
             <StackPanel Orientation="Vertical" Padding="36,0">
 
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Recent Collages" x:Uid="RecentCollages"/>
-                    
-                    <Button Background="Transparent"
-                            Style="{StaticResource CloseButton}"
+                    <Button Background="Transparent" Style="{StaticResource CloseButton}"
                             Command="{Binding RecentCollCloseCommand}">
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8BB;"
                                   FontSize="10"/>
@@ -120,11 +121,13 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <usercontroles:BtnWithBluring
+                            <usercontroles:BtnWithBluring 
                                    Project="{Binding Item1}" 
                                    Margin="0,0,8,0"
                                 MyCommand="{Binding ElementName=T1, 
-                                Path=DataContext.TemplateClickCommand, Mode=OneWay}"/>
+                                Path=DataContext.TemplateClickCommand, Mode=OneWay}"
+                                RemoveProjectCommand="{Binding ElementName=T1, 
+                                Path=DataContext.RecentCollageDeleteCommand, Mode=OneWay}"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

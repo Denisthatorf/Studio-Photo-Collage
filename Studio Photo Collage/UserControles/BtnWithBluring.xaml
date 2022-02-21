@@ -47,6 +47,11 @@
                         CommandParameter="{x:Bind Project}"/>
                 </Core:EventTriggerBehavior>
             </Interactivity:Interaction.Behaviors>
+            <Button CommandParameter="{x:Bind Project}"
+                    Command="{x:Bind RemoveProjectCommand, Mode=TwoWay}"
+                    HorizontalAlignment="Right" VerticalAlignment="Top">
+                <SymbolIcon Symbol="Cancel"/>
+            </Button>
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock FontSize="16" Text="{x:Bind Project.ProjectName}"/>
                 <TextBlock FontSize="12" Text="{x:Bind Project.DateOfLastEditing}"/>

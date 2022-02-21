@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Studio_Photo_Collage.ViewModels;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 
@@ -18,6 +15,7 @@ namespace Studio_Photo_Collage.Views
         public MainPage()
         {
             this.InitializeComponent();
+            Window.Current.SetTitleBar(MainTitleBar);
         }
 
         private void Save_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)

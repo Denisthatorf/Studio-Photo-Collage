@@ -2,7 +2,6 @@
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.Storage.Streams;
 
 namespace Studio_Photo_Collage.Infrastructure.Helpers
 {
@@ -33,7 +32,8 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
 
         public static async Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value)
         {
-            settings.SaveString(key, await JsonHelper.StringifyAsync(value));
+            var saveStr = await JsonHelper.StringifyAsync(value);
+            settings.SaveString(key, saveStr);
         }
 
         public static void SaveString(this ApplicationDataContainer settings, string key, string value)

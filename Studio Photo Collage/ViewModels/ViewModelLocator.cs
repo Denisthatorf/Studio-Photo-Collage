@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Studio_Photo_Collage.Infrastructure.Services;
 using Studio_Photo_Collage.ViewModels.PopUpsViewModels;
@@ -35,6 +30,7 @@ namespace Studio_Photo_Collage.ViewModels
             services.AddSingleton<RecentPageViewModel>();
             services.AddSingleton<TemplatePageViewModel>();
             services.AddSingleton<TransformPageViewModel>();
+            services.AddSingleton<TemplatesSidePanelPageViewModel>();
 
             Ioc.Default.ConfigureServices(services.BuildServiceProvider());
         }
@@ -43,13 +39,14 @@ namespace Studio_Photo_Collage.ViewModels
         public StartPageViewModel StarPageInstance => Ioc.Default.GetService<StartPageViewModel>();
         public TemplatePageViewModel TemplatePageInstance => Ioc.Default.GetService<TemplatePageViewModel>();
 
-        public SettingsDialogViewModel  SettingsDialogInstance => Ioc.Default.GetService<SettingsDialogViewModel>();
+        public SettingsDialogViewModel SettingsDialogInstance => Ioc.Default.GetService<SettingsDialogViewModel>();
 
         public FramesPageViewModel FramesPageInstance => Ioc.Default.GetService<FramesPageViewModel>();
         public BackgroundPageViewModel BackgroundPageInstance => Ioc.Default.GetService<BackgroundPageViewModel>();
         public FiltersPageViewModel FiltersPageInstance => Ioc.Default.GetService<FiltersPageViewModel>();
         public RecentPageViewModel RecentPageInstance => Ioc.Default.GetService<RecentPageViewModel>();
         public TransformPageViewModel TransformPageInstance => Ioc.Default.GetService<TransformPageViewModel>();
+        public TemplatesSidePanelPageViewModel TemplatesSidePanelPageInstance => Ioc.Default.GetService<TemplatesSidePanelPageViewModel>();
 
         public static void ReloadCurrentPage()
         {

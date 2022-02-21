@@ -12,6 +12,7 @@ namespace Studio_Photo_Collage.Views
         public StartPage()
         {
             this.InitializeComponent();
+            //PopUpFrame.Navigate(typeof(RecentsPage));
         }
     }
 }

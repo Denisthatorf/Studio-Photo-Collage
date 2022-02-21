@@ -1,8 +1,8 @@
 ﻿using System;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Imaging;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace Studio_Photo_Collage.ViewModels.SidePanels
 {
@@ -38,14 +38,14 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
                     action = (parameter) =>
                     {
                         var source = parameter.Source as WriteableBitmap;
-                        parameter.Source = source.Flip(WriteableBitmapExtensions.FlipMode.Horizontal); 
+                        parameter.Source = source.Flip(WriteableBitmapExtensions.FlipMode.Horizontal);
                     };
                     break;
                 case "HorizontalFlip":
                     action = (parameter) =>
                     {
                         var source = parameter.Source as WriteableBitmap;
-                        parameter.Source = source.Flip(WriteableBitmapExtensions.FlipMode.Vertical); 
+                        parameter.Source = source.Flip(WriteableBitmapExtensions.FlipMode.Vertical);
                     };
                     break;
                 case "ZoomIn":

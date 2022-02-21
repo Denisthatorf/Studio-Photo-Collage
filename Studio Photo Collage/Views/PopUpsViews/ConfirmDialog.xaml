@@ -13,13 +13,13 @@
     
     <ContentDialog.SecondaryButtonStyle>
         <Style TargetType="Button">
-            <Setter Property="Background" Value="{ThemeResource NoBtnPopUpBtnBrush}"/>
+            <Setter Property="Background" Value="{ThemeResource NoConfirmPopUpBtnBrush}"/>
             <Setter Property="Foreground" Value="{ThemeResource WhiteInLightAndBlackInDark}"/>
         </Style>
     </ContentDialog.SecondaryButtonStyle>
     <ContentDialog.PrimaryButtonStyle>
         <Style TargetType="Button">
-            <Setter Property="Background" Value="{ThemeResource CustomColor}"/>
+            <Setter Property="Background" Value="{ThemeResource CustomBrush}"/>
             <Setter Property="Foreground" Value="{ThemeResource WhiteInLightAndBlackInDark}"/>
         </Style>
     </ContentDialog.PrimaryButtonStyle>

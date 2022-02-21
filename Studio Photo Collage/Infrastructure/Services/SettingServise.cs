@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Studio_Photo_Collage.Infrastructure.Converters;
 using Studio_Photo_Collage.Infrastructure.Helpers;
 using Studio_Photo_Collage.ViewModels;
@@ -26,7 +22,7 @@ namespace Studio_Photo_Collage.Infrastructure.Services
         private const string CustomColorSettingsKey = "CustomColor";
 
         public ElementTheme Theme { get; set; }
-        public Color CustomColor { get; set; }
+        public Color CustomBrush { get; set; }
         public CultureInfo Language { get; set; }
 
         public SettingServise() { }
@@ -49,12 +45,12 @@ namespace Studio_Photo_Collage.Infrastructure.Services
         public async Task SetRequestedThemeAsync(ElementTheme theme)
         {
             Theme = theme;
+            await ApplicationData.Current.LocalSettings.SaveAsync<ElementTheme>(ThemeSettingsKey, theme);
             await SetApplicationRequestedThemeAsync();
-            await ApplicationData.Current.LocalSettings.SaveAsync<ElementTheme>(ThemeSettingsKey,theme);
         }
         public async Task SetCutomColorAsync(Color color)
         {
-            CustomColor = color;
+            CustomBrush = color;
             SetApplicationCustomColor();
             await ApplicationData.Current.LocalSettings.SaveAsync<Color>(CustomColorSettingsKey, color);
         }
@@ -62,7 +58,7 @@ namespace Studio_Photo_Collage.Infrastructure.Services
         private void SetApplicationCustomColor()
         {
             var brush = (SolidColorBrush)App.Current.Resources["CustomBrush"];
-            brush.Color = CustomColor;
+            brush.Color = CustomBrush;
 
             ViewModelLocator.ReloadCurrentPage();
         }
@@ -87,15 +83,15 @@ namespace Studio_Photo_Collage.Infrastructure.Services
 
             var userColor = (Color)Application.Current.Resources["SystemAccentColor"];
 
-            CustomColor = color == default ? userColor : color;
-            await SetCutomColorAsync(CustomColor);
+            CustomBrush = color == default ? userColor : color;
+            await SetCutomColorAsync(CustomBrush);
         }
         private async Task SetApplicationThemeFromSettings()
         {
             var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
             var theme = await localSettings.ReadAsync<ElementTheme>(ThemeSettingsKey);
 
-            Theme =  theme;
+            Theme = theme;
             await SetRequestedThemeAsync(Theme);
         }
         private void SetLanguageFromSettings()

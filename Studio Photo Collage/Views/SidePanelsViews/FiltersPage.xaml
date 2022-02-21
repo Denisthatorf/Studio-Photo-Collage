@@ -7,18 +7,21 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    DataContext="{Binding Source={StaticResource Locator}, Path=FiltersPageInstance}"
+    Style="{StaticResource SidePanelPage}"
+    d:Width="245">
 
-    <StackPanel Padding="10"  Style="{ThemeResource SidePanelPopUp}" >
-        <TextBlock Text="Filters" Style="{StaticResource Header}"/>
+    <StackPanel Padding="10">
+        <TextBlock Text="Filters" Style="{StaticResource Header}" Margin="0,0,0,24"/>
 
-        <StackPanel Orientation="Horizontal">
+        <StackPanel Orientation="Horizontal" >
             <TextBlock Text="Opacity:" Margin="0,0,3,0"/>
             <TextBlock Text="{Binding ElementName=OpacitySlider, Path=Value}"/>
         </StackPanel>
 
         <Slider x:Name="OpacitySlider" 
-                Foreground="#FF524D4D" Background="#FFB6B6B6"/>
+                Foreground="#FF524D4D" Background="#FFB6B6B6" 
+                Margin="0,0,0,8"/>
         <CheckBox Content="apply to all"/>
         <muxc:TreeView AutomationProperties.Name="Effects">
 

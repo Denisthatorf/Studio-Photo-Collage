@@ -126,14 +126,13 @@
     <Compile Include="Infrastructure\Converters\ProjectToCollage.cs" />
     <Compile Include="Infrastructure\Converters\FromArrToGridConverter.cs" />
     <Compile Include="Infrastructure\Converters\FromThemeToStringConverter.cs" />
-    <Compile Include="Infrastructure\Helpers\BrushGenerator.cs" />
+    <Compile Include="Infrastructure\Helpers\ColorGenerator.cs" />
     <Compile Include="Infrastructure\Helpers\GroupTemplateSelector.cs" />
     <Compile Include="Infrastructure\Helpers\CollageGenerator.cs" />
     <Compile Include="Infrastructure\Helpers\JsonHelper.cs" />
     <Compile Include="Infrastructure\Helpers\ImageHelper.cs" />
     <Compile Include="Infrastructure\Helpers\SavingHeper.cs" />
     <Compile Include="Infrastructure\Helpers\SettingsStorageExtensions.cs" />
-    <Compile Include="Infrastructure\Services\ThemeSelectorService.cs" />
     <Compile Include="Infrastructure\Messages\BorderThicknessChangedMessage.cs" />
     <Compile Include="Infrastructure\Messages\BackgroundOpacityChangedMessage.cs" />
     <Compile Include="Infrastructure\Messages\ProjectSavedMessage.cs" />
@@ -189,9 +188,6 @@
     </Compile>
     <Compile Include="Views\SidePanelsViews\FramesPage.xaml.cs">
       <DependentUpon>FramesPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SidePanelsViews\RecentPage.xaml.cs">
-      <DependentUpon>RecentPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SidePanelsViews\ResentsPage.xaml.cs">
       <DependentUpon>ResentsPage.xaml</DependentUpon>
@@ -331,10 +327,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SidePanelsViews\FramesPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SidePanelsViews\RecentPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
