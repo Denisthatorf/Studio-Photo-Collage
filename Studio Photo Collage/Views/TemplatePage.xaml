@@ -1,0 +1,111 @@
+﻿<Page
+    x:Class="Studio_Photo_Collage.Views.TemplatePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Studio_Photo_Collage.Views"
+    xmlns:models="using:Studio_Photo_Collage.Models"
+    xmlns:converter="using:Studio_Photo_Collage.Infrastructure.Converters"
+    xmlns:viewModels="using:Studio_Photo_Collage.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="Gray"
+    DataContext="{Binding TemplatePageInstance, Source={StaticResource Locator}}">
+
+    <Page.Resources>
+        <Style TargetType="Rectangle">
+            <Setter Property="Fill" Value="White"/>
+            <Setter Property="Margin" Value="2.5"/>
+        </Style>
+        <converter:FromArrToGridConverter x:Key="FromArrToGridConverter"/>
+
+        <CollectionViewSource
+                   x:Name="GroupedProjectList"
+                   Source="{Binding TemplateCollection}"
+                   IsSourceGrouped="True"
+                   ItemsPath="Projects"/>
+
+        <Style TargetType="GridViewHeaderItem">
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+            <Setter Property="FontSize" Value="{ThemeResource GridViewHeaderItemThemeFontSize}" />
+            <Setter Property="Background" Value="{ThemeResource GridViewHeaderItemBackground}" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+            <Setter Property="Padding" Value="12,8,12,0" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="VerticalContentAlignment" Value="Top" />
+            <Setter Property="MinHeight" Value="{ThemeResource GridViewHeaderItemMinHeight}" />
+            <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GridViewHeaderItem">
+                        <StackPanel Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}">
+                            <ContentPresenter x:Name="ContentPresenter"
+                Margin="{TemplateBinding Padding}"
+                Content="{TemplateBinding Content}"
+                ContentTemplate="{TemplateBinding ContentTemplate}"
+                ContentTransitions="{TemplateBinding ContentTransitions}"
+                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="31"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid x:Name="MainTitleBar" 
+              Background="{ThemeResource MainBackgroundColor}"
+              HorizontalAlignment="Stretch">
+            <TextBlock Text="Studio Photo Collage"
+                       x:Uid="StudioPhotoCollageTBoxMain"
+                       VerticalAlignment="Center" Margin="56,0"/>
+        </Grid>
+
+        <Button VerticalAlignment="Top" HorizontalAlignment="Left"
+                Width="48"
+                Style="{StaticResource BackBtnStyle}"
+                Command="{Binding GoBackCommand}">
+        </Button>
+        
+        <GridView x:Name="Template3" Grid.Row="1"
+              ItemsSource = "{Binding Source={StaticResource GroupedProjectList}}"
+              SelectionMode="None"
+              IsItemClickEnabled="False" >
+
+            <GridView.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate x:DataType="models:GroupedTemplates" >
+                            <TextBlock>
+                            <Run x:Uid="CountOfPicturesRun">
+                                Pictures:
+                            </Run>
+                            <Run Text="{Binding CountOfPhotos}"/>
+                            </TextBlock>
+                        </DataTemplate >
+                    </GroupStyle.HeaderTemplate >
+                </GroupStyle >
+            </GridView.GroupStyle >
+
+            <GridView.ItemTemplate>
+                <DataTemplate x:DataType="models:Project">
+                    <Button Style="{StaticResource TemplatesBtns}"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                        Margin="9"
+                        Command="{Binding ElementName=Template3, 
+                        Path=DataContext.TemplateClickCommand}"
+                        
+                        CommandParameter="{Binding}" Content="{Binding PhotoArray,
+                        Converter={StaticResource FromArrToGridConverter}}"/>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+    </Grid>
+</Page>

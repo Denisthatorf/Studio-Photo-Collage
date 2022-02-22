@@ -1,6 +1,5 @@
-﻿using Studio_Photo_Collage.Infrastructure.Helpers;
-using Studio_Photo_Collage.ViewModels.PopUps;
-using System;
+﻿using System;
+using Studio_Photo_Collage.ViewModels;
 using Windows.UI.Xaml.Data;
 
 namespace Studio_Photo_Collage.Infrastructure.Converters
@@ -10,27 +9,25 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value == null || parameter == null)
+            {
                 return false;
+            }
+
             return value.ToString() == parameter.ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            if (value == null || parameter == null)
-                return null;
-            var rtnValue = parameter.ToString();
-            try
+            if (value != null && parameter != null)
             {
-                object returnEnum = Enum.Parse(typeof(BtnNameEnum), rtnValue);
-                return returnEnum;
+                var rtnValue = parameter.ToString();
+                try
+                {
+                    object returnEnum = Enum.Parse(typeof(BtnNameEnum), rtnValue);
+                    return returnEnum;
+                }
+                catch (ArgumentException) { }
             }
-            catch (ArgumentException) { }
-            try
-            {
-                object returnEnum = Enum.Parse(typeof(PaintClearEnum), rtnValue);
-                return returnEnum;
-            }
-            catch (ArgumentException) { }
 
             return null;
         }

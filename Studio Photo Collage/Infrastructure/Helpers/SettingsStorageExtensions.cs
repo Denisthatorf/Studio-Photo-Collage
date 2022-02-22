@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-
 using Windows.Storage;
-using Windows.Storage.Streams;
 
 namespace Studio_Photo_Collage.Infrastructure.Helpers
 {
@@ -11,15 +9,10 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
     {
         private const string FileExtension = ".json";
 
-        public static bool IsRoamingStorageAvailable(this ApplicationData appData)
-        {
-            return appData.RoamingStorageQuota == 0;
-        }
-
         public static async Task SaveAsync<T>(this StorageFolder folder, string name, T content)
         {
             var file = await folder.CreateFileAsync(GetFileName(name), CreationCollisionOption.ReplaceExisting);
-            var fileContent = await JsonHelper.StringifyAsync(content).ConfigureAwait(true);
+            var fileContent = await JsonHelper.StringifyAsync(content);
 
             await FileIO.WriteTextAsync(file, fileContent);
         }
@@ -39,7 +32,8 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
 
         public static async Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value)
         {
-            settings.SaveString(key, await JsonHelper.StringifyAsync(value));
+            var saveStr = await JsonHelper.StringifyAsync(value);
+            settings.SaveString(key, saveStr);
         }
 
         public static void SaveString(this ApplicationDataContainer settings, string key, string value)
@@ -76,38 +70,38 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             return storageFile;
         }
 
-        public static async Task<byte[]> ReadFileAsync(this StorageFolder folder, string fileName)
-        {
-            var item = await folder.TryGetItemAsync(fileName).AsTask().ConfigureAwait(false);
+        //public static async Task<byte[]> ReadFileAsync(this StorageFolder folder, string fileName)
+        //{
+        //    var item = await folder.TryGetItemAsync(fileName).AsTask().ConfigureAwait(false);
 
-            if (item != null && item.IsOfType(StorageItemTypes.File))
-            {
-                var storageFile = await folder.GetFileAsync(fileName);
-                byte[] content = await storageFile.ReadBytesAsync();
-                return content;
-            }
+        //    if ((item != null) && item.IsOfType(StorageItemTypes.File))
+        //    {
+        //        var storageFile = await folder.GetFileAsync(fileName);
+        //        byte[] content = await storageFile.ReadBytesAsync();
+        //        return content;
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
-        public static async Task<byte[]> ReadBytesAsync(this StorageFile file)
-        {
-            if (file != null)
-            {
-                using (IRandomAccessStream stream = await file.OpenReadAsync())
-                {
-                    using (var reader = new DataReader(stream.GetInputStreamAt(0)))
-                    {
-                        await reader.LoadAsync((uint)stream.Size);
-                        var bytes = new byte[stream.Size];
-                        reader.ReadBytes(bytes);
-                        return bytes;
-                    }
-                }
-            }
+        //public static async Task<byte[]> ReadBytesAsync(this StorageFile file)
+        //{
+        //    if (file != null)
+        //    {
+        //        using (IRandomAccessStream stream = await file.OpenReadAsync())
+        //        {
+        //            using (var reader = new DataReader(stream.GetInputStreamAt(0)))
+        //            {
+        //                await reader.LoadAsync((uint)stream.Size);
+        //                var bytes = new byte[stream.Size];
+        //                reader.ReadBytes(bytes);
+        //                return bytes;
+        //            }
+        //        }
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
         private static string GetFileName(string name)
         {

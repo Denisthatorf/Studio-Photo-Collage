@@ -1,9 +1,5 @@
-﻿using CommonServiceLocator;
-using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
-using GalaSoft.MvvmLight.Views;
+﻿using System.Windows.Input;
 using Studio_Photo_Collage.Models;
-using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -23,8 +19,6 @@ namespace Studio_Photo_Collage.UserControles
         public static readonly DependencyProperty ProjectProperty =
             DependencyProperty.Register("Project", typeof(Project), typeof(BtnWithBluring), new PropertyMetadata(null));
 
-
-
         public ICommand MyCommand
         {
             get { return (ICommand)GetValue(MyCommandProperty); }
@@ -35,18 +29,21 @@ namespace Studio_Photo_Collage.UserControles
         public static readonly DependencyProperty MyCommandProperty =
             DependencyProperty.Register("MyCommand", typeof(ICommand), typeof(BtnWithBluring), new PropertyMetadata(null));
 
+        public ICommand RemoveProjectCommand
+        {
+            get { return (ICommand)GetValue(RemoveProjectCommandProperty); }
+            set { SetValue(RemoveProjectCommandProperty, value); }
+        }
 
-        public ICommand TemplateClickCommand { get; private set; }
+        // Using a DependencyProperty as the backing store for RemoveProjectCommand.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty RemoveProjectCommandProperty =
+            DependencyProperty.Register("RemoveProjectCommand", typeof(ICommand), typeof(BtnWithBluring), new PropertyMetadata(null));
+
+        public string DateOfProject => Project.DateOfLastEditing.ToString("MM/dd/yy");
 
         public BtnWithBluring()
         {
             this.InitializeComponent();
-            TemplateClickCommand = new RelayCommand<Project>((parameter) =>
-            {
-                var navigation = ServiceLocator.Current.GetInstance<INavigationService>();
-                navigation.NavigateTo("MainPage");
-                Messenger.Default.Send(parameter);
-            });
         }
     }
 }

@@ -2,296 +2,273 @@
     x:Class="Studio_Photo_Collage.Views.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converters="using:Studio_Photo_Collage.Infrastructure.Converters"
-    xmlns:infrastruct="using:Studio_Photo_Collage.Infrastructure"
-    xmlns:usercontrole="using:Studio_Photo_Collage.UserControles"
+    xmlns:local="using:Studio_Photo_Collage.Views"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:converters="using:Studio_Photo_Collage.Infrastructure.Converters"
+    xmlns:viewModels="using:Studio_Photo_Collage.ViewModels"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
-    ui:ApplicationViewExtensions.ExtendViewIntoTitleBar="False"
-    ui:ApplicationViewExtensions.BackButtonVisibility="Visible"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    DataContext="{Binding MainPageInstance, Source={StaticResource Locator}}" 
-    x:Name="Page">
+    DataContext="{Binding MainPageInstance, Source={StaticResource Locator}}"
+    x:Name="Page"
+    Background="Gray">
+
     <Page.Resources>
         <converters:EnumValueConverter x:Key="EnumValueConverter"/>
-        <converters:ProjectToCollage x:Key="ToCollageConverter"/>
-        <infrastruct:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <Style TargetType="AppBarToggleButton" >
+        <converters:ProjectToUICollage x:Key="ProjectToUICollageConverter"/>
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        
+        <Style TargetType="AppBarToggleButton">
             <Setter Property="Width" Value="48"/>
             <Setter Property="Height" Value="48"/>
-
-            <!--<Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="AppBarToggleButton">
-                        <Grid x:Name="Root" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" MaxWidth="{TemplateBinding MaxWidth}" MinWidth="{TemplateBinding MinWidth}">
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="CommonStates">
-                                    <VisualState x:Name="Checked">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
-                                                <DiscreteObjectKeyFrame KeyTime="0">
-                                                    <DiscreteObjectKeyFrame.Value>
-                                                        <SolidColorBrush Color="Red"/>
-                                                    </DiscreteObjectKeyFrame.Value>
-                                                </DiscreteObjectKeyFrame>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ToggleButtonForegroundChecked}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Red"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Disabled">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="Root">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarButtonBackgroundDisabled}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="Root">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarButtonBorderBrushDisabled}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="Content">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarButtonForegroundDisabled}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="TextLabel">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarButtonForegroundDisabled}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="OverflowTextLabel">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarButtonForegroundDisabled}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-
-                            <Grid x:Name="ContentRoot" MinHeight="{ThemeResource AppBarThemeMinHeight}" 
-                                  VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto"/>
-                                </Grid.ColumnDefinitions>
-                                <ContentPresenter x:Name="Content" 
-                                                  Content="{TemplateBinding Icon}" 
-                                                  AutomationProperties.AccessibilityView="Raw"
-                                                  Foreground="{TemplateBinding Foreground}" 
-                                                  HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                  Margin="22"/>
-                                 <TextBlock x:Name="TextLabel" Foreground="{TemplateBinding Foreground}" FontSize="12" FontFamily="{TemplateBinding FontFamily}" Margin="5,0" Grid.Row="0" Grid.Column="1" TextAlignment="Center" TextWrapping="Wrap" Text="{TemplateBinding Label}" VerticalAlignment="Center"/>
-                            </Grid>
-                              <TextBlock x:Name="OverflowTextLabel" Foreground="{TemplateBinding Foreground}" FontSize="15" FontFamily="{TemplateBinding FontFamily}" HorizontalAlignment="Stretch" Margin="12,0,12,0" Padding="0,5,0,7" TextAlignment="Left" TextWrapping="NoWrap" Text="{TemplateBinding Label}" TextTrimming="Clip" Visibility="Collapsed" VerticalAlignment="Center"/>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>-->
+            <Setter Property="Template" Value="{StaticResource MenuAppBarToggleButton}"/>
         </Style>
         
         <Style TargetType="AppBarButton">
             <Setter Property="Width" Value="48"/>
             <Setter Property="Height" Value="48"/>
         </Style>
+        <Style x:Key="MenuFlyoutMenuFlyoutPresenterStyle" TargetType="MenuFlyoutPresenter">
+            <Setter Property="Background" Value="{ThemeResource MenuFlyoutPresenterBackground}"/>
+            <Setter Property="BorderBrush" Value="1"/>
+            <Setter Property="BorderThickness" Value="{ThemeResource MenuFlyoutPresenterBorderThemeThickness}"/>
+            <Setter Property="Padding" Value="{ThemeResource MenuFlyoutPresenterThemePadding}"/>
+            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.IsHorizontalRailEnabled" Value="False"/>
+            <Setter Property="ScrollViewer.IsVerticalRailEnabled" Value="False"/>
+            <Setter Property="ScrollViewer.ZoomMode" Value="Disabled"/>
+            <Setter Property="MaxWidth" Value="{ThemeResource FlyoutThemeMaxWidth}"/>
+            <Setter Property="MinHeight" Value="{ThemeResource MenuFlyoutThemeMinHeight}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="MenuFlyoutPresenter">
+                        <Grid Background="{TemplateBinding Background}" CornerRadius="0">
+                            <ScrollViewer x:Name="MenuFlyoutPresenterScrollViewer" AutomationProperties.AccessibilityView="Raw" HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}" HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}" IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}" IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}" Margin="{TemplateBinding Padding}" MinWidth="{Binding TemplateSettings.FlyoutContentMinWidth, RelativeSource={RelativeSource Mode=TemplatedParent}}" VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}" VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}" ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}">
+                                <ItemsPresenter Margin="{ThemeResource MenuFlyoutScrollerMargin}"/>
+                            </ScrollViewer>
+                            <Border x:Name="MenuFlyoutPresenterBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="0"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
+
+
     <Grid>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="31"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
 
-            <Grid  Grid.Row="1">
-                <StackPanel Background="{ThemeResource MainBackgroundColor}">
-                    <AppBarToggleButton x:Name="AddFile" 
-                                        IsChecked="{Binding CheckBoxesEnum, 
-                                        Converter={StaticResource EnumValueConverter},
-                                        ConverterParameter=AddFile , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                        <AppBarToggleButton.Icon>
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF61B;"/>
-                        </AppBarToggleButton.Icon>
-                    </AppBarToggleButton>
-                    <AppBarToggleButton  x:Name="Resents" 
-                                        IsChecked="{Binding CheckBoxesEnum, 
-                                        Converter={StaticResource EnumValueConverter},
-                                        ConverterParameter=Resents , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                        <AppBarToggleButton.Icon>
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72C;"/>
-                        </AppBarToggleButton.Icon>
-                    </AppBarToggleButton>
-                    <AppBarToggleButton  x:Name="Print" 
-                                        IsChecked="{Binding CheckBoxesEnum, 
-                                        Converter={StaticResource EnumValueConverter},
-                                        ConverterParameter=Print, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                        <AppBarToggleButton.Icon>
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE749;"/>
-                        </AppBarToggleButton.Icon>
-                    </AppBarToggleButton>
-                    <AppBarButton  x:Name="Save" 
-                                        PointerEntered="Save_PointerEntered">
-                        <AppBarButton.Icon>
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74E;"/>
-                        </AppBarButton.Icon>
-                        <FlyoutBase.AttachedFlyout>
-                            <MenuFlyout Placement="Right">
-                                <MenuFlyoutItem Text="Save image" Command="{Binding SaveImageCommand}"/>
-                                <MenuFlyoutItem Text="Save project" Command="{Binding SaveProjectCommand}"/>
-                            </MenuFlyout>
-                        </FlyoutBase.AttachedFlyout>
-                    </AppBarButton>
-                </StackPanel>
 
-                <AppBarToggleButton x:Name="Settings" 
-                                     IsChecked="{Binding CheckBoxesEnum, 
-                                     Converter={StaticResource EnumValueConverter},
-                                     ConverterParameter=Settings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          Icon="Setting" Grid.Row="1" VerticalAlignment="Bottom"/>
-            </Grid>
-            
-            <!--<UserControl Content="{Binding CurrentProject.Collage}"
-                                  Grid.Column="1" Grid.Row="1"
-                                  Width="400" Height="400"/>-->
 
-            
-            <ContentPresenter x:Name="CollagePresenter"
-                                  Content="{Binding CurrentCollage.CollageGrid}"
-                                  Grid.Column="1" Grid.Row="1"
-                                  Width="400" Height="400"/>
-            
-            <InkCanvas x:Name="InkCanv"
+        <Grid x:Name="MainTitleBar" 
+              Background="{ThemeResource MainBackgroundColor}"
+              HorizontalAlignment="Stretch">
+            <TextBlock Text="Studio Photo Collage"
+                       x:Uid="StudioPhotoCollageTBoxMain"
+                       VerticalAlignment="Center" Margin="56,0"/>
+        </Grid>
+
+        <Button VerticalAlignment="Top" HorizontalAlignment="Left"
+                    Width="48"
+                    Style="{StaticResource BackBtnStyle}"
+                    IsEnabled="True" Command="{Binding GoBackCommand}">
+        </Button>
+
+        <Grid Grid.Row="1">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <ContentPresenter x:Name="CollagePresenter"
+                         Content="{Binding CurrentCollage.CollageGrid}"
+                         Grid.Column="1" Grid.Row="1"
+                         Width="400" Height="400"
+                         Margin="24"/>
+
+        <!--<InkCanvas x:Name="InkCanv"
                        Visibility="{Binding ElementName=Paint, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Grid.Column="1" Grid.Row="1"
                        Width="{Binding ElementName=CollagePresenter, Path=Width}" 
                        Height="{Binding ElementName=CollagePresenter, Path=Height}">
-            </InkCanvas>
+        </InkCanvas>-->
 
-            <Grid  Grid.ColumnSpan="2"  Background="{ThemeResource MainBackgroundColor}" >
-                <CommandBar HorizontalAlignment="Center" DefaultLabelPosition="Collapsed">
-                    <CommandBar.PrimaryCommands>
-                        <AppBarToggleButton x:Name="Templates"
+
+        <Grid x:Name="LeftBar" Grid.Row="1">
+            <StackPanel Background="{ThemeResource MainBackgroundColor}">
+                <AppBarToggleButton x:Name="AddFile" 
+                                        IsChecked="{Binding CheckBoxesEnum, 
+                                        Converter={StaticResource EnumValueConverter},
+                                        ConverterParameter=AddFile , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <AppBarToggleButton.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF61B;"/>
+                    </AppBarToggleButton.Icon>
+                </AppBarToggleButton>
+                <AppBarToggleButton  x:Name="Resents" 
+                                        IsChecked="{Binding CheckBoxesEnum, 
+                                        Converter={StaticResource EnumValueConverter},
+                                        ConverterParameter=Resents , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <AppBarToggleButton.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72C;"/>
+                    </AppBarToggleButton.Icon>
+                </AppBarToggleButton>
+                <AppBarToggleButton  x:Name="Print" 
+                                        IsChecked="{Binding CheckBoxesEnum, 
+                                        Converter={StaticResource EnumValueConverter},
+                                        ConverterParameter=Print, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <AppBarToggleButton.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE749;"/>
+                    </AppBarToggleButton.Icon>
+                </AppBarToggleButton>
+                <AppBarButton  x:Name="Save" PointerEntered="Save_PointerEntered" >
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74E;"/>
+                    </AppBarButton.Icon>
+                    <FlyoutBase.AttachedFlyout>
+                        <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource MenuFlyoutMenuFlyoutPresenterStyle}" Placement="Right">
+                            <MenuFlyoutItem Text="Save image" Command="{Binding SaveImageCommand}" CornerRadius="0"/>
+                            <MenuFlyoutItem Text="Save project" Command="{Binding SaveProjectCommand}" CornerRadius="0"/>
+                        </MenuFlyout>
+                    </FlyoutBase.AttachedFlyout>
+                </AppBarButton>
+            </StackPanel>
+
+            <AppBarToggleButton x:Name="Settings" 
+                                     IsChecked="{Binding CheckBoxesEnum, 
+                                     Converter={StaticResource EnumValueConverter},
+                                     ConverterParameter=Settings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Icon="Setting" Grid.Row="1" VerticalAlignment="Bottom"
+                                Margin="0,180,0,0"/>
+        </Grid>
+
+        <Grid  x:Name="UpBar" Grid.ColumnSpan="2"  
+               Background="{ThemeResource MainBackgroundColor}" >
+            
+            <CommandBar HorizontalAlignment="Center" DefaultLabelPosition="Collapsed">
+                <CommandBar.PrimaryCommands>
+                    <AppBarToggleButton  x:Name="Templates"
                                             IsChecked="{Binding CheckBoxesEnum, 
                                             Converter={StaticResource EnumValueConverter},
                                             ConverterParameter=Templates , Mode=TwoWay}" >
-                            <AppBarToggleButton.Icon>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE80A;"/>
-                            </AppBarToggleButton.Icon>
-                        </AppBarToggleButton>
-                        <AppBarToggleButton x:Name="Transform" 
+                        <AppBarToggleButton.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE80A;"/>
+                        </AppBarToggleButton.Icon>
+                    </AppBarToggleButton>
+                    <AppBarToggleButton x:Name="Transform" 
                                              IsChecked="{Binding CheckBoxesEnum, 
                                             Converter={StaticResource EnumValueConverter},
                                             ConverterParameter=Transform , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
-                            <AppBarToggleButton.Icon>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEB9F;"/>
-                            </AppBarToggleButton.Icon>
-                        </AppBarToggleButton>
-                        <AppBarToggleButton x:Name="Frames"
+                        <AppBarToggleButton.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEB9F;"/>
+                        </AppBarToggleButton.Icon>
+                    </AppBarToggleButton>
+                    <AppBarToggleButton x:Name="Frames"
                                              IsChecked="{Binding CheckBoxesEnum, 
                                             Converter={StaticResource EnumValueConverter},
                                             ConverterParameter=Frames , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                            <AppBarToggleButton.Icon>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8B3;"/>
-                            </AppBarToggleButton.Icon>
-                        </AppBarToggleButton>
-                        <AppBarToggleButton x:Name="Filters" 
+                        <AppBarToggleButton.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8B3;"/>
+                        </AppBarToggleButton.Icon>
+                    </AppBarToggleButton>
+                    <AppBarToggleButton x:Name="Filters" 
                                              IsChecked="{Binding CheckBoxesEnum, 
                                             Converter={StaticResource EnumValueConverter},
                                             ConverterParameter=Filters , Mode=TwoWay,
                                             UpdateSourceTrigger=PropertyChanged}">
-                            <AppBarToggleButton.Icon>
-                                <muxc:ImageIcon Source="/Assets/Icons/Wand-256.png"/>
-                            </AppBarToggleButton.Icon>
-                        </AppBarToggleButton>
-                        <AppBarToggleButton x:Name="Background" 
+                        <AppBarToggleButton.Icon>
+                            <muxc:ImageIcon Source="/Assets/Icons/Wand-256.png"/>
+                        </AppBarToggleButton.Icon>
+                    </AppBarToggleButton>
+                    <AppBarToggleButton x:Name="Background" 
                                              IsChecked="{Binding CheckBoxesEnum, 
                                             Converter={StaticResource EnumValueConverter},
                                             ConverterParameter=Background, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                            <AppBarToggleButton.Icon>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8B9;"/>
-                            </AppBarToggleButton.Icon>
-                        </AppBarToggleButton>
-                        <AppBarToggleButton x:Name="Photo" 
+                        <AppBarToggleButton.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8B9;"/>
+                        </AppBarToggleButton.Icon>
+                    </AppBarToggleButton>
+                    <AppBarToggleButton x:Name="Photo" 
                                              IsChecked="{Binding CheckBoxesEnum, 
                                             Converter={StaticResource EnumValueConverter},
                                             ConverterParameter=Photo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                            <AppBarToggleButton.Icon>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE722;"/>
-                            </AppBarToggleButton.Icon>
-                        </AppBarToggleButton>
-                        <AppBarToggleButton x:Name="Add" 
+                        <AppBarToggleButton.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE722;"/>
+                        </AppBarToggleButton.Icon>
+                    </AppBarToggleButton>
+                    <AppBarToggleButton x:Name="Add" 
                                              IsChecked="{Binding CheckBoxesEnum, 
                                             Converter={StaticResource EnumValueConverter},
                                             ConverterParameter=Add , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                            <AppBarToggleButton.Icon>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;"/>
-                            </AppBarToggleButton.Icon>
-                        </AppBarToggleButton>
-                        <AppBarToggleButton x:Name="Paint" 
+                        <AppBarToggleButton.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;"/>
+                        </AppBarToggleButton.Icon>
+                    </AppBarToggleButton>
+                    <AppBarToggleButton x:Name="Paint" 
                                             IsChecked="{Binding CheckBoxesEnum, 
                                             Converter={StaticResource EnumValueConverter},
                                             ConverterParameter=Paint , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                            <AppBarToggleButton.Icon>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;"/>
-                            </AppBarToggleButton.Icon>
-                        </AppBarToggleButton>
-                        <AppBarToggleButton x:Name="Delete" 
+                        <AppBarToggleButton.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;"/>
+                        </AppBarToggleButton.Icon>
+                    </AppBarToggleButton>
+                    <AppBarToggleButton x:Name="Delete" 
                                              IsChecked="{Binding CheckBoxesEnum, 
                                             Converter={StaticResource EnumValueConverter},
                                             ConverterParameter=Delete , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                            <AppBarToggleButton.Icon>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74D;"/>
-                            </AppBarToggleButton.Icon>
-                        </AppBarToggleButton>
-                    </CommandBar.PrimaryCommands>
-                </CommandBar>
-            </Grid>
-            
-            <!--<ItemsControl ItemsSource="{Binding CurrentTemplate}"
-                          Grid.Column="1" Grid.Row="1" 
-                          HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                          HorizontalAlignment="Center" VerticalAlignment="Center">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Grid Width="400" Height="400">
-                            
-                        </Grid>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>-->
+                        <AppBarToggleButton.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74D;"/>
+                        </AppBarToggleButton.Icon>
+                    </AppBarToggleButton>
+                </CommandBar.PrimaryCommands>
+            </CommandBar>
+        </Grid>
 
-            <Grid Grid.Row="1" Grid.Column="1" x:Name="MainGrid">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="32*"/>
-                    <RowDefinition Height="687*"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
+        <Grid x:Name="MainGrid" Grid.Row="1" Grid.Column="1" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32*"/>
+                <RowDefinition Height="687*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
 
-                <Popup  Grid.Column="1" IsOpen="True" Width="245" Grid.RowSpan="2">
-                    <Frame x:Name="SidePanel"
-                           Height="{Binding ElementName=Page, Path=ActualHeight}"/>
-                </Popup>
+            <Popup  Grid.Column="1" IsOpen="True" Width="245" Grid.RowSpan="2">
+                <Frame x:Name="SidePanel" 
+                       Visibility="Collapsed"
+                       Background="{ThemeResource MainBackgroundColor}"
+                       Height="{Binding ElementName=Page, Path=ActualHeight, Mode=TwoWay}"
+                       Width="245"/>
+            </Popup>
 
-                <!--<Popup IsOpen="{Binding ElementName=Settings, Path=IsChecked}" 
+            <!--<Popup IsOpen="{Binding ElementName=Settings, Path=IsChecked}" 
                    HorizontalAlignment="Center" VerticalAlignment="Center"
                    Width="343" Height="467" 
                    Grid.Row="1" Grid.ColumnSpan="2">
                     <Frame BorderBrush="Black" BorderThickness="1" 
                        Content="{Binding SettingsFrame}"/>
                 </Popup>-->
-                
-                <Popup IsOpen="{Binding ElementName=Paint, Path=IsChecked}"
+
+            <!--<Popup IsOpen="{Binding ElementName=Paint, Path=IsChecked}"
                    Width="380" Height="64"
                    VerticalAlignment="Bottom" HorizontalAlignment="Center" 
                        Grid.Row="1"  Grid.ColumnSpan="2">
-                    <ContentPresenter Content="{Binding PaintFrame}"/>
-                </Popup>
-            </Grid>
+                <ContentPresenter Content="{Binding PaintFrame}"/>
+            </Popup>-->
         </Grid>
+
+    </Grid>
+
+
     </Grid>
 </Page>

@@ -1,153 +1,57 @@
-﻿using CommonServiceLocator;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Ioc;
-using GalaSoft.MvvmLight.Views;
-using Studio_Photo_Collage.ViewModels.PopUps;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Studio_Photo_Collage.Infrastructure.Services;
+using Studio_Photo_Collage.ViewModels.PopUpsViewModels;
 using Studio_Photo_Collage.ViewModels.SidePanels;
-using Studio_Photo_Collage.Views;
-using Studio_Photo_Collage.Views.PopUps;
-using Studio_Photo_Collage.Views.SidePanels;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Studio_Photo_Collage.ViewModels.SidePanelsViewModels;
 
 namespace Studio_Photo_Collage.ViewModels
 {
-    /// <summary>
-    /// This class contains static references to all the view models in the
-    /// application and provides an entry point for the bindings.
-    /// </summary> 
-    /// 
     public class ViewModelLocator
     {
-        // private static ViewModelLocator _current;
-        //  public static ViewModelLocator Current => _current ?? (_current = new ViewModelLocator());
-
-        public const string StartPageKey = "StartPage";
-        public const string TemplatesPageKey = "TemplatesPage";
-        public const string MainPageKey = "MainPage";
-
-        public const string FiltersPageKey = "FiltersPage";
-        public const string BackgroundPageKey = "BackgroundPage";
-        public const string TransformPageKey = "TransformPage";
-        public const string RecentPageKey = "RecentPage";
-        public const string FramesPadeKey = "FramesPage";
-        public const string TemplatesSidePanelPageKey = "TemplatesSidePagePage";
-
-        public const string PaintPopUpPageKey = "PaintPopUpPage";
-        public const string SettingstDialogKey = "SettingsContentDialog";
-
-        /// <summary>
-        /// Initializes a new instance of the ViewModelLocator class.
-        /// </summary>
-        /// 
-
-        private static NavigationService nav = new NavigationService();
-
         public ViewModelLocator()
         {
-            ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
-            nav.Configure(StartPageKey, typeof(StartPage));
-            nav.Configure(TemplatesPageKey, typeof(TemplatesPage));
-            nav.Configure(MainPageKey, typeof(MainPage));
+            // ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
-            nav.Configure(FiltersPageKey, typeof(FiltersPage));
-            nav.Configure(BackgroundPageKey, typeof(BackgroundPage));
-            nav.Configure(TransformPageKey, typeof(TransformPage));
-            nav.Configure(RecentPageKey, typeof(ResentsPage));
-            nav.Configure(FramesPadeKey, typeof(FramesPage));
+            var services = new ServiceCollection();
 
-            nav.Configure(PaintPopUpPageKey, typeof(PaintPopUpPage));
-            nav.Configure(SettingstDialogKey, typeof(SettingsDialog));
-            // nav.Configure(TemplatesSidePanelPageKey, typeof(TemplatesSidePanelPage));
+            //services.AddTransient<MainPageViewModel>();
+            services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<SettingServise>();
+            services.AddSingleton<StartPageViewModel>();
+            services.AddSingleton<TemplatePageViewModel>();
+            services.AddSingleton<MainPageViewModel>();
 
-            if (ViewModelBase.IsInDesignModeStatic)
-            {
-                // Create design time view services and models
-            }
-            else
-            {
-                // Create run time view services and models
-            }
+            services.AddSingleton<SettingsDialogViewModel>();
 
-            //Register your services used here
-            SimpleIoc.Default.Register<INavigationService>(() => nav);
-            SimpleIoc.Default.Register<StartPageViewModel>();
-            SimpleIoc.Default.Register<TemplatesPageViewModel>();
-            SimpleIoc.Default.Register<MainPageViewModel>();
+            services.AddSingleton<FramesPageViewModel>();
+            services.AddSingleton<BackgroundPageViewModel>();
+            services.AddSingleton<FiltersPageViewModel>();
+            services.AddSingleton<RecentPageViewModel>();
+            services.AddSingleton<TemplatePageViewModel>();
+            services.AddSingleton<TransformPageViewModel>();
+            services.AddSingleton<TemplatesSidePanelPageViewModel>();
 
-            SimpleIoc.Default.Register<FiltersPageViewModel>();
-            SimpleIoc.Default.Register<BackgroundPageViewModel>();
-            SimpleIoc.Default.Register<TransformPageViewModel>();
-            SimpleIoc.Default.Register<RecentPageViewModel>();
-            SimpleIoc.Default.Register<FramesPageViewModel>();
-            SimpleIoc.Default.Register<TemplatesSidePanelPageViewModel>();
-
-            SimpleIoc.Default.Register<PaintPopUpPageViewModel>();
-            SimpleIoc.Default.Register<SettingsDialogViewModel>();
-
+            Ioc.Default.ConfigureServices(services.BuildServiceProvider());
         }
 
+        public MainPageViewModel MainPageInstance => Ioc.Default.GetService<MainPageViewModel>();
+        public StartPageViewModel StarPageInstance => Ioc.Default.GetService<StartPageViewModel>();
+        public TemplatePageViewModel TemplatePageInstance => Ioc.Default.GetService<TemplatePageViewModel>();
 
-        // <summary>
-        // Gets the StartPage view model.
-        // </summary>
-        // <value>
-        // The StartPage view model.
-        // </value>
-        public StartPageViewModel StartPageInstance => ServiceLocator.Current.GetInstance<StartPageViewModel>();
-        public TemplatesPageViewModel TemplatesPageInstance => ServiceLocator.Current.GetInstance<TemplatesPageViewModel>();
-        public MainPageViewModel MainPageInstance => ServiceLocator.Current.GetInstance<MainPageViewModel>();
+        public SettingsDialogViewModel SettingsDialogInstance => Ioc.Default.GetService<SettingsDialogViewModel>();
 
-        public FiltersPageViewModel FiltersPageInstance => ServiceLocator.Current.GetInstance<FiltersPageViewModel>();
-        public BackgroundPageViewModel BackgroundPageInstance => ServiceLocator.Current.GetInstance<BackgroundPageViewModel>();
-        public TransformPageViewModel TransformPageInstance => ServiceLocator.Current.GetInstance<TransformPageViewModel>();
-        public RecentPageViewModel RecentPageInstance => ServiceLocator.Current.GetInstance<RecentPageViewModel>();
-        public FramesPageViewModel FramesPageInstanse => ServiceLocator.Current.GetInstance<FramesPageViewModel>();
-        //    public TemplatesSidePanelPageViewModel TemplatesSidePanelPageInstance => ServiceLocator.Current.GetInstance<TemplatesSidePanelPageViewModel>();
-
-        public SettingsDialogViewModel SettingsDialogInstance => ServiceLocator.Current.GetInstance<SettingsDialogViewModel>();
-        public PaintPopUpPageViewModel PaintPopUppageInstance => ServiceLocator.Current.GetInstance<PaintPopUpPageViewModel>();
-
+        public FramesPageViewModel FramesPageInstance => Ioc.Default.GetService<FramesPageViewModel>();
+        public BackgroundPageViewModel BackgroundPageInstance => Ioc.Default.GetService<BackgroundPageViewModel>();
+        public FiltersPageViewModel FiltersPageInstance => Ioc.Default.GetService<FiltersPageViewModel>();
+        public RecentPageViewModel RecentPageInstance => Ioc.Default.GetService<RecentPageViewModel>();
+        public TransformPageViewModel TransformPageInstance => Ioc.Default.GetService<TransformPageViewModel>();
+        public TemplatesSidePanelPageViewModel TemplatesSidePanelPageInstance => Ioc.Default.GetService<TemplatesSidePanelPageViewModel>();
 
         public static void ReloadCurrentPage()
         {
-            var navigation = ServiceLocator.Current.GetInstance<INavigationService>();
-
-            Frame rootFrame = Window.Current.Content as Frame;
-            var strContent = rootFrame.Content.ToString();
-            var arr = strContent.Split('.');
-
-            //rootFrame.Navigate(rootFrame.CurrentSourcePageType, "reload");
-            navigation.NavigateTo(GetStringCurrentPage(), "reload");
-        }
-        public static string GetStringCurrentPage()
-        {
-            var pageFullType = (Window.Current.Content as Frame).Content.ToString();
-            var arr = pageFullType.Split('.');
-            var currentPage = arr[arr.Length - 1];
-            return currentPage;
-        }
-        public static void GoBack()
-        {
-            var navigation = ServiceLocator.Current.GetInstance<INavigationService>();
-            var currentPage = GetStringCurrentPage();
-            if (currentPage == "MainPage")
-            {
-                var mainPage = ServiceLocator.Current.GetInstance<MainPageViewModel>();
-                mainPage.GoBack();
-            }
-            else if (currentPage == "TemplatesPage")
-            {
-                navigation.NavigateTo("StartPage");
-            }
-        }
-
-        // <summary>
-        // The cleanup.
-        // </summary>
-        public static void Cleanup()
-        {
-            // TODO Clear the ViewModels
+            var navService = Ioc.Default.GetService<INavigationService>();
+            navService.Navigate(navService.CurrentPageType, "reload");
         }
     }
 }

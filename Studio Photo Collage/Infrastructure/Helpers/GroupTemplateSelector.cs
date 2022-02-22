@@ -12,9 +12,15 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
         protected override DataTemplate SelectTemplateCore(object item)
         {
             if (item is GroupedTemplates)
+            {
                 return GroupTemplate;
-            if (item is Project)
+            }
+
+            else if (item is Project)
+            {
                 return ProjectTemplate;
+            }
+
             return null;
         }
     }
