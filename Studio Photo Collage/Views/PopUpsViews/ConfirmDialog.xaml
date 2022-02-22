@@ -6,27 +6,36 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    Height="160" Width="356"
      x:Name="ConfirmContentDialog"
     PrimaryButtonText="Yes"
     SecondaryButtonText="No"
     Style="{StaticResource ContentDialog}">
-    
+    <ContentDialog.Resources>
+        <Thickness x:Key="ContentDialogButton1HostMargin">0,0,0,0</Thickness>
+        <Thickness x:Key="ContentDialogButton2HostMargin">0,0,0,0</Thickness>
+        <Thickness x:Key="ContentDialogContentMargin">0,0,0,0</Thickness>
+        <Thickness x:Key="ContentDialogCommandSpaceMargin">0,18,0,0</Thickness>
+        <x:Double x:Key="ContentDialogMinHeight">140</x:Double>
+    </ContentDialog.Resources>
     <ContentDialog.SecondaryButtonStyle>
         <Style TargetType="Button">
             <Setter Property="Background" Value="{ThemeResource NoConfirmPopUpBtnBrush}"/>
-            <Setter Property="Foreground" Value="{ThemeResource WhiteInLightAndBlackInDark}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Margin" Value="0"/>
         </Style>
     </ContentDialog.SecondaryButtonStyle>
     <ContentDialog.PrimaryButtonStyle>
         <Style TargetType="Button">
             <Setter Property="Background" Value="{ThemeResource CustomBrush}"/>
-            <Setter Property="Foreground" Value="{ThemeResource WhiteInLightAndBlackInDark}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Margin" Value="0"/>
         </Style>
     </ContentDialog.PrimaryButtonStyle>
-    <StackPanel>
+    <StackPanel Margin="0,0,0,0">
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Confirmation" FontSize="20"/>
-            <Button Margin="185,0,0,0" 
+            <Button Margin="161,0,5,0" 
                     Click="Button_Click"
                     Background="Transparent" BorderBrush="Transparent"
                           Padding="0">
@@ -34,7 +43,7 @@
             </Button>
         </StackPanel>
 
-        <TextBlock Margin="0,14,0,0" >
+        <TextBlock Margin="0,8,0,0" FontSize="15">
             <Run>
                 Do you really want to remove
             </Run>

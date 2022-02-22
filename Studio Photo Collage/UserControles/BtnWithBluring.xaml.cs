@@ -39,7 +39,7 @@ namespace Studio_Photo_Collage.UserControles
         public static readonly DependencyProperty RemoveProjectCommandProperty =
             DependencyProperty.Register("RemoveProjectCommand", typeof(ICommand), typeof(BtnWithBluring), new PropertyMetadata(null));
 
-        public string DateOfProject => Project.DateOfLastEditing.ToString( );
+        public string DateOfProject => Project.DateOfLastEditing.ToString("MM/dd/yy");
 
         public BtnWithBluring()
         {

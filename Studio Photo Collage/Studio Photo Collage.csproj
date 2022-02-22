@@ -135,6 +135,7 @@
     <Compile Include="Infrastructure\Helpers\SettingsStorageExtensions.cs" />
     <Compile Include="Infrastructure\Messages\BorderThicknessChangedMessage.cs" />
     <Compile Include="Infrastructure\Messages\BackgroundOpacityChangedMessage.cs" />
+    <Compile Include="Infrastructure\Messages\DeleteProjectMessage.cs" />
     <Compile Include="Infrastructure\Messages\ProjectSavedMessage.cs" />
     <Compile Include="Infrastructure\Messages\SaveProjectRequestMessage.cs" />
     <Compile Include="Infrastructure\Services\SettingServise.cs" />
@@ -252,7 +253,16 @@
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
       <Version>7.1.2</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations">
+      <Version>7.1.2</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Behaviors">
+      <Version>7.1.2</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
+      <Version>7.1.2</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Media">
       <Version>7.1.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
@@ -279,6 +289,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\LightThemeDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\Slider.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

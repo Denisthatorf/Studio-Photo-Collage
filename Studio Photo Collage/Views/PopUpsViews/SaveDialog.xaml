@@ -9,17 +9,20 @@
     Style="{StaticResource ContentDialog}"
     PrimaryButtonText="Yes"
     SecondaryButtonText="No">
-
+    <ContentDialog.Resources>
+        <Thickness x:Key="ContentDialogPadding">24</Thickness>
+    </ContentDialog.Resources>
+    
     <ContentDialog.PrimaryButtonStyle>
         <Style TargetType="Button">
             <Setter Property="Background" Value="{ThemeResource CustomBrush}"/>
-            <Setter Property="Foreground" Value="{ThemeResource WhiteInLightAndBlackInDark}"/>
+            <Setter Property="Foreground" Value="White"/>
         </Style>
     </ContentDialog.PrimaryButtonStyle>
     <ContentDialog.SecondaryButtonStyle>
         <Style TargetType="Button">
             <Setter Property="Background" Value="{ThemeResource NoConfirmPopUpBtnBrush}"/>
-            <Setter Property="Foreground" Value="{ThemeResource WhiteInLightAndBlackInDark}"/>
+            <Setter Property="Foreground" Value="White"/>
         </Style>
     </ContentDialog.SecondaryButtonStyle>
     
@@ -43,11 +46,15 @@
             </Run>
         </TextBlock>
         <TextBlock Text="Enter name, please" Margin="0,12,0,0"/>
-        <TextBox x:Name="NameTBox"
+        
+        <Grid>
+
+            <TextBox x:Name="NameTBox"
                  BorderBrush="{StaticResource CustomBrush}" 
                  Background="Transparent" 
                  Margin="0,8,0,0" CornerRadius="0" 
                  Text="{x:Bind ProjectName,
                  Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
     </StackPanel>
 </ContentDialog>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
 namespace Studio_Photo_Collage.Models
@@ -31,7 +32,7 @@ namespace Studio_Photo_Collage.Models
         public DateTime DateOfLastEditing { get; set; }
         public string ProjectName { get; set; }
 
-        #region UIelement
+        #region UIelement prop
         public string BackgroundColor { get; set; }
         public double BorderThickness { get; set; }
         public double BorderOpacity { get; set; }
@@ -53,6 +54,7 @@ namespace Studio_Photo_Collage.Models
             return ProjectName;
         }
 
+        #region Equels overriding
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -62,12 +64,10 @@ namespace Studio_Photo_Collage.Models
 
             return Equals(obj as Project);
         }
-
         public bool Equals(Project other)
         {
-            return other != null && other.GetHashCode() == this.GetHashCode();
+            return !(other is null) && other.GetHashCode() == this.GetHashCode();
         }
-
         public override int GetHashCode()
         {
             /* int hashCode = 547882800;
@@ -86,6 +86,23 @@ namespace Studio_Photo_Collage.Models
              }
              return hashCode;*/
             return uid;
+        }
+        public static bool operator ==(Project first, Project second)
+        {
+            if (!(first is null || second is null))
+            {
+                return first.Equals(second);
+            }
+
+            return false;
+        }
+        public static bool operator !=(Project first, Project second) => !(first == second);
+        #endregion
+
+        [OnSerializing]
+        private void OnDeserializingMethod(StreamingContext context)
+        {
+            DateOfLastEditing = DateTime.Now;
         }
     }
 }

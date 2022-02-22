@@ -80,11 +80,22 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
                     Projects.Add(m.Value);
                 }
             });
+            Messenger.Register<DeleteProjectMessage>(this, (r, m) =>
+            {
+                if (Projects.Contains(m.Value))
+                {
+                    Projects.Remove(m.Value);
+                }
+            });
         }
 
         private async void DesserializeProjectsAsync()
         {
             Projects = await ApplicationData.Current.LocalFolder.ReadAsync<ObservableCollection<Project>>("projects");
+            if(Projects == null)
+            {
+                Projects = new ObservableCollection<Project>();
+            }
         }
     }
 }

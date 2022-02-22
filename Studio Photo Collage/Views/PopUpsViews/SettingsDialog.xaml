@@ -16,7 +16,9 @@
     Style="{StaticResource ContentDialog}">
 
     <!--RequestedTheme="{Binding ThemeOfSettings}"-->
-        <ContentDialog.Resources>
+    <ContentDialog.Resources>
+        <Thickness x:Key="ContentDialogPadding">12</Thickness>
+
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <converters:CultureInfoToFullStringNameConverter x:Key="CultureConverter"/>
         <converters:ThemeToStringConverter x:Key="ThemeConverter"/>
@@ -83,19 +85,19 @@
                     </ItemsControl>
 
                     <TextBlock Text="Photos on this PC"/>
-                    <HyperlinkButton Padding="0">
+                    <HyperlinkButton Padding="0" >
                         <TextBlock Text="Choose where we will look for photos" 
-                               Foreground="Red"/>
+                               Foreground="{ThemeResource CustomBrush}" Margin="0,4"/>
                     </HyperlinkButton>
 
-                    <TextBlock Text="Collages on this PC"/>
+                    <TextBlock Text="Collages on this PC" Margin="0,4"/>
                     <HyperlinkButton Padding="0">
                         <TextBlock Text="Choose where we will look for photos" 
-                               Foreground="Red"/>
+                               Foreground="{ThemeResource CustomBrush}" Margin="0,4"/>
                     </HyperlinkButton>
                 </StackPanel>
             </PivotItem>
-            <PivotItem x:Name="About" Header="About"  Margin="14,14,29,0">
+            <PivotItem x:Name="About" Header="About"  Margin="8,14,28,0">
                 <StackPanel>
                     <TextBlock>
                     <Bold>

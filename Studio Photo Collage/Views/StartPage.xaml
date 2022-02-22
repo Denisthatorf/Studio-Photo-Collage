@@ -127,7 +127,7 @@
                                 MyCommand="{Binding ElementName=T1, 
                                 Path=DataContext.TemplateClickCommand, Mode=OneWay}"
                                 RemoveProjectCommand="{Binding ElementName=T1, 
-                                Path=DataContext.RecentCollageDeleteCommand, Mode=OneWay}"/>
+                                Path=DataContext.RecentCollageDeleteOneProjectCommand, Mode=OneWay}"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

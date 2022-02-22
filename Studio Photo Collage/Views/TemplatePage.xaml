@@ -25,6 +25,32 @@
                    IsSourceGrouped="True"
                    ItemsPath="Projects"/>
 
+        <Style TargetType="GridViewHeaderItem">
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+            <Setter Property="FontSize" Value="{ThemeResource GridViewHeaderItemThemeFontSize}" />
+            <Setter Property="Background" Value="{ThemeResource GridViewHeaderItemBackground}" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+            <Setter Property="Padding" Value="12,8,12,0" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="VerticalContentAlignment" Value="Top" />
+            <Setter Property="MinHeight" Value="{ThemeResource GridViewHeaderItemMinHeight}" />
+            <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GridViewHeaderItem">
+                        <StackPanel Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}">
+                            <ContentPresenter x:Name="ContentPresenter"
+                Margin="{TemplateBinding Padding}"
+                Content="{TemplateBinding Content}"
+                ContentTemplate="{TemplateBinding ContentTemplate}"
+                ContentTransitions="{TemplateBinding ContentTransitions}"
+                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
     </Page.Resources>
 
@@ -67,12 +93,12 @@
                 </GroupStyle >
             </GridView.GroupStyle >
 
-            <GridView.ItemTemplate >
-                <DataTemplate x:DataType="models:Project" >
+            <GridView.ItemTemplate>
+                <DataTemplate x:DataType="models:Project">
                     <Button Style="{StaticResource TemplatesBtns}"
                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                        
+                        Margin="9"
                         Command="{Binding ElementName=Template3, 
                         Path=DataContext.TemplateClickCommand}"
                         

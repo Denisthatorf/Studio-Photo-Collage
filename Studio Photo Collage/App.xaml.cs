@@ -69,22 +69,7 @@ namespace Studio_Photo_Collage
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
-
-            var currentView = SystemNavigationManager.GetForCurrentView();
-            currentView.BackRequested += (object s, BackRequestedEventArgs ev) => Ioc.Default.GetService<INavigationService>().GoBack();
-
-            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            titleBar.ButtonBackgroundColor = Colors.Transparent;
-            //titleBar.ButtonHoverBackgroundColor = Colors.Red;
-            //titleBar.ButtonPressedBackgroundColor = Colors.Red;
-
-            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-            coreTitleBar.ExtendViewIntoTitleBar = true;
-            currentView.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
-
             Ioc.Default.GetService<SettingServise>().LoadStartSetting();
-            Application.Current.Resources["ContentDialogBorderWidth"] = new Thickness(2);
-            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500, 461));
         }
 
         /// <summary>

@@ -6,7 +6,7 @@
     xmlns:toolkitControls="using:Microsoft.Toolkit.Uwp.UI.Controls">
 
     <SolidColorBrush x:Key="CustomBrush" Color="{StaticResource SystemAccentColor}"/>
-
+    
     <Style TargetType="TextBlock" x:Key="Header">
         <Setter Property="Foreground" Value="{StaticResource CustomBrush}"/>
         <Setter Property="FontSize" Value="16"/>

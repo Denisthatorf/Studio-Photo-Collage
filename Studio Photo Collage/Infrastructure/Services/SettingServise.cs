@@ -2,16 +2,20 @@
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Studio_Photo_Collage.Infrastructure.Converters;
 using Studio_Photo_Collage.Infrastructure.Helpers;
 using Studio_Photo_Collage.ViewModels;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources.Core;
+using Windows.Foundation;
 using Windows.Globalization;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 
 namespace Studio_Photo_Collage.Infrastructure.Services
@@ -31,6 +35,8 @@ namespace Studio_Photo_Collage.Infrastructure.Services
             await SetApplicationThemeFromSettings();
             await SetCustomColorFromSettings();
             SetLanguageFromSettings();
+            SetAnotherSettings();
+            SetTitleBarTheme();
         }
         public void SetLanguage(CultureInfo cultureInfo)
         {
@@ -55,6 +61,13 @@ namespace Studio_Photo_Collage.Infrastructure.Services
             await ApplicationData.Current.LocalSettings.SaveAsync<Color>(CustomColorSettingsKey, color);
         }
 
+        private void SetTitleBarTheme()
+        {
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.ButtonBackgroundColor = Colors.Transparent;
+            //titleBar.ButtonHoverBackgroundColor = Colors.Red;
+            //titleBar.ButtonPressedBackgroundColor = Colors.Red;
+        }
         private void SetApplicationCustomColor()
         {
             var brush = (SolidColorBrush)App.Current.Resources["CustomBrush"];
@@ -102,6 +115,17 @@ namespace Studio_Photo_Collage.Infrastructure.Services
 
             Language = culture;
             SetLanguage(Language);
+        }
+        private void SetAnotherSettings()
+        {
+            var currentView = SystemNavigationManager.GetForCurrentView();
+            currentView.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
+
+            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = true;
+
+            Application.Current.Resources["ContentDialogBorderWidth"] = new Thickness(2);
+            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500, 461));
         }
     }
 }

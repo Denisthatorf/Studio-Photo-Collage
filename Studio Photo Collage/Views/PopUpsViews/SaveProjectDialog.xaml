@@ -7,11 +7,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     PrimaryButtonText="Save">
-
+    <ContentDialog.Resources>
+        <Thickness x:Key="ContentDialogPadding">26</Thickness>
+    </ContentDialog.Resources>
     <ContentDialog.PrimaryButtonStyle>
         <Style TargetType="Button">
             <Setter Property="Background" Value="{StaticResource CustomBrush}"/>
-            <Setter Property="Foreground" Value="{ThemeResource WhiteInLightAndBlackInDark}"/>
+            <Setter Property="Foreground" Value="White"/>
         </Style>
     </ContentDialog.PrimaryButtonStyle>
     <StackPanel>

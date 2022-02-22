@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using Windows.Storage;
+using Windows.UI.Xaml.Controls;
 using Studio_Photo_Collage.Infrastructure.Helpers;
 using Studio_Photo_Collage.Infrastructure.Messages;
 using Studio_Photo_Collage.Infrastructure.Services;
 using Studio_Photo_Collage.Models;
 using Studio_Photo_Collage.Views;
 using Studio_Photo_Collage.Views.PopUps;
-using Windows.Storage;
 
 namespace Studio_Photo_Collage.ViewModels
 {
@@ -31,7 +33,7 @@ namespace Studio_Photo_Collage.ViewModels
         private ICommand templateClickCommand;
         private ICommand recentCollageDeleteCommand;
 
-        public ICommand RecentCollageDeleteCommand
+        public ICommand RecentCollageDeleteOneProjectCommand
         {
             get
             {
@@ -45,7 +47,10 @@ namespace Studio_Photo_Collage.ViewModels
                             projectList.Remove(parameter);
                             await ApplicationData.Current.LocalFolder.SaveAsync("projects", projectList);
                         }
-                        RecentProjects.Remove(RecentProjects.Where(x => x.Item1 == parameter).First());
+                        var removedProject = RecentProjects.Where(x => x.Item1 == parameter).First();
+
+                        RecentProjects.Remove(removedProject);
+                        Messenger.Send(new DeleteProjectMessage(removedProject.Item1));
                     });
                 }
 
@@ -122,7 +127,14 @@ namespace Studio_Photo_Collage.ViewModels
         public ObservableCollection<Tuple<Project>> RecentProjects
         {
             get => recentProjects;
-            set => SetProperty(ref recentProjects, value);
+            set
+            {
+                SetProperty(ref recentProjects, value);
+                if(RecentProjects.Count == 0)
+                {
+                    IsRecentCollagesOpen = false;
+                }
+            } 
         }
 
         public bool IsRecentCollagesOpen
@@ -137,7 +149,6 @@ namespace Studio_Photo_Collage.ViewModels
                 }
             }
         }
-
         public bool IsGreetingTextVisible
         {
             get => isGreetingTextVisible;
@@ -146,11 +157,12 @@ namespace Studio_Photo_Collage.ViewModels
 
         public StartPageViewModel(INavigationService navigationService)
         {
+            InitializeAsync();
+
             this.navigationService = navigationService;
             RecentProjects = new ObservableCollection<Tuple<Project>>();
             isGreetingTextVisible = true;
 
-            DesserializeProjects();
             Messenger.Register<ProjectSavedMessage>(this, (r, m) =>
             {
                 if (!RecentProjects.Any((x) => x.Item1 == m.Value))
@@ -158,17 +170,17 @@ namespace Studio_Photo_Collage.ViewModels
                     RecentProjects.Add(new Tuple<Project>(m.Value));
                 }
             });
-
-            Windows.UI.Xaml.Window.Current.CoreWindow.KeyDown += (sender, arg) =>
-            {
-                if (arg.VirtualKey == Windows.System.VirtualKey.Space || arg.VirtualKey == Windows.System.VirtualKey.Enter)
-                {
-                    IsRecentCollagesOpen = true;
-                }
-            };
         }
 
-        private async void DesserializeProjects()
+        private async void InitializeAsync()
+        {
+            await DesserializeProjectsAsync();
+            if(RecentProjects.Count > 0)
+            {
+                IsRecentCollagesOpen = true;
+            }
+        }
+        private async Task DesserializeProjectsAsync()
         {
             var projects = await ApplicationData.Current.LocalFolder.ReadAsync<List<Project>>("projects");
 

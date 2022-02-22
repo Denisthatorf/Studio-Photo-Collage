@@ -36,7 +36,14 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
                         gridInGrid.BorderThickness = new Windows.UI.Xaml.Thickness(proj.BorderThickness * (int.Parse(parameter as string) / 480.0));
                     }
 
-                    backgroundGrid.Background = ColorGenerator.GetBrushFromHexOrStrImgBase64(proj.BackgroundColor);
+                    if (proj.BackgroundColor.Length < 10)
+                    {
+                        backgroundGrid.Background = ColorGenerator.GetSolidColorBrushFromString(proj.BackgroundColor);
+                    }
+                    else
+                    {
+                        backgroundGrid.Background = ColorGenerator.GetImageBrushFromString64(proj.BackgroundColor);
+                    }
                     backgroundGrid.Opacity = proj.BorderOpacity;
 
                     collage.Children.Add(backgroundGrid);

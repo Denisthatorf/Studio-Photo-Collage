@@ -155,6 +155,8 @@ namespace Studio_Photo_Collage.ViewModels
 
             if (result != ContentDialogResult.None)
             {
+                CheckBoxesEnum = null;
+                CurrentCollage = null;
                 navigationService.Navigate(typeof(TemplatePage));
             }
         }

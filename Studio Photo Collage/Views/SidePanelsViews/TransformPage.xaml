@@ -9,14 +9,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Style="{StaticResource SidePanelPage}"
     d:Width="245">
 
     <StackPanel>
         <TextBlock Text="Transform" x:Uid="Transform"
                    Margin="20"
                    Style="{StaticResource Header}"/>
-
+        
         <ListView x:Name="ListView"
             Margin="0,16,0,0" 
             IsItemClickEnabled="True" SelectionMode="None"

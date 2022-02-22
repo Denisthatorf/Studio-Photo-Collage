@@ -34,24 +34,10 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             return colors;
         }
 
-        public static Brush GetBrushFromHexOrStrImgBase64(string color)
+        public static Brush GetSolidColorBrushFromString(string color)
         {
-            if (string.IsNullOrEmpty(color))
-            {
-                return null;
-            }
-
-            Brush brush;
-            if (color.Length < 10)
-            {
-                var c = GetColorFromString(color);
-                brush = new SolidColorBrush(c);
-            }
-            else
-            {
-                brush = new ImageBrush();
-                ImageHelper.SetImgSourceFromBase64Async((ImageBrush)brush, color);
-            }
+            var c = GetColorFromString(color);
+            var brush = new SolidColorBrush(c);
 
             return brush;
         }
@@ -83,31 +69,37 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
 
             return result;
         }
+        public static ImageBrush GetImageBrushFromString64(string str64)
+        {
+            var brush = new ImageBrush();
+            ImageHelper.SetImgSourceFromBase64Async((ImageBrush)brush, str64);
+            return brush;
+        }
         public static List<SolidColorBrush> FillSettingByBrush()
         {
             var Colors = new List<SolidColorBrush>
             {
-                (SolidColorBrush)ColorGenerator.GetBrushFromHexOrStrImgBase64("FFBA00"),
-                (SolidColorBrush)ColorGenerator.GetBrushFromHexOrStrImgBase64("F76304"),
-                (SolidColorBrush)ColorGenerator.GetBrushFromHexOrStrImgBase64("DB3800"),
-                (SolidColorBrush)ColorGenerator.GetBrushFromHexOrStrImgBase64("D23135"),
-                (SolidColorBrush)ColorGenerator.GetBrushFromHexOrStrImgBase64("E9091E"),
-                (SolidColorBrush)ColorGenerator.GetBrushFromHexOrStrImgBase64("C40051"),
-                (SolidColorBrush)ColorGenerator.GetBrushFromHexOrStrImgBase64("E4008D"),
-                (SolidColorBrush)ColorGenerator.GetBrushFromHexOrStrImgBase64("C336B5"),
-                (SolidColorBrush)ColorGenerator.GetBrushFromHexOrStrImgBase64("891099"),
-                (SolidColorBrush)ColorGenerator.GetBrushFromHexOrStrImgBase64("754CAB"),
-                (SolidColorBrush)ColorGenerator.GetBrushFromHexOrStrImgBase64("8F8DD9"),
-                (SolidColorBrush)ColorGenerator.GetBrushFromHexOrStrImgBase64("6B69D7"),
-                (SolidColorBrush)ColorGenerator.GetBrushFromHexOrStrImgBase64("0063B3"),
-                (SolidColorBrush)ColorGenerator.GetBrushFromHexOrStrImgBase64("0079D8"),
-                (SolidColorBrush)ColorGenerator.GetBrushFromHexOrStrImgBase64("009ABD"),
-                (SolidColorBrush)ColorGenerator.GetBrushFromHexOrStrImgBase64("00B8C4"),
-                (SolidColorBrush)ColorGenerator.GetBrushFromHexOrStrImgBase64("00B395"),
-                (SolidColorBrush)ColorGenerator.GetBrushFromHexOrStrImgBase64("008675"),
-                (SolidColorBrush)ColorGenerator.GetBrushFromHexOrStrImgBase64("078A3C"),
-                (SolidColorBrush)ColorGenerator.GetBrushFromHexOrStrImgBase64("505C6B"),
-                (SolidColorBrush)ColorGenerator.GetBrushFromHexOrStrImgBase64("7F745F")
+                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("FFBA00"),
+                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("F76304"),
+                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("DB3800"),
+                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("D23135"),
+                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("E9091E"),
+                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("C40051"),
+                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("E4008D"),
+                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("C336B5"),
+                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("891099"),
+                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("754CAB"),
+                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("8F8DD9"),
+                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("6B69D7"),
+                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("0063B3"),
+                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("0079D8"),
+                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("009ABD"),
+                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("00B8C4"),
+                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("00B395"),
+                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("008675"),
+                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("078A3C"),
+                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("505C6B"),
+                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("7F745F")
             };
 
             return Colors;

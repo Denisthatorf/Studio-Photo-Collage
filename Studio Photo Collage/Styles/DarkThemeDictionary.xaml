@@ -6,7 +6,15 @@
     <SolidColorBrush x:Key="PopUpsBackground" Opacity="0.9">#1f1f1f</SolidColorBrush>
 
     <SolidColorBrush x:Key="BlackInLightAndWhiteInDark" Color="White"/>
+    <Color x:Key="BlackInLightAndWhiteInDarkColor">White</Color>
     <SolidColorBrush x:Key="WhiteInLightAndBlackInDark" Color="Black"/>
 
     <SolidColorBrush x:Key="NoConfirmPopUpBtnBrush" Color="#555453"/>
+    
+    <!--<AcrylicBrush x:Key="MainBackgroundColor"
+            BackgroundSource="HostBackdrop"
+            TintColor="#1f1f1f"
+            TintOpacity="0.6"
+            TintLuminosityOpacity="0.9"
+            FallbackColor="#232324"/>-->
 </ResourceDictionary>

@@ -28,6 +28,33 @@
             <Setter Property="Width" Value="48"/>
             <Setter Property="Height" Value="48"/>
         </Style>
+        <Style x:Key="MenuFlyoutMenuFlyoutPresenterStyle" TargetType="MenuFlyoutPresenter">
+            <Setter Property="Background" Value="{ThemeResource MenuFlyoutPresenterBackground}"/>
+            <Setter Property="BorderBrush" Value="1"/>
+            <Setter Property="BorderThickness" Value="{ThemeResource MenuFlyoutPresenterBorderThemeThickness}"/>
+            <Setter Property="Padding" Value="{ThemeResource MenuFlyoutPresenterThemePadding}"/>
+            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.IsHorizontalRailEnabled" Value="False"/>
+            <Setter Property="ScrollViewer.IsVerticalRailEnabled" Value="False"/>
+            <Setter Property="ScrollViewer.ZoomMode" Value="Disabled"/>
+            <Setter Property="MaxWidth" Value="{ThemeResource FlyoutThemeMaxWidth}"/>
+            <Setter Property="MinHeight" Value="{ThemeResource MenuFlyoutThemeMinHeight}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="MenuFlyoutPresenter">
+                        <Grid Background="{TemplateBinding Background}" CornerRadius="0">
+                            <ScrollViewer x:Name="MenuFlyoutPresenterScrollViewer" AutomationProperties.AccessibilityView="Raw" HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}" HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}" IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}" IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}" Margin="{TemplateBinding Padding}" MinWidth="{Binding TemplateSettings.FlyoutContentMinWidth, RelativeSource={RelativeSource Mode=TemplatedParent}}" VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}" VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}" ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}">
+                                <ItemsPresenter Margin="{ThemeResource MenuFlyoutScrollerMargin}"/>
+                            </ScrollViewer>
+                            <Border x:Name="MenuFlyoutPresenterBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="0"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
 
 
@@ -108,9 +135,9 @@
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74E;"/>
                     </AppBarButton.Icon>
                     <FlyoutBase.AttachedFlyout>
-                        <MenuFlyout Placement="Right">
-                            <MenuFlyoutItem Text="Save image" Command="{Binding SaveImageCommand}"/>
-                            <MenuFlyoutItem Text="Save project" Command="{Binding SaveProjectCommand}"/>
+                        <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource MenuFlyoutMenuFlyoutPresenterStyle}" Placement="Right">
+                            <MenuFlyoutItem Text="Save image" Command="{Binding SaveImageCommand}" CornerRadius="0"/>
+                            <MenuFlyoutItem Text="Save project" Command="{Binding SaveProjectCommand}" CornerRadius="0"/>
                         </MenuFlyout>
                     </FlyoutBase.AttachedFlyout>
                 </AppBarButton>
