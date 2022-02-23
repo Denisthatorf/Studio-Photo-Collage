@@ -194,6 +194,12 @@ namespace Studio_Photo_Collage.ViewModels
                 case BtnNameEnum.Photo:
                     TakePthoto();
                     break;
+                case BtnNameEnum.Add:
+                    _ = CurrentCollage.SetImgByFilePickerToSelectedBtn();
+                    break;
+                case BtnNameEnum.Delete:
+                    CurrentCollage.DeleteSelectedImgFromBtn();
+                    break;
             }
 
             var type = StringToFrameConverter.Convert(checkBoxesEnum);

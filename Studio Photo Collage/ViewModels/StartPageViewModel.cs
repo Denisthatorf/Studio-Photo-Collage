@@ -157,15 +157,14 @@ namespace Studio_Photo_Collage.ViewModels
 
         public StartPageViewModel(INavigationService navigationService)
         {
-            InitializeAsync();
-
             this.navigationService = navigationService;
             RecentProjects = new ObservableCollection<Tuple<Project>>();
             isGreetingTextVisible = true;
 
+            InitializeAsync();
             Messenger.Register<ProjectSavedMessage>(this, (r, m) =>
             {
-                if (!RecentProjects.Any((x) => x.Item1 == m.Value))
+                if (RecentProjects.Count == 0 || !RecentProjects.Any((x) => x.Item1 == m.Value))
                 {
                     RecentProjects.Add(new Tuple<Project>(m.Value));
                 }

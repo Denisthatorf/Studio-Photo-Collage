@@ -13,6 +13,8 @@
     DataContext="{Binding TemplatePageInstance, Source={StaticResource Locator}}">
 
     <Page.Resources>
+        <Thickness x:Key="GridViewItemRevealBorderThemeThickness">0</Thickness>
+
         <Style TargetType="Rectangle">
             <Setter Property="Fill" Value="White"/>
             <Setter Property="Margin" Value="2.5"/>
@@ -23,7 +25,7 @@
                    x:Name="GroupedProjectList"
                    Source="{Binding TemplateCollection}"
                    IsSourceGrouped="True"
-                   ItemsPath="Projects"/>
+                   ItemsPath="ProjectsList"/>
 
         <Style TargetType="GridViewHeaderItem">
             <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />

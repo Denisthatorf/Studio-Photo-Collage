@@ -148,6 +148,12 @@
     <Compile Include="UserControles\BtnWithBluring.xaml.cs">
       <DependentUpon>BtnWithBluring.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControles\CustomTreeView.xaml.cs">
+      <DependentUpon>CustomTreeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControles\CustomTreeViewNode.xaml.cs">
+      <DependentUpon>CustomTreeViewNode.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\PopUpsViewModels\PaintPopUpPageViewModel.cs" />
     <Compile Include="ViewModels\PopUpsViewModels\SettingsDialogViewModel.cs" />
@@ -155,7 +161,6 @@
     <Compile Include="ViewModels\SidePanelsViewModels\FiltersPageViewModel.cs" />
     <Compile Include="ViewModels\SidePanelsViewModels\FramesPageViewModel.cs" />
     <Compile Include="ViewModels\SidePanelsViewModels\RecentPageViewModel.cs" />
-    <Compile Include="ViewModels\SidePanelsViewModels\TemplatesSidePanelPageViewModel.cs" />
     <Compile Include="ViewModels\SidePanelsViewModels\TransformPageViewModel.cs" />
     <Compile Include="ViewModels\StartPageViewModel.cs" />
     <Compile Include="ViewModels\TemplatePageViewModel.cs" />
@@ -301,6 +306,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControles\BtnWithBluring.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControles\CustomTreeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControles\CustomTreeViewNode.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

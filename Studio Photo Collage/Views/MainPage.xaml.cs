@@ -22,5 +22,10 @@ namespace Studio_Photo_Collage.Views
         {
             FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
         }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            SidePanel.Height = e.NewSize.Height;
+        }
     }
 }

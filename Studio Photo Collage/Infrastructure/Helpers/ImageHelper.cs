@@ -23,6 +23,9 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
             picker.FileTypeFilter.Add(".jpg");
             picker.FileTypeFilter.Add(".png");
+            picker.FileTypeFilter.Add(".bmp");
+            picker.FileTypeFilter.Add(".jfif");
+            picker.FileTypeFilter.Add(".tiff");
 
             return await picker.PickSingleFileAsync();
         }
@@ -94,7 +97,7 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             return output;
         }
 
-        public static async void SetImgSourceFromBase64Async(Image img, string base64)
+        public static async Task SetImgSourceFromBase64Async(Image img, string base64)
         {
             if (!string.IsNullOrEmpty(base64))
             {

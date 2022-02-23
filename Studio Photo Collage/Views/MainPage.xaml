@@ -11,7 +11,8 @@
     mc:Ignorable="d"
     DataContext="{Binding MainPageInstance, Source={StaticResource Locator}}"
     x:Name="Page"
-    Background="Gray">
+    Background="Gray"
+    SizeChanged="Page_SizeChanged">
 
     <Page.Resources>
         <converters:EnumValueConverter x:Key="EnumValueConverter"/>
@@ -30,7 +31,7 @@
         </Style>
         <Style x:Key="MenuFlyoutMenuFlyoutPresenterStyle" TargetType="MenuFlyoutPresenter">
             <Setter Property="Background" Value="{ThemeResource MenuFlyoutPresenterBackground}"/>
-            <Setter Property="BorderBrush" Value="1"/>
+            <!--<Setter Property="BorderBrush" Value="1"/>-->
             <Setter Property="BorderThickness" Value="{ThemeResource MenuFlyoutPresenterBorderThemeThickness}"/>
             <Setter Property="Padding" Value="{ThemeResource MenuFlyoutPresenterThemePadding}"/>
             <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
@@ -243,11 +244,12 @@
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
-            <Popup  Grid.Column="1" IsOpen="True" Width="245" Grid.RowSpan="2">
+            <Popup  Grid.Column="1" IsOpen="True" Width="245" Grid.RowSpan="2"
+                    VerticalAlignment="Stretch">
                 <Frame x:Name="SidePanel" 
                        Visibility="Collapsed"
                        Background="{ThemeResource MainBackgroundColor}"
-                       Height="{Binding ElementName=Page, Path=ActualHeight, Mode=TwoWay}"
+                        Height="{Binding ElementName=Page, Path=ActualHeight}"
                        Width="245"/>
             </Popup>
 

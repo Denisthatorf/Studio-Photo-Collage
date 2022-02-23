@@ -16,7 +16,7 @@ namespace Studio_Photo_Collage.Models
         public UIElement BackgroundGrid => (CollageGrid as Grid).Children[0];
         public UIElement MainGrid => (CollageGrid as Grid).Children[1];
 
-        public Image SelectedImage
+        public ToggleButton SelectedToggleBtn
         {
             get
             {
@@ -27,12 +27,16 @@ namespace Studio_Photo_Collage.Models
                     var ToggleBtn = gridInGrid.Children[0] as ToggleButton;
                     if ((bool)ToggleBtn.IsChecked)
                     {
-                        return ToggleBtn.Content as Image;
+                        return ToggleBtn;
                     }
                 }
 
                 return null;
             }
+        }
+        public Image SelectedImage
+        {
+            get => SelectedToggleBtn?.Content as Image;
         }
         public int SelectedImageNumberInList
         {
@@ -95,6 +99,41 @@ namespace Studio_Photo_Collage.Models
             }
         }
 
+        public void DeleteSelectedImgFromBtn()
+        {
+            if(SelectedToggleBtn != null)
+            {
+                SelectedToggleBtn.Content = GetPlusSignIcon();
+            }
+        }
+        public async Task SetImgByFilePickerToSelectedBtn()
+        {
+            var img = new Image();
+            img.Stretch = Windows.UI.Xaml.Media.Stretch.Fill;
+
+            var file = await ImageHelper.OpenFilePicker();
+
+            if (file != null)
+            {
+                using (var fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read))
+                {
+
+                    try
+                    {
+                        var decoder = await BitmapDecoder.CreateAsync(fileStream);
+                        var source = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
+                        await source.SetSourceAsync(fileStream);
+                        img.Source = source;
+                        SelectedToggleBtn.Content = img;
+                        Project.ImageArr[SelectedImageNumberInList] = await ImageHelper.SaveToStringBase64Async(source);
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+            }
+        }
+
         #region UIElement creation
         private UIElement CreateCollage()
         {
@@ -134,52 +173,23 @@ namespace Studio_Photo_Collage.Models
 
         private ToggleButton GetToggleBtnWithImg(int numberInList)
         {
-            var ToggleBtn = new ToggleButton();
+            var toggleBtn = new ToggleButton();
+            toggleBtn.Style = Application.Current.Resources["TemplatesToggleButton"] as Style;
 
-            var img = new Image();
-            img.Stretch = Windows.UI.Xaml.Media.Stretch.Fill;
-            ImageHelper.SetImgSourceFromBase64Async(img, Project.ImageArr?[numberInList]);
+            RestoreBtnContentAsync(toggleBtn, numberInList);
 
-            ToggleBtn.Content = img;
-            ToggleBtn.Style = Application.Current.Resources["TemplatesToggleButton"] as Style;
-
-            ToggleBtn.CommandParameter = numberInList; // number in PhotoArray
-            ToggleBtn.Checked += async (o, e) =>
+            toggleBtn.CommandParameter = numberInList; // number in PhotoArray
+            toggleBtn.Checked += async (o, e) =>
             {
                 var Tbtn = o as ToggleButton;
                 if (Tbtn.Content != null)
                 {
                     var comPar = (int)Tbtn.CommandParameter;
                     UnCheckedAnothersBtns(comPar);
-                    await LoadMediaAsync(comPar, Tbtn.Content);
+                    await SetImgByFilePickerToSelectedBtn();
                 }
             };
-            return ToggleBtn;
-        }
-
-        private async Task LoadMediaAsync(int numberInList, object content)
-        {
-            var img = content as Image;
-            var file = await ImageHelper.OpenFilePicker();
-
-            if (file != null)
-            {
-                using (var fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read))
-                {
-
-                    try
-                    {
-                        var decoder = await BitmapDecoder.CreateAsync(fileStream);
-                        var source = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
-                        await source.SetSourceAsync(fileStream);
-                        img.Source = source;
-                        Project.ImageArr[numberInList] = await ImageHelper.SaveToStringBase64Async(source);
-                    }
-                    catch (Exception)
-                    {
-                    }
-                }
-            }
+            return toggleBtn;
         }
 
         private void UnCheckedAnothersBtns(int numberInList)
@@ -194,6 +204,29 @@ namespace Studio_Photo_Collage.Models
                     ToggleBtn.IsChecked = false;
                 }
             }
+        }
+        private async void RestoreBtnContentAsync(ToggleButton toggleBtn, int imgNumberInList)
+        {
+            var img = new Image();
+            img.Stretch = Windows.UI.Xaml.Media.Stretch.Fill;
+
+            await ImageHelper.SetImgSourceFromBase64Async(img, Project.ImageArr?[imgNumberInList]);
+
+            if (img.Source != null)
+            {
+                toggleBtn.Content = img;
+            }
+            else
+            {
+                toggleBtn.Content = GetPlusSignIcon();
+            }
+        }
+        private FontIcon GetPlusSignIcon()
+        {
+            var icon = new FontIcon();
+            icon.FontFamily = new FontFamily("Segoe MDL2 Assets");
+            icon.Glyph = "\xE710";
+            return icon;
         }
         #endregion
     }

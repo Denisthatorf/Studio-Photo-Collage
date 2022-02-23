@@ -30,7 +30,6 @@ namespace Studio_Photo_Collage.ViewModels
             services.AddSingleton<RecentPageViewModel>();
             services.AddSingleton<TemplatePageViewModel>();
             services.AddSingleton<TransformPageViewModel>();
-            services.AddSingleton<TemplatesSidePanelPageViewModel>();
 
             Ioc.Default.ConfigureServices(services.BuildServiceProvider());
         }
@@ -46,7 +45,6 @@ namespace Studio_Photo_Collage.ViewModels
         public FiltersPageViewModel FiltersPageInstance => Ioc.Default.GetService<FiltersPageViewModel>();
         public RecentPageViewModel RecentPageInstance => Ioc.Default.GetService<RecentPageViewModel>();
         public TransformPageViewModel TransformPageInstance => Ioc.Default.GetService<TransformPageViewModel>();
-        public TemplatesSidePanelPageViewModel TemplatesSidePanelPageInstance => Ioc.Default.GetService<TemplatesSidePanelPageViewModel>();
 
         public static void ReloadCurrentPage()
         {

@@ -5,12 +5,12 @@ namespace Studio_Photo_Collage.Models
 {
     public class GroupedTemplates
     {
-        public List<Project> Projects { get; }
+        public List<Project> ProjectsList { get; }
         public int CountOfPhotos { get; set; }
 
         public GroupedTemplates()
         {
-            Projects = new List<Project>();
+            ProjectsList = new List<Project>();
         }
 
         public static ObservableCollection<GroupedTemplates> FillByGroupedTemplate()
@@ -63,7 +63,7 @@ namespace Studio_Photo_Collage.Models
             for (int i = 0; i < countOfRotation; i++)
             {
                 var newproj = GetRotatedProject(project.PhotoArray, i);
-                groupedTemplates.Projects.Add(newproj);
+                groupedTemplates.ProjectsList.Add(newproj);
             }
         }
 
