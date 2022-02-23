@@ -218,6 +218,7 @@ namespace Studio_Photo_Collage.ViewModels
             {
                 CurrentCollage.Project.BorderThickness = m.Value;
                 CurrentCollage.UpdateUIAsync();
+                //CurrentCollage.SelectedImage.Margin = new Thickness(m.Value-100);
             });
 
             Messenger.Register<BackgroundOpacityChangedMessage>(this, (r, m) =>

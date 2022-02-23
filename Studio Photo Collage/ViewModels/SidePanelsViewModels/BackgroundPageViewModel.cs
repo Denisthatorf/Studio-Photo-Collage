@@ -73,7 +73,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
 
         public BackgroundPageViewModel()
         {
-            Colors = ColorGenerator.GenerateBrushes();
+            Colors = BrushGenerator.GenerateBrushes();
         }
 
         private static async void UploadBackgroundFromPhotoBtnClickMethod()

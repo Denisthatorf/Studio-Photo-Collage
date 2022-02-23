@@ -126,7 +126,7 @@
     <Compile Include="Infrastructure\Converters\ProjectToCollage.cs" />
     <Compile Include="Infrastructure\Converters\FromArrToGridConverter.cs" />
     <Compile Include="Infrastructure\Converters\FromThemeToStringConverter.cs" />
-    <Compile Include="Infrastructure\Helpers\ColorGenerator.cs" />
+    <Compile Include="Infrastructure\Helpers\BrushGenerator.cs" />
     <Compile Include="Infrastructure\Helpers\GroupTemplateSelector.cs" />
     <Compile Include="Infrastructure\Helpers\CollageGenerator.cs" />
     <Compile Include="Infrastructure\Helpers\JsonHelper.cs" />

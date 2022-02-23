@@ -38,11 +38,11 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
 
                     if (proj.BackgroundColor.Length < 10)
                     {
-                        backgroundGrid.Background = ColorGenerator.GetSolidColorBrushFromString(proj.BackgroundColor);
+                        backgroundGrid.Background = BrushGenerator.GetSolidColorBrushFromString(proj.BackgroundColor);
                     }
                     else
                     {
-                        backgroundGrid.Background = ColorGenerator.GetImageBrushFromString64(proj.BackgroundColor);
+                        backgroundGrid.Background = BrushGenerator.GetImageBrushFromString64(proj.BackgroundColor);
                     }
                     backgroundGrid.Opacity = proj.BorderOpacity;
 

@@ -37,6 +37,7 @@ namespace Studio_Photo_Collage.Models
         public double BorderThickness { get; set; }
         public double BorderOpacity { get; set; }
         public string[] ImageArr { get; set; }
+        public float ZoomFactor { get; set; }
         #endregion
 
         public Project(byte[,] photoArr)

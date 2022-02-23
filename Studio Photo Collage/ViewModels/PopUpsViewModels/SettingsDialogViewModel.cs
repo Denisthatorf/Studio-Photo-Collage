@@ -77,7 +77,7 @@ namespace Studio_Photo_Collage.ViewModels.PopUpsViewModels
         {
             this.settingServise = settingServise;
 
-            Brushes = ColorGenerator.FillSettingByBrush();
+            Brushes = BrushGenerator.FillSettingByBrush();
 
             languageComBox_SelectedItm = settingServise.Language;
             themeComBox_SelectedItem = settingServise.Theme;

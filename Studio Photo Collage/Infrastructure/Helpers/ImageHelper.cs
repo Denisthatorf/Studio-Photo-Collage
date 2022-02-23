@@ -111,6 +111,7 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
                 img.ImageSource = source;
             }
         }
+
     }
 }
 

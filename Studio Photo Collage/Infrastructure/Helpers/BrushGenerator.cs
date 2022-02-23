@@ -5,7 +5,7 @@ using Windows.UI.Xaml.Media;
 
 namespace Studio_Photo_Collage.Infrastructure.Helpers
 {
-    public static class ColorGenerator
+    public static class BrushGenerator
     {
         public static List<SolidColorBrush> GenerateBrushes()
         {
@@ -79,27 +79,27 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
         {
             var Colors = new List<SolidColorBrush>
             {
-                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("FFBA00"),
-                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("F76304"),
-                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("DB3800"),
-                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("D23135"),
-                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("E9091E"),
-                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("C40051"),
-                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("E4008D"),
-                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("C336B5"),
-                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("891099"),
-                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("754CAB"),
-                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("8F8DD9"),
-                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("6B69D7"),
-                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("0063B3"),
-                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("0079D8"),
-                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("009ABD"),
-                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("00B8C4"),
-                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("00B395"),
-                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("008675"),
-                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("078A3C"),
-                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("505C6B"),
-                (SolidColorBrush)ColorGenerator.GetSolidColorBrushFromString("7F745F")
+                (SolidColorBrush)BrushGenerator.GetSolidColorBrushFromString("FFBA00"),
+                (SolidColorBrush)BrushGenerator.GetSolidColorBrushFromString("F76304"),
+                (SolidColorBrush)BrushGenerator.GetSolidColorBrushFromString("DB3800"),
+                (SolidColorBrush)BrushGenerator.GetSolidColorBrushFromString("D23135"),
+                (SolidColorBrush)BrushGenerator.GetSolidColorBrushFromString("E9091E"),
+                (SolidColorBrush)BrushGenerator.GetSolidColorBrushFromString("C40051"),
+                (SolidColorBrush)BrushGenerator.GetSolidColorBrushFromString("E4008D"),
+                (SolidColorBrush)BrushGenerator.GetSolidColorBrushFromString("C336B5"),
+                (SolidColorBrush)BrushGenerator.GetSolidColorBrushFromString("891099"),
+                (SolidColorBrush)BrushGenerator.GetSolidColorBrushFromString("754CAB"),
+                (SolidColorBrush)BrushGenerator.GetSolidColorBrushFromString("8F8DD9"),
+                (SolidColorBrush)BrushGenerator.GetSolidColorBrushFromString("6B69D7"),
+                (SolidColorBrush)BrushGenerator.GetSolidColorBrushFromString("0063B3"),
+                (SolidColorBrush)BrushGenerator.GetSolidColorBrushFromString("0079D8"),
+                (SolidColorBrush)BrushGenerator.GetSolidColorBrushFromString("009ABD"),
+                (SolidColorBrush)BrushGenerator.GetSolidColorBrushFromString("00B8C4"),
+                (SolidColorBrush)BrushGenerator.GetSolidColorBrushFromString("00B395"),
+                (SolidColorBrush)BrushGenerator.GetSolidColorBrushFromString("008675"),
+                (SolidColorBrush)BrushGenerator.GetSolidColorBrushFromString("078A3C"),
+                (SolidColorBrush)BrushGenerator.GetSolidColorBrushFromString("505C6B"),
+                (SolidColorBrush)BrushGenerator.GetSolidColorBrushFromString("7F745F")
             };
 
             return Colors;

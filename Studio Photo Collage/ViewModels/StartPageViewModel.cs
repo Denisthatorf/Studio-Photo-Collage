@@ -157,11 +157,11 @@ namespace Studio_Photo_Collage.ViewModels
 
         public StartPageViewModel(INavigationService navigationService)
         {
-            InitializeAsync();
-
             this.navigationService = navigationService;
             RecentProjects = new ObservableCollection<Tuple<Project>>();
             isGreetingTextVisible = true;
+
+            InitializeAsync();
 
             Messenger.Register<ProjectSavedMessage>(this, (r, m) =>
             {
@@ -183,13 +183,13 @@ namespace Studio_Photo_Collage.ViewModels
         private async Task DesserializeProjectsAsync()
         {
             var projects = await ApplicationData.Current.LocalFolder.ReadAsync<List<Project>>("projects");
-
-            if (projects != null)
+            if (projects == null)
             {
-                foreach (var proj in projects)
-                {
-                    RecentProjects.Add(new Tuple<Project>(proj));
-                }
+                projects = new List<Project>();
+            }
+            foreach (var proj in projects)
+            {
+                RecentProjects.Add(new Tuple<Project>(proj));
             }
         }
     }

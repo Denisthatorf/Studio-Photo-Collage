@@ -16,22 +16,26 @@ namespace Studio_Photo_Collage.Models
         public UIElement BackgroundGrid => (CollageGrid as Grid).Children[0];
         public UIElement MainGrid => (CollageGrid as Grid).Children[1];
 
+        public ScrollViewer SelectedImgZoom
+        {
+            get
+            {
+                if(SelectedImageNumberInList == -1)
+                {
+                    return null;
+                }
+
+                var grid = MainGrid as Grid;
+                var gridInGrid = grid.Children[SelectedImageNumberInList] as Grid;
+                var ToggleBtn = gridInGrid.Children[0] as ToggleButton;
+                return ToggleBtn.Content as ScrollViewer;
+            }
+        }
         public Image SelectedImage
         {
             get
             {
-                var grid = MainGrid as Grid;
-                for (int i = 0; i < grid.Children.Count; i++)
-                {
-                    var gridInGrid = grid.Children[i] as Grid;
-                    var ToggleBtn = gridInGrid.Children[0] as ToggleButton;
-                    if ((bool)ToggleBtn.IsChecked)
-                    {
-                        return ToggleBtn.Content as Image;
-                    }
-                }
-
-                return null;
+               return SelectedImgZoom?.Content as Image;
             }
         }
         public int SelectedImageNumberInList
@@ -118,11 +122,11 @@ namespace Studio_Photo_Collage.Models
 
             if(Project.BackgroundColor.Length < 10)
             {
-                backgroundgrid.Background = ColorGenerator.GetSolidColorBrushFromString(Project.BackgroundColor);
+                backgroundgrid.Background = BrushGenerator.GetSolidColorBrushFromString(Project.BackgroundColor);
             }
             else
             {
-                backgroundgrid.Background = ColorGenerator.GetImageBrushFromString64(Project.BackgroundColor);
+                backgroundgrid.Background = BrushGenerator.GetImageBrushFromString64(Project.BackgroundColor);
             }
             backgroundgrid.Opacity = this.Project.BorderOpacity;
 
@@ -135,29 +139,61 @@ namespace Studio_Photo_Collage.Models
         private ToggleButton GetToggleBtnWithImg(int numberInList)
         {
             var ToggleBtn = new ToggleButton();
-
+            var scrollViewer = new ScrollViewer();
             var img = new Image();
-            img.Stretch = Windows.UI.Xaml.Media.Stretch.Fill;
+
+            img.Stretch = Windows.UI.Xaml.Media.Stretch.Uniform;
+            img.HorizontalAlignment = HorizontalAlignment.Stretch;
+
             ImageHelper.SetImgSourceFromBase64Async(img, Project.ImageArr?[numberInList]);
 
-            ToggleBtn.Content = img;
+            #region Zoom settings
+            scrollViewer.ZoomMode = ZoomMode.Enabled;
+            scrollViewer.IsVerticalScrollChainingEnabled = false;
+
+            scrollViewer.HorizontalContentAlignment = HorizontalAlignment.Stretch;
+            scrollViewer.VerticalContentAlignment = VerticalAlignment.Stretch;
+
+            scrollViewer.HorizontalScrollMode = ScrollMode.Enabled;
+            scrollViewer.VerticalScrollMode = ScrollMode.Enabled;
+
+            scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
+            scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+           
+            #endregion
+
+            scrollViewer.Content = img;
+
+            ToggleBtn.Content = scrollViewer;
+
             ToggleBtn.Style = Application.Current.Resources["TemplatesToggleButton"] as Style;
 
             ToggleBtn.CommandParameter = numberInList; // number in PhotoArray
-            ToggleBtn.Checked += async (o, e) =>
+            ToggleBtn.Checked += (o, e) =>
             {
                 var Tbtn = o as ToggleButton;
-                if (Tbtn.Content != null)
+                var scroll = Tbtn.Content as ScrollViewer;
+                var imgInBtn = scroll.Content as Image;
+                if (imgInBtn.Source == null)
                 {
-                    var comPar = (int)Tbtn.CommandParameter;
-                    UnCheckedAnothersBtns(comPar);
-                    await LoadMediaAsync(comPar, Tbtn.Content);
+                    var comPar = Tbtn.CommandParameter;
+                    UnCheckedAnothersBtns((int)comPar);
+                    LoadMediaAsync((int)comPar, scroll.Content);
                 }
+            };
+            ToggleBtn.Unchecked += (o, e) =>
+            {
+                var Tbtn = o as ToggleButton;
+                var scroll = Tbtn.Content as ScrollViewer;
+                var imgInBtn = scroll.Content as Image;
+
+                var comPar = Tbtn.CommandParameter;
+                LoadMediaAsync((int)comPar, scroll.Content);
             };
             return ToggleBtn;
         }
 
-        private async Task LoadMediaAsync(int numberInList, object content)
+        private async void LoadMediaAsync(int numberInList, object content)
         {
             var img = content as Image;
             var file = await ImageHelper.OpenFilePicker();
