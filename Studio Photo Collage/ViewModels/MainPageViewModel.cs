@@ -108,31 +108,6 @@ namespace Studio_Photo_Collage.ViewModels
             MessengersRegistration();
         }
 
-
-
-        private async Task SaveProjectInJsonAsync()
-        {
-            var projects = await ApplicationData.Current.LocalFolder.ReadAsync<List<Project>>("projects");
-            if (projects == null)
-            {
-                projects = new List<Project>();
-            }
-
-            int index = projects.IndexOf(CurrentCollage.Project);
-            if (index == -1)
-            {
-                projects.Add(CurrentCollage.Project);
-            }
-            else
-            {
-                projects[index] = CurrentCollage.Project;
-            }
-
-            await ApplicationData.Current.LocalFolder.SaveAsync<List<Project>>("projects", projects);
-
-            Messenger.Send(new ProjectSavedMessage(CurrentCollage.Project));
-        }
-
         public async Task<ContentDialogResult> SaveProjectBySaveDialogAsync()
         {
             var dialog = new SaveDialog();
@@ -143,7 +118,7 @@ namespace Studio_Photo_Collage.ViewModels
             if (result == ContentDialogResult.Primary)
             {
                 CurrentCollage.Project.ProjectName = dialog.ProjectName;
-                await SaveProjectInJsonAsync();
+                ProjectHelper.SaveProjectInJson(CurrentCollage.Project);
             }
 
             return result;
@@ -180,7 +155,7 @@ namespace Studio_Photo_Collage.ViewModels
             if (result == ContentDialogResult.Primary)
             {
                 CurrentCollage.Project.ProjectName = dialog.ProjectName;
-                _ = SaveProjectInJsonAsync();
+                ProjectHelper.SaveProjectInJson(CurrentCollage.Project);
             }
         }
 

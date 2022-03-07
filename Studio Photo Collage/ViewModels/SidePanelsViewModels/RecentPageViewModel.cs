@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -59,7 +60,8 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
                             if (result.ToString() == "Primary") //yes
                             {
                                 Projects.Clear();
-                                await ApplicationData.Current.LocalFolder.SaveAsync<ObservableCollection<Project>>("projects.json", null);
+                                ProjectHelper.DeleteAllProjectsFromJson();
+
                             }
                         }
                     });
@@ -82,11 +84,22 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
             });
             Messenger.Register<DeleteProjectMessage>(this, (r, m) =>
             {
-                if (Projects.Contains(m.Value))
+                if (Projects.Count == 0 || Projects.Contains(m.Value))
                 {
                     Projects.Remove(m.Value);
                 }
+                else
+                {
+                    var index = Projects.IndexOf(Projects.Where((x) => x == m.Value).FirstOrDefault());
+                    Projects[index] = m.Value;
+                }
             });
+
+            Messenger.Register<DeleteAllProjectMessage>(this,
+                (r, m) => 
+                {
+                    Projects.Clear();
+                });
         }
 
         private async void DesserializeProjectsAsync()

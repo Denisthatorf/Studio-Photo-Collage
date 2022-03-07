@@ -39,18 +39,11 @@ namespace Studio_Photo_Collage.ViewModels
             {
                 if (recentCollageDeleteCommand == null)
                 {
-                    recentCollageDeleteCommand = new RelayCommand<Project>(async (parameter) =>
+                    recentCollageDeleteCommand = new RelayCommand<Project>((parameter) =>
                     {
-                        var projectList = RecentProjects.Select((x) => x.Item1).ToList();
-                        if (projectList != null && projectList.Contains(parameter))
-                        {
-                            projectList.Remove(parameter);
-                            await ApplicationData.Current.LocalFolder.SaveAsync("projects", projectList);
-                        }
-                        var removedProject = RecentProjects.Where(x => x.Item1 == parameter).First();
-
+                        var removedProject = RecentProjects.Where(x => x.Item1 == parameter).FirstOrDefault();
+                        ProjectHelper.DeleteProject(removedProject?.Item1);
                         RecentProjects.Remove(removedProject);
-                        Messenger.Send(new DeleteProjectMessage(removedProject.Item1));
                     });
                 }
 
@@ -83,7 +76,7 @@ namespace Studio_Photo_Collage.ViewModels
                         {
                             RecentProjects.Clear();
                             IsRecentCollagesOpen = false;
-                            await ApplicationData.Current.LocalFolder.SaveAsync<ObservableCollection<Project>>("project", null);
+                            ProjectHelper.DeleteAllProjectsFromJson();
                         }
                     });
                 }
@@ -159,16 +152,31 @@ namespace Studio_Photo_Collage.ViewModels
         {
             this.navigationService = navigationService;
             RecentProjects = new ObservableCollection<Tuple<Project>>();
-            isGreetingTextVisible = true;
 
             InitializeAsync();
             Messenger.Register<ProjectSavedMessage>(this, (r, m) =>
             {
-                if (RecentProjects.Count == 0 || !RecentProjects.Any((x) => x.Item1 == m.Value))
+                bool isContains = RecentProjects.Any((x) => x.Item1 == m.Value);
+                if (RecentProjects.Count == 0)
+                {
+                    RecentProjects.Add(new Tuple<Project>(m.Value));
+                    IsRecentCollagesOpen = true;
+                }
+                else if (!isContains)
                 {
                     RecentProjects.Add(new Tuple<Project>(m.Value));
                 }
+                else
+                {
+                    var index = RecentProjects.IndexOf(RecentProjects.Where((x) => x.Item1 == m.Value).FirstOrDefault());
+                    RecentProjects[index] = new Tuple<Project>(m.Value);
+                }
             });
+            Messenger.Register<DeleteAllProjectMessage>(this,
+                (r, m) =>{
+                    RecentProjects.Clear();
+                    IsRecentCollagesOpen = false;
+                });
         }
 
         private async void InitializeAsync()

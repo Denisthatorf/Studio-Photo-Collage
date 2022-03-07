@@ -131,10 +131,12 @@
     <Compile Include="Infrastructure\Helpers\CollageGenerator.cs" />
     <Compile Include="Infrastructure\Helpers\JsonHelper.cs" />
     <Compile Include="Infrastructure\Helpers\ImageHelper.cs" />
+    <Compile Include="Infrastructure\Helpers\ProjectHelper.cs" />
     <Compile Include="Infrastructure\Helpers\SavingHeper.cs" />
     <Compile Include="Infrastructure\Helpers\SettingsStorageExtensions.cs" />
     <Compile Include="Infrastructure\Messages\BorderThicknessChangedMessage.cs" />
     <Compile Include="Infrastructure\Messages\BackgroundOpacityChangedMessage.cs" />
+    <Compile Include="Infrastructure\Messages\DeleteAllProjectMessage.cs" />
     <Compile Include="Infrastructure\Messages\DeleteProjectMessage.cs" />
     <Compile Include="Infrastructure\Messages\ProjectSavedMessage.cs" />
     <Compile Include="Infrastructure\Messages\SaveProjectRequestMessage.cs" />
