@@ -173,6 +173,9 @@
     <Compile Include="Views\PopUpsViews\ConfirmDialog.xaml.cs">
       <DependentUpon>ConfirmDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\PopUpsViews\LocalPhotosDialog.xaml.cs">
+      <DependentUpon>LocalPhotosDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PopUpsViews\PaintPopUpPage.xaml.cs">
       <DependentUpon>PaintPopUpPage.xaml</DependentUpon>
     </Compile>
@@ -324,6 +327,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PopUpsViews\ConfirmDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PopUpsViews\LocalPhotosDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -17,7 +17,12 @@
 
     <!--RequestedTheme="{Binding ThemeOfSettings}"-->
     <ContentDialog.Resources>
+        <SolidColorBrush x:Key="GridViewItemBackgroundSelected"
+                         Color="{ThemeResource BlackInLightAndWhiteInDarkColor}"/>
+        <x:Double x:Key="GridViewItemMinWidth">36</x:Double>
+        <x:Double x:Key="GridViewItemMinHeight">36</x:Double>
         <Thickness x:Key="ContentDialogPadding">12</Thickness>
+        <x:Double x:Key="GridViewItemSelectedBorderThemeThickness">2</x:Double>
 
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <converters:CultureInfoToFullStringNameConverter x:Key="CultureConverter"/>
@@ -54,35 +59,17 @@
                     </ComboBox>
 
                     <TextBlock Text="Choose your color"/>
-
-                    <ItemsControl ItemsSource="{Binding Brushes}" x:Name="ItemControle" Margin="0,8,0,0">
-                        <ItemsControl.ItemTemplate>
+                    <GridView ItemsSource="{Binding Brushes}"
+                              CanDrag="False" 
+                              SelectedIndex="{Binding SelectedColorIndex, Mode=TwoWay}">
+                        <GridView.ItemTemplate>
                             <DataTemplate>
-                                <Button Margin="2" Width="38" Height="38"
-                                        Background="{Binding}" CornerRadius="0"
-                                        Command="{Binding ElementName=ItemControle, 
-                                        Path=DataContext.ChangeMainColorCommand}"
-                                        CommandParameter="{Binding Color}">
-
-                                </Button>
-                                <!--<ToggleButton x:Name="T"
-                                        Margin="2" Width="38" Height="38"
-                                        Background="{Binding}" CornerRadius="0"
-                                              Command="{Binding ElementName=ItemControle, 
-                                        Path=DataContext.ChangeMainColorCommand}"
-                                        CommandParameter="{Binding Color}">
-                                    --><!--IsChecked="{Binding ElementName=ItemControle, 
-                                        Path=DataContext.SelectedColor,
-                                        Converter={StaticResource ColorToBoolConverter} ,UpdateSourceTrigger=PropertyChanged}"--><!--
-                                </ToggleButton>-->
+                                <GridViewItem Width="38" Height="38"
+                                      Background="{Binding}" 
+                                      Margin="2"/>
                             </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <controle:WrapPanel Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
+                        </GridView.ItemTemplate>
+                    </GridView>
 
                     <TextBlock Text="Photos on this PC"/>
                     <HyperlinkButton Padding="0" >

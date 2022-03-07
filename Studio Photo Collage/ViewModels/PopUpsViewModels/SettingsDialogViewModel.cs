@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -19,24 +20,18 @@ namespace Studio_Photo_Collage.ViewModels.PopUpsViewModels
         private CultureInfo languageComBox_SelectedItm;
         private ElementTheme themeComBox_SelectedItem;
         private ElementTheme themeOfSettings;
-        private ICommand changeMainColorCommand;
-        //private Color selectedColor;
+        private int selectedColorIndex;
 
-        public ICommand ChangeMainColorCommand
+        public int SelectedColorIndex
         {
-            get
+            get => selectedColorIndex;
+            set
             {
-                if (changeMainColorCommand == null)
-                {
-                    changeMainColorCommand = new RelayCommand<Color>(async (parametr) =>
-                    {
-                        await settingServise.SetCutomColorAsync(parametr);
-                    });
-                }
-
-                return changeMainColorCommand;
+                SetProperty(ref selectedColorIndex, value);
+                _ = settingServise.SetCutomColorAsync(Brushes[value].Color);
             }
-        }
+         }
+
         public List<SolidColorBrush> Brushes { get; }
 
         public CultureInfo LanguageComBox_SelectedItm
@@ -67,12 +62,6 @@ namespace Studio_Photo_Collage.ViewModels.PopUpsViewModels
         }
         public string VersionDescription { get; set; }
 
-        //public Color SelectedColor 
-        //{ 
-        //    get => selectedColor;
-        //    set => SetProperty(ref selectedColor, value);
-        //}
-
         public SettingsDialogViewModel(SettingServise settingServise)
         {
             this.settingServise = settingServise;
@@ -82,6 +71,8 @@ namespace Studio_Photo_Collage.ViewModels.PopUpsViewModels
             languageComBox_SelectedItm = settingServise.Language;
             themeComBox_SelectedItem = settingServise.Theme;
             themeOfSettings = settingServise.Theme;
+            selectedColorIndex = 
+                Brushes.IndexOf(Brushes.Where( x => x.Color == settingServise.CustomBrush).FirstOrDefault());
             VersionDescription = GetVersionDescription();
         }
 
