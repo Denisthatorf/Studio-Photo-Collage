@@ -10,69 +10,59 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     d:Width="245">
-
     <StackPanel>
+        <StackPanel.Resources>
+            <Style TargetType="TextBlock">
+                <Setter Property="Margin" Value="44,0,0,0"/>
+            </Style>
+            <Style TargetType="Grid">
+                <Setter Property="Padding" Value="9,0"/>
+                <Setter Property="Margin" Value="0,4"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+            </Style>
+        </StackPanel.Resources>
         <TextBlock Text="Transform" x:Uid="Transform"
                    Margin="20"
                    Style="{StaticResource Header}"/>
-        
-        <ListView x:Name="ListView"
-            Margin="0,16,0,0" 
-            IsItemClickEnabled="True" SelectionMode="None"
-             ItemClick="{x:Bind VM.ListView_ItemClick}">
-            <ListView.Resources>
-                <Style TargetType="TextBlock">
-                    <Setter Property="Margin" Value="8,0,0,0"/>
-                </Style>
-            </ListView.Resources>
-            
-            <Interactivity:Interaction.Behaviors>
-                <Core:EventTriggerBehavior EventName="ItemClick">
-                    <Core:InvokeCommandAction />
-                </Core:EventTriggerBehavior>
-            </Interactivity:Interaction.Behaviors>
 
-
-
-            <StackPanel Orientation="Horizontal" x:Name="RotateLeft">
+            <Grid x:Name="RotateLeft">
                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;"
                           x:Name="RotateLeftIcon">
                     <FontIcon.RenderTransform>
                         <TransformGroup>
                             <CompositeTransform ScaleX="-1"/>
-                            <TranslateTransform X="20"/>
+                            <TranslateTransform X="40"/>
                         </TransformGroup>
                     </FontIcon.RenderTransform>
                 </FontIcon>
                 <TextBlock Text="Rotate left" x:Uid="RotateLeft"/>
-            </StackPanel>
+            </Grid>
             
-            <StackPanel Orientation="Horizontal" x:Name="RotateRight">
+            <Grid x:Name="RotateRight">
                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;"/>
                 <TextBlock Text="Rotate right" x:Uid="RotateRight"/>
-            </StackPanel>
-            
-            <StackPanel Orientation="Horizontal" x:Name="HorizontalFlip">
+            </Grid>
+
+            <Grid x:Name="HorizontalFlip">
                 <muxc:ImageIcon Source="/Assets/HorizontalFlip.png"
                                 Width="{Binding ElementName=RotateLeftIcon, Path=ActualWidth}"/>
                 <TextBlock Text="Horizontal flip" x:Uid="HorizontalFlip"/>
-            </StackPanel>
-            
-            <StackPanel Orientation="Horizontal" x:Name="VerticalFlip">
+            </Grid>
+
+            <Grid x:Name="VerticalFlip">
                     <muxc:ImageIcon Source="/Assets/VerticalFlip.png"
                                 Width="{Binding ElementName=RotateLeftIcon, Path=ActualWidth}"/>
                     <TextBlock Text="Vertical flip" x:Uid="VerticalFlip"/>
-            </StackPanel>
-            
-             <StackPanel Orientation="Horizontal" x:Name="ZoomIn">
+            </Grid>
+
+            <Grid x:Name="ZoomIn">
                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71E;"/>
                 <TextBlock Text="Zoom in" x:Uid="ZoomIn"/>
-            </StackPanel>
-            
-            <StackPanel Orientation="Horizontal" x:Name="ZoomOut">
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71F;"/>
-                <TextBlock Text="Zoom out" x:Uid="ZoomOut"/>
-            </StackPanel>
-        </ListView>
+            </Grid>
+
+         <Grid x:Name="ZoomOut">
+            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71F;"/>
+            <TextBlock Text="Zoom out" x:Uid="ZoomOut"/>
+         </Grid>
     </StackPanel>
 </Page> 

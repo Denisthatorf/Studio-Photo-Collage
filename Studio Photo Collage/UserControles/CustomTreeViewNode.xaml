@@ -13,7 +13,8 @@
         <StackPanel x:Name="Node" Orientation="Horizontal"
                     PointerPressed="Node_PointerPressed">
             <ContentPresenter Content="{x:Bind NodeContent}"/>
-            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF5B0;"
+            <FontIcon x:Name="TreeViewSign"
+                      FontFamily="Segoe MDL2 Assets" Glyph="&#xF5B0;"
                       Margin="5,0"
                       FontSize="11"/>
         </StackPanel>

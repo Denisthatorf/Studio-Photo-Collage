@@ -52,10 +52,12 @@ namespace Studio_Photo_Collage.UserControles
             if (NodeItem.Visibility == Visibility.Collapsed)
             {
                 NodeItem.Visibility = Visibility.Visible;
+                TreeViewSign.Visibility = Visibility.Collapsed;
             }
             else if (NodeItem.Visibility == Visibility.Visible)
             {
                 NodeItem.Visibility = Visibility.Collapsed;
+                TreeViewSign.Visibility = Visibility.Visible;
             }
         }
     }
