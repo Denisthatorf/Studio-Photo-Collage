@@ -17,9 +17,11 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Studio_Photo_Collage.Views.PopUpsViews
 {
-    public sealed partial class LocalPhotosDialog : ContentDialog
+    public sealed partial class LocalFolderDialog : ContentDialog
     {
-        public LocalPhotosDialog()
+        public string LoacalFolder { get; set; }
+
+        public LocalFolderDialog()
         {
             this.InitializeComponent();
         }

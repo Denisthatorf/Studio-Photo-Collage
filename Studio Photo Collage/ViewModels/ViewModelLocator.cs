@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Studio_Photo_Collage.Infrastructure.Services;
+using Studio_Photo_Collage.ViewModels.PopUps;
 using Studio_Photo_Collage.ViewModels.PopUpsViewModels;
 using Studio_Photo_Collage.ViewModels.SidePanels;
 using Studio_Photo_Collage.ViewModels.SidePanelsViewModels;
+using Studio_Photo_Collage.Views.PopUps;
 
 namespace Studio_Photo_Collage.ViewModels
 {
@@ -23,6 +25,7 @@ namespace Studio_Photo_Collage.ViewModels
             services.AddSingleton<MainPageViewModel>();
 
             services.AddSingleton<SettingsDialogViewModel>();
+            services.AddSingleton<PaintPopUpPageViewModel>();
 
             services.AddSingleton<FramesPageViewModel>();
             services.AddSingleton<BackgroundPageViewModel>();
@@ -39,6 +42,7 @@ namespace Studio_Photo_Collage.ViewModels
         public TemplatePageViewModel TemplatePageInstance => Ioc.Default.GetService<TemplatePageViewModel>();
 
         public SettingsDialogViewModel SettingsDialogInstance => Ioc.Default.GetService<SettingsDialogViewModel>();
+        public PaintPopUpPageViewModel PaintPopUpPageInstance => Ioc.Default.GetService<PaintPopUpPageViewModel>();
 
         public FramesPageViewModel FramesPageInstance => Ioc.Default.GetService<FramesPageViewModel>();
         public BackgroundPageViewModel BackgroundPageInstance => Ioc.Default.GetService<BackgroundPageViewModel>();

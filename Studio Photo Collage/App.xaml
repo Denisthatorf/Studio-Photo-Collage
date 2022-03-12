@@ -16,6 +16,7 @@
                 
                 <ResourceDictionary Source="Styles/StaticStylesDictionary.xaml"/>
                 <ResourceDictionary Source="Styles/ButtonsDictionary.xaml"/>
+                <ResourceDictionary Source="Styles/SlidersStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary Source="Styles/LightThemeDictionary.xaml" x:Key="Light"/>

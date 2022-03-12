@@ -8,8 +8,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    DataContext="{Binding RecentPageInstance, Source={StaticResource Locator}}"
     Style="{StaticResource SidePanelPage}"
+    DataContext="{Binding RecentPageInstance, Source={StaticResource Locator}}"
     d:Width="245">
     
     <Page.Resources>
@@ -24,7 +24,7 @@
                 </TextBlock>
                 
                 <Button Background="Transparent" BorderBrush="Transparent"
-                        Padding="0" Margin="7,2,0,0"
+                        Padding="0" Margin="3,4,0,0"
                         Command="{Binding RemoveCommand}">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8BB;" 
                               FontSize="10" Foreground="{StaticResource CustomBrush}"/>

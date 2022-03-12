@@ -52,12 +52,22 @@ namespace Studio_Photo_Collage.UserControles
             if (NodeItem.Visibility == Visibility.Collapsed)
             {
                 NodeItem.Visibility = Visibility.Visible;
-                TreeViewSign.Visibility = Visibility.Collapsed;
+
+                TreeViewSign.RenderTransform = new TransformGroup();
+
             }
             else if (NodeItem.Visibility == Visibility.Visible)
             {
                 NodeItem.Visibility = Visibility.Collapsed;
-                TreeViewSign.Visibility = Visibility.Visible;
+
+                TreeViewSign.RenderTransform = new TransformGroup()
+                {
+                    Children = new TransformCollection
+                    {
+                    new RotateTransform() { Angle = 90 },
+                    new TranslateTransform() { X = 15, Y = 6}
+                    }
+                };
             }
         }
     }

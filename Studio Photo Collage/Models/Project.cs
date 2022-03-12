@@ -33,7 +33,7 @@ namespace Studio_Photo_Collage.Models
         public string ProjectName { get; set; }
 
         #region UIelement prop
-        public string BackgroundColor { get; set; }
+        public string Background { get; set; }
         public double BorderThickness { get; set; }
         public double BorderOpacity { get; set; }
         public string[] ImageArr { get; set; }
@@ -44,7 +44,7 @@ namespace Studio_Photo_Collage.Models
             uid = rnd.Next();
             PhotoArray = photoArr;
             BorderOpacity = 1;
-            BackgroundColor = "#ffff00";
+            Background = "#ffff00";
             ImageArr = new string[CountOfPhotos];
         }
         public Project() { }

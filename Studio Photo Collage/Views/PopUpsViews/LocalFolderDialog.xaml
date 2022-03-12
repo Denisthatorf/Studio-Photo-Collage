@@ -1,5 +1,5 @@
 ﻿<ContentDialog
-    x:Class="Studio_Photo_Collage.Views.PopUpsViews.LocalPhotosDialog"
+    x:Class="Studio_Photo_Collage.Views.PopUpsViews.LocalFolderDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Studio_Photo_Collage.Views.PopUpsViews"
@@ -57,10 +57,14 @@
                 Photos
             </TextBlock>
             <Button Style="{StaticResource CloseButton}" 
+                    Margin="-1"
                     HorizontalAlignment="Right" VerticalAlignment="Top">
-                <FontIcon FontSize="16"
-                          FontFamily="Segoe MDL2 Assets" Glyph="&#xE8BB;" />
+                <FontIcon FontSize="15"
+                          FontFamily="Segoe MDL2 Assets" 
+                          Glyph="&#xE8BB;" />
             </Button>
+            <TextBlock Text="{x:Bind LoacalFolder}" 
+                       Margin="0,18,0,0"/>
         </Grid>
     </StackPanel>
 </ContentDialog>

@@ -3,6 +3,8 @@ using Studio_Photo_Collage.Infrastructure.Helpers;
 using Studio_Photo_Collage.Models;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media;
+using ColorHelper = Microsoft.Toolkit.Uwp.Helpers.ColorHelper;
 
 namespace Studio_Photo_Collage.Infrastructure.Converters
 {
@@ -12,10 +14,8 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
         {
 
             Grid collage = null;
-            if (value as Project != null)
+            if (value as Project != null && parameter != null)
             {
-                if (parameter != null)
-                {
 
                     var proj = value as Project;
                     var arr = proj.PhotoArray;
@@ -30,26 +30,26 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
 
                         var img = new Image();
                         img.Stretch = Windows.UI.Xaml.Media.Stretch.Fill;
-                        ImageHelper.SetImgSourceFromBase64Async(img, proj.ImageArr[i]);
+                        _ = ImageHelper.SetImgSourceFromBase64Async(img, proj.ImageArr[i]);
 
                         gridInGrid.Children.Add(img);
-                        gridInGrid.BorderThickness = new Windows.UI.Xaml.Thickness(proj.BorderThickness * (int.Parse(parameter as string) / 480.0));
+                        gridInGrid.BorderThickness = new Windows.UI.Xaml.Thickness(proj.BorderThickness * (int.Parse(parameter.ToString()) / 480.0));
                     }
 
-                    if (proj.BackgroundColor.Length < 10)
+                    if (proj.Background.Length < 10)
                     {
-                        backgroundGrid.Background = ColorGenerator.GetSolidColorBrushFromString(proj.BackgroundColor);
+                        backgroundGrid.Background = new SolidColorBrush(ColorHelper.ToColor(proj.Background));
                     }
                     else
                     {
-                        backgroundGrid.Background = ColorGenerator.GetImageBrushFromString64(proj.BackgroundColor);
+                        backgroundGrid.Background = ColorGenerator.GetImageBrushFromString64(proj.Background);
                     }
+
                     backgroundGrid.Opacity = proj.BorderOpacity;
 
                     collage.Children.Add(backgroundGrid);
                     collage.Children.Add(mainGrid);
                     return collage;
-                }
             }
 
             return collage;

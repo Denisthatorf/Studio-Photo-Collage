@@ -120,22 +120,28 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Infrastructure\Converters\ProjectToUIElementAsync.cs" />
     <Compile Include="Infrastructure\Converters\StringToFrameConverter.cs" />
     <Compile Include="Infrastructure\Converters\CultureToFullString.cs" />
     <Compile Include="Infrastructure\Converters\EnumValueConverter.cs" />
-    <Compile Include="Infrastructure\Converters\ProjectToCollage.cs" />
+    <Compile Include="Infrastructure\Converters\ProjectToUICollage.cs" />
     <Compile Include="Infrastructure\Converters\FromArrToGridConverter.cs" />
     <Compile Include="Infrastructure\Converters\FromThemeToStringConverter.cs" />
+    <Compile Include="Infrastructure\Converters\FormatConverter.cs" />
     <Compile Include="Infrastructure\Helpers\ColorGenerator.cs" />
+    <Compile Include="Infrastructure\Helpers\FiltersHelper.cs" />
     <Compile Include="Infrastructure\Helpers\GroupTemplateSelector.cs" />
     <Compile Include="Infrastructure\Helpers\CollageGenerator.cs" />
     <Compile Include="Infrastructure\Helpers\JsonHelper.cs" />
     <Compile Include="Infrastructure\Helpers\ImageHelper.cs" />
+    <Compile Include="Infrastructure\Helpers\PrintHelper.cs" />
     <Compile Include="Infrastructure\Helpers\ProjectHelper.cs" />
     <Compile Include="Infrastructure\Helpers\SavingHeper.cs" />
     <Compile Include="Infrastructure\Helpers\SettingsStorageExtensions.cs" />
     <Compile Include="Infrastructure\Messages\BorderThicknessChangedMessage.cs" />
     <Compile Include="Infrastructure\Messages\BackgroundOpacityChangedMessage.cs" />
+    <Compile Include="Infrastructure\Messages\BrushSizeMessage.cs" />
+    <Compile Include="Infrastructure\Messages\PainColorChangedMessage.cs" />
     <Compile Include="Infrastructure\Messages\DeleteAllProjectMessage.cs" />
     <Compile Include="Infrastructure\Messages\DeleteProjectMessage.cs" />
     <Compile Include="Infrastructure\Messages\ProjectSavedMessage.cs" />
@@ -149,6 +155,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserControles\BtnWithBluring.xaml.cs">
       <DependentUpon>BtnWithBluring.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControles\CustomInkToolBar.xaml.cs">
+      <DependentUpon>CustomInkToolBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControles\CustomTreeView.xaml.cs">
       <DependentUpon>CustomTreeView.xaml</DependentUpon>
@@ -173,8 +182,8 @@
     <Compile Include="Views\PopUpsViews\ConfirmDialog.xaml.cs">
       <DependentUpon>ConfirmDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PopUpsViews\LocalPhotosDialog.xaml.cs">
-      <DependentUpon>LocalPhotosDialog.xaml</DependentUpon>
+    <Compile Include="Views\PopUpsViews\LocalFolderDialog.xaml.cs">
+      <DependentUpon>LocalFolderDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PopUpsViews\PaintPopUpPage.xaml.cs">
       <DependentUpon>PaintPopUpPage.xaml</DependentUpon>
@@ -276,7 +285,7 @@
       <Version>7.1.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.7.0</Version>
+      <Version>2.8.0-prerelease.220118001</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
@@ -302,7 +311,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\Slider.xaml">
+    <Page Include="Styles\SlidersStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -311,6 +320,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControles\BtnWithBluring.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControles\CustomInkToolBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -330,7 +343,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\PopUpsViews\LocalPhotosDialog.xaml">
+    <Page Include="Views\PopUpsViews\LocalFolderDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

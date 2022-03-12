@@ -8,6 +8,9 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using ColorHelper = Microsoft.Toolkit.Uwp.Helpers.ColorHelper;
+using Windows.UI.Popups;
 
 namespace Studio_Photo_Collage.Models
 {
@@ -91,11 +94,11 @@ namespace Studio_Photo_Collage.Models
             var brush = background.Background;
             if (brush is ImageBrush imageBrush)
             {
-                Project.BackgroundColor = await ImageHelper.SaveToStringBase64Async(imageBrush.ImageSource);
+                Project.Background = await ImageHelper.SaveToStringBase64Async(imageBrush.ImageSource);
             }
             else if (brush is SolidColorBrush solidColor)
             {
-                Project.BackgroundColor = solidColor.Color.ToString();
+                Project.Background = solidColor.Color.ToString();
             }
         }
 
@@ -106,29 +109,38 @@ namespace Studio_Photo_Collage.Models
                 SelectedToggleBtn.Content = GetPlusSignIcon();
             }
         }
-        public async Task SetImgByFilePickerToSelectedBtn()
+        public async void SetImgByFilePickerToSelectedBtn()
         {
-            var img = new Image();
-            img.Stretch = Windows.UI.Xaml.Media.Stretch.Fill;
-
-            var file = await ImageHelper.OpenFilePicker();
-
-            if (file != null)
+            if (SelectedToggleBtn != null)
             {
-                using (var fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read))
-                {
+                var selectedTBtn = this.SelectedToggleBtn;
+                var numberInList = this.SelectedImageNumberInList;
+                var img = new Image();
+                img.Stretch = Windows.UI.Xaml.Media.Stretch.Fill;
 
-                    try
+                var file = await ImageHelper.OpenFilePicker();
+
+                if (file != null)
+                {
+                    selectedTBtn.Content = GetLoadingRing();
+                    using (var fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read))
                     {
-                        var decoder = await BitmapDecoder.CreateAsync(fileStream);
-                        var source = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
-                        await source.SetSourceAsync(fileStream);
-                        img.Source = source;
-                        SelectedToggleBtn.Content = img;
-                        Project.ImageArr[SelectedImageNumberInList] = await ImageHelper.SaveToStringBase64Async(source);
-                    }
-                    catch (Exception)
-                    {
+                        try
+                        {
+                            var decoder = await BitmapDecoder.CreateAsync(fileStream);
+                            var source = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
+                            await source.SetSourceAsync(fileStream);
+                            selectedTBtn.Content = img;
+                            Project.ImageArr[numberInList] = await ImageHelper.SaveToStringBase64Async(source);
+                            img.Source = source;
+                            
+                        }
+                        catch 
+                        {
+                            selectedTBtn.Content = GetPlusSignIcon();
+                            var messageDialog = new MessageDialog("Image has not right format or it is to big");
+                            await messageDialog.ShowAsync();
+                        }
                     }
                 }
             }
@@ -155,14 +167,15 @@ namespace Studio_Photo_Collage.Models
                 borderGridInGrid.Children.Add(btn); ;
             }
 
-            if(Project.BackgroundColor.Length < 10)
+            if(Project.Background.Length < 10)
             {
-                backgroundgrid.Background = ColorGenerator.GetSolidColorBrushFromString(Project.BackgroundColor);
+                backgroundgrid.Background = new SolidColorBrush(ColorHelper.ToColor(Project.Background));
             }
             else
             {
-                backgroundgrid.Background = ColorGenerator.GetImageBrushFromString64(Project.BackgroundColor);
+                backgroundgrid.Background = ColorGenerator.GetImageBrushFromString64(Project.Background);
             }
+
             backgroundgrid.Opacity = this.Project.BorderOpacity;
 
             collageGrid.Children.Add(backgroundgrid);
@@ -177,17 +190,13 @@ namespace Studio_Photo_Collage.Models
             toggleBtn.Style = Application.Current.Resources["TemplatesToggleButton"] as Style;
 
             RestoreBtnContentAsync(toggleBtn, numberInList);
-
             toggleBtn.CommandParameter = numberInList; // number in PhotoArray
-            toggleBtn.Checked += async (o, e) =>
+            toggleBtn.Checked += (o, e) =>
             {
                 var Tbtn = o as ToggleButton;
-                if (Tbtn.Content != null)
-                {
-                    var comPar = (int)Tbtn.CommandParameter;
-                    UnCheckedAnothersBtns(comPar);
-                    await SetImgByFilePickerToSelectedBtn();
-                }
+                var comPar = (int)Tbtn.CommandParameter;
+                UnCheckedAnothersBtns(comPar);
+                SetImgByFilePickerToSelectedBtn();
             };
             return toggleBtn;
         }
@@ -207,8 +216,10 @@ namespace Studio_Photo_Collage.Models
         }
         private async void RestoreBtnContentAsync(ToggleButton toggleBtn, int imgNumberInList)
         {
+            toggleBtn.Content = GetLoadingRing();
+
             var img = new Image();
-            img.Stretch = Windows.UI.Xaml.Media.Stretch.Fill;
+            img.Stretch = Stretch.Fill;
 
             await ImageHelper.SetImgSourceFromBase64Async(img, Project.ImageArr?[imgNumberInList]);
 
@@ -227,6 +238,14 @@ namespace Studio_Photo_Collage.Models
             icon.FontFamily = new FontFamily("Segoe MDL2 Assets");
             icon.Glyph = "\xE710";
             return icon;
+        }
+        private Loading GetLoadingRing()
+        {
+            var load = new Loading() { IsLoading = true };
+            load.Content = new ProgressRing() { IsActive = true };
+            load.HorizontalAlignment = HorizontalAlignment.Stretch;
+            load.VerticalAlignment = VerticalAlignment.Stretch;
+            return load;
         }
         #endregion
     }

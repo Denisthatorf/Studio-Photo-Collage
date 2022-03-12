@@ -8,6 +8,7 @@
     xmlns:viewModels="using:Studio_Photo_Collage.ViewModels"
     xmlns:usercontroles="using:Studio_Photo_Collage.UserControles"
     xmlns:converters="using:Studio_Photo_Collage.Infrastructure.Converters"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -20,6 +21,43 @@
     </Page.Resources>
 
     <Grid>
+        
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="dsd">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                        <AdaptiveTrigger MinWindowHeight="0"/>
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <!--<Setter Target="ClassicTemplate.Width" Value="133"/>
+                        <Setter Target="ClassicTemplate.Height" Value="168"/>-->
+                        <Setter Target="ClassicCollage.Width" Value="191"/>
+                        <Setter Target="ClassicCollage.Height" Value="234"/>
+                        <Setter Target="WelcomeTBox.FontSize" Value="17"/>
+                        <Setter Target="ClassicTemplateTBox.FontSize" Value="17"/>
+                        <Setter Target="ClassicTemplateTBox.Margin" Value="0,15,0,0"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState >
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowHeight="1000"/>
+                        <AdaptiveTrigger MinWindowWidth="1000"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!--<Setter Target="ClassicTemplate.Width" Value="200"/>
+                        <Setter Target="ClassicTemplate.Height" Value="254"/>-->
+                        <Setter Target="ClassicCollage.Width" Value="288"/>
+                        <Setter Target="ClassicCollage.Height" Value="354"/>
+                        <Setter Target="WelcomeTBox.FontSize" Value="48"/>
+                        <Setter Target="ClassicTemplateTBox.FontSize" Value="26"/>
+                        <Setter Target="ClassicTemplateTBox.Margin" Value="0,24,0,0"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
         <Grid x:Name="TitleBar" Margin="20,10" Height="32" VerticalAlignment="Top">
             <TextBlock FontSize="12" x:Uid="TitleBarHeaderInStartPage">Studio Collages</TextBlock>
         </Grid>
@@ -30,11 +68,11 @@
                 Icon="Setting"
                 Command="{Binding SettingsCommand}"/>
 
-            <Button x:Name="ClassicTemplate"
-                    HorizontalAlignment="Center" VerticalAlignment="Center" 
-                    Background="Transparent" BorderBrush="Transparent" 
-                    Padding="0" 
-                    Command="{Binding ImageClickCommand}">
+        <Button x:Name="ClassicTemplate" 
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                Background="Transparent" BorderBrush="Transparent" 
+                Padding="0" 
+                Command="{Binding ImageClickCommand}">
 
                 <Interactivity:Interaction.Behaviors>
                     <Core:EventTriggerBehavior EventName="PointerEntered">
@@ -51,14 +89,17 @@
                     <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Opacity="0.1">#b8b8b8</SolidColorBrush>
                     <SolidColorBrush x:Key="ButtonBorderBrushPointerOver">#0000</SolidColorBrush>
                 </Button.Resources>
+                
                 <Grid>
-                    <Rectangle x:Name="ClassicTempaleBorder"
+                <Rectangle x:Name="ClassicTempaleBorder"
                         StrokeThickness="1" Stroke="Black" 
                                StrokeDashArray="6 6"
                                Fill="Transparent"/>
+                    
                     <StackPanel Margin="26">
-                        <Grid Width="288" Height="354">
-                            <Grid.Resources>
+                    <Grid x:Name="ClassicCollage"
+                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <Grid.Resources>
                                 <Style TargetType="Rectangle">
                                     <Setter Property="Fill" Value="Aquamarine"/>
                                 </Style>
@@ -76,14 +117,15 @@
                             <Rectangle Grid.Column="0" Grid.Row="1"/>
                             <Rectangle Grid.Column="1" Grid.RowSpan="2" Margin="15,0,0,0"/>
                         </Grid>
-                        <TextBlock Text="Classic Template" x:Uid="ClassicTemplate"
-                                   HorizontalAlignment="Center"
-                                   Margin="0,24,0,0" FontSize="26"/>
+                        <TextBlock Text="Classic Template" 
+                                   x:Uid="ClassicTemplate" x:Name="ClassicTemplateTBox"
+                                   HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Grid>
             </Button>
 
-            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" 
+        <TextBlock x:Name="WelcomeTBox"
+                       HorizontalAlignment="Center" VerticalAlignment="Bottom" 
                        Margin="50" 
                        Visibility="{Binding IsGreetingTextVisible, 
                        Converter={StaticResource BoolToVisibilityConverter}}"
@@ -91,18 +133,12 @@
                        Foreground="{ThemeResource AppBarItemForegroundThemeBrush}" 
                        Text="Welcome to Studio Photo Collages" x:Uid="Greeting" />
 
-            <!--<Popup x:Name="RecentColl"
-               HorizontalAlignment="Left" VerticalAlignment="Bottom"
-               Height="200"
-               IsOpen="{Binding IsRecentCollagesOpen}">
-            <Frame x:Name="PopUpFrame" Background="Transparent"
-                   Height="200" Width="{Binding ElementName=Page, Path=ActualWidth}"/>
-        </Popup>-->
-        <Popup x:Name="RecentColl"
-               HorizontalAlignment="Left" VerticalAlignment="Bottom"
-               Height="200"
-               IsOpen="{Binding IsRecentCollagesOpen}">
-            <StackPanel Orientation="Vertical" Padding="36,0">
+        
+            <StackPanel 
+                HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                Visibility="{Binding IsRecentCollagesOpen, 
+                Converter={StaticResource BoolToVisibilityConverter}}"
+                Orientation="Vertical" Padding="36,0">
 
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Recent Collages" x:Uid="RecentCollages"/>
@@ -113,25 +149,35 @@
                     </Button>
                 </StackPanel>
 
-                <ItemsControl x:Name="T1" ItemsSource="{Binding RecentProjects}" >
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <usercontroles:BtnWithBluring 
-                                   Project="{Binding Item1}" 
-                                   Margin="0,0,8,0"
+                <ScrollViewer HorizontalScrollMode="Enabled"
+                              HorizontalScrollBarVisibility="Auto"
+                              IsHorizontalRailEnabled="True"
+                              IsHorizontalScrollChainingEnabled="True"
+                              Width="auto">
+                    <ItemsControl x:Name="T1"
+                                  ItemsSource="{Binding RecentProjects}" >
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <usercontroles:BtnWithBluring 
+                                x:Name="myButton"
+                                Width="130" Height="130"
+                                Project="{Binding Item1}" 
+                                Margin="0,0,8,0"
                                 MyCommand="{Binding ElementName=T1, 
                                 Path=DataContext.TemplateClickCommand, Mode=OneWay}"
                                 RemoveProjectCommand="{Binding ElementName=T1, 
                                 Path=DataContext.RecentCollageDeleteOneProjectCommand, Mode=OneWay}"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
             </StackPanel>
-        </Popup>
+       
     </Grid>
 </Page>

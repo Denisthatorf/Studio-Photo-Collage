@@ -6,9 +6,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    PrimaryButtonText="Save">
+    PrimaryButtonText="Save"
+    d:Width="360" d:Height="250">
     <ContentDialog.Resources>
-        <Thickness x:Key="ContentDialogPadding">26</Thickness>
+        <Thickness x:Key="ContentDialogPadding">24</Thickness>
     </ContentDialog.Resources>
     <ContentDialog.PrimaryButtonStyle>
         <Style TargetType="Button">
@@ -22,7 +23,7 @@
             <Button x:Name="CloseBtn" 
                    Click="CloseBtn_Click"
                     Style="{StaticResource CloseButton}" 
-                    Margin="259,0,0,0" >
+                    Margin="244,0,0,0">
                 <SymbolIcon Symbol="Cancel"/>
             </Button>
         </StackPanel>

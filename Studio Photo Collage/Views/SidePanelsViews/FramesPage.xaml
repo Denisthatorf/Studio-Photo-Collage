@@ -8,8 +8,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     DataContext="{Binding FramesPageViewModel, Source={StaticResource Locator}}"
-    Style="{StaticResource SidePanelPage}"
-    d:Width="245">
+    d:Width="245"
+    Style="{StaticResource SidePanelPage}">
     
     <Page.Resources>
         <Style TargetType="Button">
@@ -19,8 +19,7 @@
     </Page.Resources>
     
     <ScrollViewer VerticalScrollBarVisibility="Visible">
-        <StackPanel 
-                    Padding="21,21,14,0" >
+        <StackPanel>
             <TextBlock Text="Frame" Style="{StaticResource Header}"/>
             <Grid>
                 <Grid.RowDefinitions>

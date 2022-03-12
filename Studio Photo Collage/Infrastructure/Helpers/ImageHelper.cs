@@ -56,34 +56,6 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             return output;
         }
 
-        public static async Task<byte[]> ImageToBytes(IRandomAccessStream sourceStream)
-        {
-            byte[] imageArray;
-            var decoder = await BitmapDecoder.CreateAsync(sourceStream);
-
-            var transform = new BitmapTransform { ScaledWidth = decoder.PixelWidth, ScaledHeight = decoder.PixelHeight };
-            var pixelData = await decoder.GetPixelDataAsync(
-                BitmapPixelFormat.Rgba8,
-                BitmapAlphaMode.Straight,
-                transform,
-                ExifOrientationMode.RespectExifOrientation,
-                ColorManagementMode.DoNotColorManage);
-
-            using (var destinationStream = new InMemoryRandomAccessStream())
-            {
-                var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, destinationStream);
-                encoder.SetPixelData(BitmapPixelFormat.Rgba8, BitmapAlphaMode.Premultiplied, decoder.PixelWidth,
-                    decoder.PixelHeight, 96, 96, pixelData.DetachPixelData());
-                await encoder.FlushAsync();
-
-                var outputDecoder = await BitmapDecoder.CreateAsync(destinationStream);
-                await destinationStream.FlushAsync();
-                imageArray = (await outputDecoder.GetPixelDataAsync()).DetachPixelData();
-            }
-
-            return imageArray;
-        }
-
         public static async Task<ImageSource> FromBase64(string base64)
         {
             byte[] bytes = Convert.FromBase64String(base64);

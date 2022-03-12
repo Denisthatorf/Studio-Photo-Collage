@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
@@ -12,13 +12,20 @@ using Studio_Photo_Collage.Infrastructure.Services;
 using Studio_Photo_Collage.Models;
 using Studio_Photo_Collage.Views;
 using Studio_Photo_Collage.Views.PopUps;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
+using Windows.Graphics.Display;
+using Windows.Graphics.Imaging;
+using Windows.Graphics.Printing;
 using Windows.Media.Capture;
 using Windows.Storage;
+using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.UI.Xaml.Printing;
 
 namespace Studio_Photo_Collage.ViewModels
 {
@@ -29,14 +36,33 @@ namespace Studio_Photo_Collage.ViewModels
         private ICommand saveImageCommand;
         private ICommand saveProjectCommand;
         private ICommand goBackCommand;
+        private ICommand addImageCommand;
+        private ICommand deleteImageCommand;
         private BtnNameEnum? checkBoxesEnum;
         private Collage currentCollage;
+        private Grid renderCollage;
+        private Color paintColor;
 
+        public Color PaintColor
+        {
+            get => paintColor;
+            set
+            {
+                SetProperty(ref paintColor, value);
+            }
+        }
         public Collage CurrentCollage
         {
             get => currentCollage;
             set => SetProperty(ref currentCollage, value);
         }
+
+        public Grid RenderCollage
+        {
+            get => renderCollage;
+            set => SetProperty(ref renderCollage, value);
+        }
+
         public BtnNameEnum? CheckBoxesEnum
         {
             get => checkBoxesEnum;
@@ -50,6 +76,7 @@ namespace Studio_Photo_Collage.ViewModels
                 else
                 {
                     SetProperty(ref checkBoxesEnum, null);
+                    CheckBoxesEnumValueChange();
                 }
             }
         }
@@ -60,7 +87,7 @@ namespace Studio_Photo_Collage.ViewModels
             {
                 if (saveImageCommand == null)
                 {
-                    saveImageCommand = new RelayCommand(() => SaveCollageAsImageAsync());
+                    saveImageCommand = new RelayCommand(() => SaveCollageAsImageBySaveImageDialogAsync());
                 }
 
                 return saveImageCommand;
@@ -86,7 +113,35 @@ namespace Studio_Photo_Collage.ViewModels
                 {
                     goBackCommand = new RelayCommand(() => GoBack());
                 }
+
                 return goBackCommand;
+            }
+        }
+        public ICommand DeleteImageCommmand
+        {
+            get
+            {
+                if(deleteImageCommand == null)
+                {
+                    deleteImageCommand = new RelayCommand(() =>
+                    {
+                        CurrentCollage.DeleteSelectedImgFromBtn();
+                    });
+                }
+
+                return deleteImageCommand;
+            }
+        }
+        public ICommand AddImageCommand
+        {
+            get
+            {
+                if (addImageCommand == null)
+                {
+                    addImageCommand = new RelayCommand(() => CurrentCollage.SetImgByFilePickerToSelectedBtn());
+                }
+
+                return addImageCommand;
             }
         }
 
@@ -105,7 +160,7 @@ namespace Studio_Photo_Collage.ViewModels
         {
             this.navigationService = navigationService;
             checkBoxesEnum = null;
-            MessengersRegistration();
+            MessengersRegistration();      
         }
 
         public async Task<ContentDialogResult> SaveProjectBySaveDialogAsync()
@@ -136,15 +191,56 @@ namespace Studio_Photo_Collage.ViewModels
             }
         }
 
-        private async void SaveCollageAsImageAsync()
+        private async void SaveCollageAsImageBySaveImageDialogAsync()
         {
             var dialog = new SaveImageDialog();
             dialog.NameOfImg = CurrentCollage.Project.ProjectName;
             var result = await dialog.ShowAsync();
 
             var name = dialog.NameOfImg;
-            var format = dialog.Format;
+            var format = dialog.Format.ToLower();
             var quality = dialog.Quality;
+
+            if(result != ContentDialogResult.None)
+            {
+                SaveCollageAsImageAsync(name, format);
+            }
+
+            //Є ще одна кнопка при нажатті на яку InkCanvas має бути все ще видним,
+            //але щоб я міг нажимати на кнопки та не міг малювати на InkCanvas, як це зробити?
+        }
+
+        private async void SaveCollageAsImageAsync(string name, string format)
+        {
+            var collage = await ProjectToUIElementAsync.Convert(CurrentCollage.Project, 1000);
+            collage.Width = 1000;
+            collage.Height = 1000;
+            RenderCollage = collage;
+
+            var bitmap = new RenderTargetBitmap();
+            await bitmap.RenderAsync(RenderCollage);
+
+            var pixelBuffer = await bitmap.GetPixelsAsync();
+            byte[] pixels = pixelBuffer.ToArray();
+            var displayInformation = DisplayInformation.GetForCurrentView();
+            var pictureFolder = KnownFolders.SavedPictures;
+            var file = await pictureFolder.CreateFileAsync($"{name}.{format}", CreationCollisionOption.ReplaceExisting);
+
+            using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
+            {
+                var encformat = FormatConverter.Convert(format);
+                var encoder = await BitmapEncoder.CreateAsync(encformat, stream);
+                encoder.SetPixelData(BitmapPixelFormat.Bgra8,
+                    BitmapAlphaMode.Ignore,
+                    (uint)bitmap.PixelWidth,
+                    (uint)bitmap.PixelHeight,
+                    displayInformation.RawDpiX,
+                    displayInformation.RawDpiY,
+                    pixels);
+                await encoder.FlushAsync();
+            }
+
+            RenderCollage = null;
         }
 
         private async void SaveProjectBySaveProjectDialogAsync()
@@ -163,17 +259,20 @@ namespace Studio_Photo_Collage.ViewModels
         {
             switch (CheckBoxesEnum)
             {
+                case null:
+                    SidePanel.Navigate(typeof(Page));
+                    break;
                 case BtnNameEnum.Settings:
                     ShowSettingDialog();
                     break;
                 case BtnNameEnum.Photo:
                     TakePthoto();
                     break;
-                case BtnNameEnum.Add:
-                    _ = CurrentCollage.SetImgByFilePickerToSelectedBtn();
-                    break;
                 case BtnNameEnum.Delete:
                     CurrentCollage.DeleteSelectedImgFromBtn();
+                    break;
+                case BtnNameEnum.Print:
+                    Print();
                     break;
             }
 
@@ -218,7 +317,7 @@ namespace Studio_Photo_Collage.ViewModels
                 backgroundGrid.Background = m;
 
                 var project = CurrentCollage.Project;
-                project.BackgroundColor = await ImageHelper.SaveToStringBase64Async(m.ImageSource);
+                project.Background = await ImageHelper.SaveToStringBase64Async(m.ImageSource);
             });
 
             Messenger.Register<SolidColorBrush>(this, (r, m) =>
@@ -227,7 +326,7 @@ namespace Studio_Photo_Collage.ViewModels
                  backgroundGrid.Background = m;
 
                  var project = CurrentCollage.Project;
-                 project.BackgroundColor = m.Color.ToString();
+                 project.Background = m.Color.ToString();
              });
 
             Messenger.Register<Action<Image>>(this, async (r, m) =>
@@ -242,11 +341,12 @@ namespace Studio_Photo_Collage.ViewModels
                         = await ImageHelper.SaveToStringBase64Async(selectedimg.Source);
                 }
             });
+            Messenger.Register<PainColorChangedMessage>(this, (r, m) => PaintColor = m.Value);
         }
 
         private async void TakePthoto()
         {
-            if (CurrentCollage.SelectedImage != null)
+            if (CurrentCollage.SelectedToggleBtn != null)
             {
                 var captureUI = new CameraCaptureUI();
                 captureUI.PhotoSettings.Format = CameraCaptureUIPhotoFormat.Jpeg;
@@ -269,6 +369,8 @@ namespace Studio_Photo_Collage.ViewModels
                     CurrentCollage.SelectedImage.Source = bitmapImage;
                 }
             }
+
+            CheckBoxesEnum = null;
         }
 
         private async void ShowSettingDialog()
@@ -276,6 +378,19 @@ namespace Studio_Photo_Collage.ViewModels
             var dialog = new SettingsDialog();
             await dialog.ShowAsync();
             CheckBoxesEnum = null;
+        }
+
+        private async void Print()
+        {
+            var printHelper = new PrintHelper();
+
+            var collage = await ProjectToUIElementAsync.Convert(CurrentCollage.Project, "1000");
+            collage.HorizontalAlignment = HorizontalAlignment.Center;
+            collage.VerticalAlignment = VerticalAlignment.Center;
+
+            printHelper.AddPrintContent(collage);
+            printHelper.Print();
+
         }
     }
     public enum BtnNameEnum

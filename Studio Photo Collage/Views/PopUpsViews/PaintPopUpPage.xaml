@@ -7,48 +7,67 @@
      xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" Height="64" Width="380" HorizontalAlignment="Center" VerticalAlignment="Bottom"
-    DataContext="{Binding PaintPopUppageInstance, Source={StaticResource Locator}}" >
+    mc:Ignorable="d" Height="64" Width="380" 
+    HorizontalAlignment="Center" VerticalAlignment="Bottom"
+    DataContext="{Binding PaintPopUpPageInstance, Source={StaticResource Locator}}" >
     <Page.Resources>
         <converters:EnumValueConverter x:Key="EnumValueConverter"/>
         <Style TargetType="AppBarToggleButton">
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="Width" Value="36"/>
-            <Setter Property="Height" Value="36"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Width" Value="48"/>
+            <Setter Property="Height" Value="48"/>
             <Setter Property="Margin" Value="5"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="Template" Value="{StaticResource MenuAppBarToggleButton}"/>
         </Style>
     </Page.Resources>
 
     <StackPanel Orientation="Horizontal" 
                 Background="{StaticResource MainBackgroundColor}">
-        <ToggleButton
-                      IsChecked="{Binding AppBarBtnsEnum, 
-                      Converter={StaticResource EnumValueConverter},
-                      ConverterParameter=Pen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <AppBarToggleButton Margin="4,0,0,0" 
+                      IsChecked="{Binding AppBarBtnsEnum, ConverterParameter=Pen, Converter={StaticResource EnumValueConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;"/>
-        </ToggleButton>
+        </AppBarToggleButton>
 
-        <ToggleButton   
-                     IsChecked="{Binding AppBarBtnsEnum, 
-                     Converter={StaticResource EnumValueConverter},
-                     ConverterParameter=Rubber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <AppBarToggleButton Margin="4,0,0,0"
+                     IsChecked="{Binding AppBarBtnsEnum, ConverterParameter=Rubber, Converter={StaticResource EnumValueConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xED60;"/>
-        </ToggleButton>
+        </AppBarToggleButton>
 
         <!--<Grid VerticalAlignment="Center">
             <ColorPicker Height="6" Width="300" VerticalAlignment="Center"/>
             <ColorPickerSlider Background="Transparent"  Width="350"/>
         </Grid>-->
-        <muxc:ColorPicker 
-      ColorSpectrumShape="Box"
-      IsMoreButtonVisible="False"
-      IsColorSliderVisible="False"
-      IsColorChannelTextInputVisible="False"
-      IsHexInputVisible="False"
-      IsAlphaEnabled="False"
-      IsAlphaSliderVisible="True"
-      IsAlphaTextInputVisible="True"
-      Height="17" Width="198"/>
+        <Grid Margin="12,0,0,0">
+            <muxc:ColorPicker VerticalAlignment="Center"
+                              ColorSpectrumShape="Box"
+                              IsMoreButtonVisible="False"
+                              IsColorSliderVisible="False"
+                              IsColorChannelTextInputVisible="False"
+                              IsHexInputVisible="False"
+                              IsAlphaEnabled="False"
+                              IsAlphaSliderVisible="True"
+                              IsAlphaTextInputVisible="True"
+                              Height="15" Width="146" CornerRadius="0"/>
+            <Slider VerticalAlignment="Center"  Margin="0,3,0,0"
+                    Background="Transparent"
+                    Value="{Binding HexValue, Mode=TwoWay, 
+                    UpdateSourceTrigger=PropertyChanged}"
+                    Style="{StaticResource BlueSliderWithTransparentTrackAccentColor}">
+            </Slider>
+        </Grid>
 
+        <Grid Margin="12,0,0,0" Width="94">
+            <Polygon Points="0,7 94,0 94,14"
+                 Fill="#949494" 
+                 HorizontalAlignment="Left" VerticalAlignment="Center"
+                 Margin="0,25,0,25"/>
+            <Rectangle Width="22" Height="3" Fill="#949494"
+                       HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Slider VerticalAlignment="Center" Margin="0,3,0,0"
+                    Background="Transparent"
+                    Style="{StaticResource SliderWithTransparentTrackAccentColor}"
+                    Value="{Binding BrushSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
     </StackPanel>
 </Page>

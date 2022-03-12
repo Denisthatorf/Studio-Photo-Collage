@@ -13,8 +13,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     x:Name="Page"
-    DataContext="{Binding Source={StaticResource Locator}, Path=TemplatePageInstance}"
     Style="{StaticResource SidePanelPage}"
+    DataContext="{Binding Source={StaticResource Locator}, 
+    Path=TemplatePageInstance}"
     d:Width="245">
 
     <Page.Resources>

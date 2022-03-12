@@ -10,9 +10,7 @@
     xmlns:converters="using:Studio_Photo_Collage.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    d:DesignHeight="300"
-    d:DesignWidth="400">
+    mc:Ignorable="d">
 
     <UserControl.Resources>
         <converters:ProjectToUICollage x:Key="ProjToCollage"/>
@@ -21,7 +19,9 @@
     <Grid>
         <Button x:Name="Btn" 
                 Background="Transparent" 
-            Width="120" Height="120" Padding="0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Padding="0"
             HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <Interactivity:Interaction.Behaviors>
                 <Core:EventTriggerBehavior EventName="PointerEntered">
@@ -32,7 +32,9 @@
             <ContentPresenter 
                 VerticalAlignment="Stretch"
                 HorizontalAlignment="Stretch"
-            Content="{x:Bind Project, Converter={StaticResource ProjToCollage}, ConverterParameter=120}"/>
+                Content="{x:Bind Project, 
+                Converter={StaticResource ProjToCollage},
+                ConverterParameter=120}"/>
         </Button>
 
 

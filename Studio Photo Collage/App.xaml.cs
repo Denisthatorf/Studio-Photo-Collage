@@ -69,6 +69,7 @@ namespace Studio_Photo_Collage
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
+
             Ioc.Default.GetService<SettingServise>().LoadStartSetting();
         }
 

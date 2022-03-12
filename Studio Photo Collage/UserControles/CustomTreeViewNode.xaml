@@ -14,9 +14,9 @@
                     PointerPressed="Node_PointerPressed">
             <ContentPresenter Content="{x:Bind NodeContent}"/>
             <FontIcon x:Name="TreeViewSign"
+                      FontSize="8"
                       FontFamily="Segoe MDL2 Assets" Glyph="&#xF5B0;"
-                      Margin="5,0"
-                      FontSize="11"/>
+                      Margin="5,0"/>
         </StackPanel>
 
         <ContentPresenter Content="{x:Bind NodeItem}"/>

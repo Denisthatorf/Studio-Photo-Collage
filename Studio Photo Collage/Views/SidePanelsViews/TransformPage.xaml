@@ -9,60 +9,160 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    DataContext="{Binding Source={StaticResource Locator}, Path=TransformPageInstance}"
     d:Width="245">
-    <StackPanel>
-        <StackPanel.Resources>
-            <Style TargetType="TextBlock">
-                <Setter Property="Margin" Value="44,0,0,0"/>
-            </Style>
-            <Style TargetType="Grid">
-                <Setter Property="Padding" Value="9,0"/>
-                <Setter Property="Margin" Value="0,4"/>
-                <Setter Property="HorizontalAlignment" Value="Left"/>
-            </Style>
-        </StackPanel.Resources>
-        <TextBlock Text="Transform" x:Uid="Transform"
-                   Margin="20"
-                   Style="{StaticResource Header}"/>
+    <Page.Resources>
+        
+        <ControlTemplate x:Key="TranformButtonTemplate" TargetType="Button">
+            <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" Background="{TemplateBinding Background}" BackgroundSizing="{TemplateBinding BackgroundSizing}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" CornerRadius="{TemplateBinding CornerRadius}" Content="{TemplateBinding Content}" ContentTransitions="{TemplateBinding ContentTransitions}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal">
+                            <Storyboard>
+                                <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter"/>
+                            </Storyboard>
+                        </VisualState>
+                        <VisualState x:Name="PointerOver">
+                            <Storyboard>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPointerOver}"/>
+                                </ObjectAnimationUsingKeyFrames>
+                                <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter"/>
+                            </Storyboard>
+                        </VisualState>
+                        <VisualState x:Name="Pressed">
+                            <Storyboard>
+                                <PointerDownThemeAnimation Storyboard.TargetName="ContentPresenter"/>
+                            </Storyboard>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+            </ContentPresenter>
+        </ControlTemplate>
 
-            <Grid x:Name="RotateLeft">
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;"
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="44,0,0,0"/>
+        </Style>
+        <Style TargetType="Grid">
+            <Setter Property="Padding" Value="9,0"/>
+            <Setter Property="Margin" Value="0,4"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="FocusVisualPrimaryBrush" Value="Red"/>
+            <Setter Property="FocusVisualPrimaryThickness" Value="2"/>
+            <Setter Property="Template" Value="{StaticResource TranformButtonTemplate}"/>
+        </Style>
+        
+    </Page.Resources>
+    <ScrollViewer>
+        <StackPanel>
+
+            <TextBlock Text="Transform" x:Uid="Transform"
+                   Style="{StaticResource Header}" 
+                       Margin="16"/>
+
+            <Button x:Name="RotateLeft">
+                <Grid>
+
+                    <Interactivity:Interaction.Behaviors>
+                        <Core:EventTriggerBehavior EventName="PointerPressed">
+                            <Core:InvokeCommandAction Command="{Binding RotateLeftCommand}"/>
+                        </Core:EventTriggerBehavior>
+                    </Interactivity:Interaction.Behaviors>
+
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;"
                           x:Name="RotateLeftIcon">
-                    <FontIcon.RenderTransform>
-                        <TransformGroup>
-                            <CompositeTransform ScaleX="-1"/>
-                            <TranslateTransform X="40"/>
-                        </TransformGroup>
-                    </FontIcon.RenderTransform>
-                </FontIcon>
-                <TextBlock Text="Rotate left" x:Uid="RotateLeft"/>
-            </Grid>
-            
-            <Grid x:Name="RotateRight">
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;"/>
-                <TextBlock Text="Rotate right" x:Uid="RotateRight"/>
-            </Grid>
+                        <FontIcon.RenderTransform>
+                            <TransformGroup>
+                                <CompositeTransform ScaleX="-1"/>
+                                <TranslateTransform X="40"/>
+                            </TransformGroup>
+                        </FontIcon.RenderTransform>
+                    </FontIcon>
+                    <TextBlock Text="Rotate left" x:Uid="RotateLeft"/>
+                </Grid>
+            </Button>
 
-            <Grid x:Name="HorizontalFlip">
-                <muxc:ImageIcon Source="/Assets/HorizontalFlip.png"
+            <Button x:Name="RotateRight">
+                <Grid>
+
+                    <Interactivity:Interaction.Behaviors>
+                        <Core:EventTriggerBehavior EventName="PointerPressed">
+                            <Core:InvokeCommandAction Command="{Binding RotateRightCommand}"/>
+                        </Core:EventTriggerBehavior>
+                    </Interactivity:Interaction.Behaviors>
+
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;"/>
+                    <TextBlock Text="Rotate right" x:Uid="RotateRight"/>
+                </Grid>
+            </Button>
+
+            <Button x:Name="HorizontalFlip">
+                <Grid>
+
+                    <Interactivity:Interaction.Behaviors>
+                        <Core:EventTriggerBehavior EventName="PointerPressed">
+                            <Core:InvokeCommandAction Command="{Binding HorizontalFlipCommand}"/>
+                        </Core:EventTriggerBehavior>
+                    </Interactivity:Interaction.Behaviors>
+
+                    <muxc:ImageIcon Source="/Assets/HorizontalFlip.png"
                                 Width="{Binding ElementName=RotateLeftIcon, Path=ActualWidth}"/>
-                <TextBlock Text="Horizontal flip" x:Uid="HorizontalFlip"/>
-            </Grid>
+                    <TextBlock Text="Horizontal flip" x:Uid="HorizontalFlip"/>
+                </Grid>
+            </Button>
 
-            <Grid x:Name="VerticalFlip">
+            <Button x:Name="VerticalFlip">
+                <Grid>
+
+                    <Interactivity:Interaction.Behaviors>
+                        <Core:EventTriggerBehavior EventName="PointerPressed">
+                            <Core:InvokeCommandAction Command="{Binding VerticalFlipCommand}"/>
+                        </Core:EventTriggerBehavior>
+                    </Interactivity:Interaction.Behaviors>
+
                     <muxc:ImageIcon Source="/Assets/VerticalFlip.png"
                                 Width="{Binding ElementName=RotateLeftIcon, Path=ActualWidth}"/>
                     <TextBlock Text="Vertical flip" x:Uid="VerticalFlip"/>
-            </Grid>
+                </Grid>
+            </Button>
 
-            <Grid x:Name="ZoomIn">
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71E;"/>
-                <TextBlock Text="Zoom in" x:Uid="ZoomIn"/>
-            </Grid>
+            <Button x:Name="ZoomIn">
+                <Grid>
 
-         <Grid x:Name="ZoomOut">
-            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71F;"/>
-            <TextBlock Text="Zoom out" x:Uid="ZoomOut"/>
-         </Grid>
-    </StackPanel>
+                    <Interactivity:Interaction.Behaviors>
+                        <Core:EventTriggerBehavior EventName="PointerPressed">
+                            <Core:InvokeCommandAction Command="{Binding ZoomInCommand}"/>
+                        </Core:EventTriggerBehavior>
+                    </Interactivity:Interaction.Behaviors>
+
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71E;"/>
+                    <TextBlock Text="Zoom in" x:Uid="ZoomIn"/>
+                </Grid>
+            </Button>
+
+            <Button x:Name="ZoomOut">
+                <Grid>
+
+                    <Interactivity:Interaction.Behaviors>
+                        <Core:EventTriggerBehavior EventName="PointerPressed">
+                            <Core:InvokeCommandAction Command="{Binding ZoomOut}"/>
+                        </Core:EventTriggerBehavior>
+                    </Interactivity:Interaction.Behaviors>
+
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71F;"/>
+                    <TextBlock Text="Zoom out" x:Uid="ZoomOut"/>
+                </Grid>
+            </Button>
+
+        </StackPanel>
+    </ScrollViewer>
 </Page> 

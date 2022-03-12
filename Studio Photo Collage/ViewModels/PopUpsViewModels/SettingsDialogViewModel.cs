@@ -50,8 +50,7 @@ namespace Studio_Photo_Collage.ViewModels.PopUpsViewModels
             {
                 SetProperty(ref themeComBox_SelectedItem, value);
                 ChangeTheme(themeComBox_SelectedItem);
-
-                settingServise.Theme = value;
+                _ = settingServise.SetRequestedThemeAsync(value);
                 ThemeOfSettings = value;
             }
         }
@@ -74,11 +73,6 @@ namespace Studio_Photo_Collage.ViewModels.PopUpsViewModels
             selectedColorIndex = 
                 Brushes.IndexOf(Brushes.Where( x => x.Color == settingServise.CustomBrush).FirstOrDefault());
             VersionDescription = GetVersionDescription();
-        }
-
-        public async void ChangeTheme(ElementTheme newtheme)
-        {
-            await settingServise.SetRequestedThemeAsync(newtheme);
         }
 
         private static string GetVersionDescription()

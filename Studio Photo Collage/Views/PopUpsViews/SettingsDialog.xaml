@@ -60,7 +60,7 @@
 
                     <TextBlock Text="Choose your color"/>
                     <GridView ItemsSource="{Binding Brushes}"
-                              CanDrag="False" 
+                              CanDrag="False" Margin="0,8,0,0"
                               SelectedIndex="{Binding SelectedColorIndex, Mode=TwoWay}">
                         <GridView.ItemTemplate>
                             <DataTemplate>

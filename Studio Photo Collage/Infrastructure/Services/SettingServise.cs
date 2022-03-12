@@ -24,23 +24,31 @@ namespace Studio_Photo_Collage.Infrastructure.Services
     {
         private const string ThemeSettingsKey = "AppBackgroundRequestedTheme";
         private const string CustomColorSettingsKey = "CustomColor";
+        private const string LocalFolderKey = "LocalFolder";
 
-        public ElementTheme Theme { get; set; }
-        public Color CustomBrush { get; set; }
-        public CultureInfo Language { get; set; }
+        private string localFolder;
+        private Color customBrush;
+        private ElementTheme theme;
+        private CultureInfo language;
+
+        public ElementTheme Theme { get => theme; }
+        public Color CustomBrush { get => customBrush; }
+        public CultureInfo Language { get => language; }
+        public string LocalFolder { get => localFolder; }
 
         public SettingServise() { }
         public async void LoadStartSetting()
         {
             await SetApplicationThemeFromSettings();
             await SetCustomColorFromSettings();
+            await SetLocalFolderFromSettings();
             SetLanguageFromSettings();
             SetAnotherSettings();
             SetTitleBarTheme();
         }
         public void SetLanguage(CultureInfo cultureInfo)
         {
-            Language = cultureInfo;
+            language = cultureInfo;
             Thread.CurrentThread.CurrentCulture = cultureInfo;
             ApplicationLanguages.PrimaryLanguageOverride = cultureInfo.ToString();
             ResourceContext.GetForCurrentView().Reset();
@@ -48,15 +56,20 @@ namespace Studio_Photo_Collage.Infrastructure.Services
 
             ViewModelLocator.ReloadCurrentPage();
         }
+        public void SetLocalFolder()
+        {
+            _ = ApplicationData.Current.LocalSettings.SaveAsync<string>(LocalFolder, LocalFolder);
+        }
         public async Task SetRequestedThemeAsync(ElementTheme theme)
         {
-            Theme = theme;
+            this.theme = theme;
             await ApplicationData.Current.LocalSettings.SaveAsync<ElementTheme>(ThemeSettingsKey, theme);
             await SetApplicationRequestedThemeAsync();
+            SetTitleBarTheme();
         }
         public async Task SetCutomColorAsync(Color color)
         {
-            CustomBrush = color;
+            customBrush = color;
             SetApplicationCustomColor();
             await ApplicationData.Current.LocalSettings.SaveAsync<Color>(CustomColorSettingsKey, color);
         }
@@ -65,8 +78,21 @@ namespace Studio_Photo_Collage.Infrastructure.Services
         {
             var titleBar = ApplicationView.GetForCurrentView().TitleBar;
             titleBar.ButtonBackgroundColor = Colors.Transparent;
-            //titleBar.ButtonHoverBackgroundColor = Colors.Red;
-            //titleBar.ButtonPressedBackgroundColor = Colors.Red;
+
+            var theme = App.Current.RequestedTheme;
+            switch (Theme)
+            {
+                case ElementTheme.Default:
+                    titleBar.ButtonForegroundColor = theme == ApplicationTheme.Light ? Colors.Black : Colors.White;
+                    break;
+                case ElementTheme.Light:
+                    titleBar.ButtonForegroundColor = Colors.Black;
+                    break;
+                case ElementTheme.Dark:
+                    titleBar.ButtonForegroundColor = Colors.White;
+                    titleBar.ForegroundColor = Colors.White;
+                    break;
+            }
         }
         private void SetApplicationCustomColor()
         {
@@ -96,7 +122,7 @@ namespace Studio_Photo_Collage.Infrastructure.Services
 
             var userColor = (Color)Application.Current.Resources["SystemAccentColor"];
 
-            CustomBrush = color == default ? userColor : color;
+            customBrush = color == default ? userColor : color;
             await SetCutomColorAsync(CustomBrush);
         }
         private async Task SetApplicationThemeFromSettings()
@@ -104,8 +130,13 @@ namespace Studio_Photo_Collage.Infrastructure.Services
             var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
             var theme = await localSettings.ReadAsync<ElementTheme>(ThemeSettingsKey);
 
-            Theme = theme;
+            this.theme = theme;
             await SetRequestedThemeAsync(Theme);
+        }
+        private async Task SetLocalFolderFromSettings()
+        {
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            localFolder = await localSettings.ReadAsync<string>(LocalFolderKey);
         }
         private void SetLanguageFromSettings()
         {
@@ -113,7 +144,7 @@ namespace Studio_Photo_Collage.Infrastructure.Services
             var conv = new CultureInfoToFullStringNameConverter();
             var culture = (CultureInfo)conv.ConvertBack(selectedLanguage, null, null, null);
 
-            Language = culture;
+            language = culture;
             SetLanguage(Language);
         }
         private void SetAnotherSettings()
@@ -125,7 +156,7 @@ namespace Studio_Photo_Collage.Infrastructure.Services
             coreTitleBar.ExtendViewIntoTitleBar = true;
 
             Application.Current.Resources["ContentDialogBorderWidth"] = new Thickness(2);
-            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500, 461));
+            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500, 500));
         }
     }
 }
