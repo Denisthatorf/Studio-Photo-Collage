@@ -49,7 +49,6 @@ namespace Studio_Photo_Collage.ViewModels.PopUpsViewModels
             set
             {
                 SetProperty(ref themeComBox_SelectedItem, value);
-                ChangeTheme(themeComBox_SelectedItem);
                 _ = settingServise.SetRequestedThemeAsync(value);
                 ThemeOfSettings = value;
             }

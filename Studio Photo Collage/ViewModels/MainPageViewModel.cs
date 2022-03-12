@@ -205,9 +205,6 @@ namespace Studio_Photo_Collage.ViewModels
             {
                 SaveCollageAsImageAsync(name, format);
             }
-
-            //Є ще одна кнопка при нажатті на яку InkCanvas має бути все ще видним,
-            //але щоб я міг нажимати на кнопки та не міг малювати на InkCanvas, як це зробити?
         }
 
         private async void SaveCollageAsImageAsync(string name, string format)
@@ -342,6 +339,23 @@ namespace Studio_Photo_Collage.ViewModels
                 }
             });
             Messenger.Register<PainColorChangedMessage>(this, (r, m) => PaintColor = m.Value);
+
+            Messenger.Register<ZoomMessage>(this, (r, m) =>
+            {
+                var scroll = CurrentCollage.SelectedScrollViewer;
+                var img = CurrentCollage.SelectedImage;
+                if(img != null && img.Source is WriteableBitmap bitmap)
+                {
+                    if (m.Value == ZoomType.ZoomIn)
+                    {
+                        scroll.ChangeView(null, null, scroll.ZoomFactor + 0.5f);
+                    }
+                    else
+                    {
+                        scroll.ChangeView(null, null, scroll.ZoomFactor - 0.5f);
+                    }
+                }
+            });
         }
 
         private async void TakePthoto()

@@ -138,7 +138,7 @@
                 HorizontalAlignment="Left" VerticalAlignment="Bottom"
                 Visibility="{Binding IsRecentCollagesOpen, 
                 Converter={StaticResource BoolToVisibilityConverter}}"
-                Orientation="Vertical" Padding="36,0">
+                Orientation="Vertical" Padding="36,8">
 
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Recent Collages" x:Uid="RecentCollages"/>

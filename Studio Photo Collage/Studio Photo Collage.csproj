@@ -141,6 +141,7 @@
     <Compile Include="Infrastructure\Messages\BorderThicknessChangedMessage.cs" />
     <Compile Include="Infrastructure\Messages\BackgroundOpacityChangedMessage.cs" />
     <Compile Include="Infrastructure\Messages\BrushSizeMessage.cs" />
+    <Compile Include="Infrastructure\Messages\ZoomMessage.cs" />
     <Compile Include="Infrastructure\Messages\PainColorChangedMessage.cs" />
     <Compile Include="Infrastructure\Messages\DeleteAllProjectMessage.cs" />
     <Compile Include="Infrastructure\Messages\DeleteProjectMessage.cs" />

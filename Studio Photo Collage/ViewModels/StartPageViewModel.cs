@@ -172,11 +172,15 @@ namespace Studio_Photo_Collage.ViewModels
                     RecentProjects[index] = new Tuple<Project>(m.Value);
                 }
             });
-            Messenger.Register<DeleteAllProjectMessage>(this,
-                (r, m) =>{
+            Messenger.Register<DeleteAllProjectMessage>(this,(r, m) =>{
                     RecentProjects.Clear();
                     IsRecentCollagesOpen = false;
                 });
+            Messenger.Register<DeleteProjectMessage>(this, (r, m) =>
+             {
+                 var index = RecentProjects.IndexOf(RecentProjects.Where(x => x.Item1 == m.Value).FirstOrDefault());
+                 RecentProjects.RemoveAt(index);
+             });
         }
 
         private async void InitializeAsync()

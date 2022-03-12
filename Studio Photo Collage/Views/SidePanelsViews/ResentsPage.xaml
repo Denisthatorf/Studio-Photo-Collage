@@ -5,6 +5,7 @@
     xmlns:converters="using:Studio_Photo_Collage.Infrastructure.Converters"
     xmlns:local="using:Studio_Photo_Collage.Views.SidePanelsViews"
     xmlns:controle="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:usercontroles="using:Studio_Photo_Collage.UserControles"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -39,7 +40,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button    Command="{Binding ElementName=Templates, 
+                        <!--<Button Command="{Binding ElementName=Templates, 
                                     Path=DataContext.ProjectCommand}"
                                     CommandParameter="{Binding}"
                                 
@@ -47,7 +48,16 @@
                                     CornerRadius="0"
                                     Background="Transparent" Padding="0"
                                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                                    Width="98" Height="98" Margin="0,0,4,4"/>
+                                    Width="98" Height="98" Margin="0,0,4,4"/>-->
+                        <usercontroles:BtnWithBluring 
+                                x:Name="myButton"
+                                Width="98" Height="98"
+                                Project="{Binding}" 
+                                Margin="0,0,8,0"
+                                MyCommand="{Binding ElementName=Templates, 
+                                Path=DataContext.ProjectCommand, Mode=OneWay}"
+                                RemoveProjectCommand="{Binding ElementName=Templates, 
+                                Path=DataContext.RecentCollageDeleteOneProjectCommand, Mode=OneWay}"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

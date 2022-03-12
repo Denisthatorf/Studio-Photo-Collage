@@ -18,6 +18,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
         private ObservableCollection<Project> projects;
         private ICommand projectCommand;
         private ICommand removeAllCollagesCommand;
+        private ICommand recentCollageDeleteCommand;
 
         public ObservableCollection<Project> Projects
         {
@@ -70,6 +71,23 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
                 return removeAllCollagesCommand;
             }
         }
+        public ICommand RecentCollageDeleteOneProjectCommand
+        {
+            get
+            {
+                if (recentCollageDeleteCommand == null)
+                {
+                    recentCollageDeleteCommand = new RelayCommand<Project>((parameter) =>
+                    {
+                        var removedProject = Projects.Where(x => x == parameter).FirstOrDefault();
+                        ProjectHelper.DeleteProject(removedProject);
+                        Projects.Remove(removedProject);
+                    });
+                }
+
+                return recentCollageDeleteCommand;
+            }
+        }
 
         public RecentPageViewModel()
         {
@@ -84,15 +102,18 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
             });
             Messenger.Register<DeleteProjectMessage>(this, (r, m) =>
             {
-                if (Projects.Count == 0 || Projects.Contains(m.Value))
-                {
-                    Projects.Remove(m.Value);
-                }
-                else
-                {
-                    var index = Projects.IndexOf(Projects.Where((x) => x == m.Value).FirstOrDefault());
-                    Projects[index] = m.Value;
-                }
+                    if (Projects.Count == 0 || Projects.Contains(m.Value))
+                    {
+                        Projects.Remove(m.Value);
+                    }
+                    else
+                    {
+                        var index = Projects.IndexOf(Projects.Where((x) => x == m.Value).FirstOrDefault());
+                        if(index != -1)
+                        {
+                        Projects[index] = m.Value;
+                        }
+                    }
             });
 
             Messenger.Register<DeleteAllProjectMessage>(this,
