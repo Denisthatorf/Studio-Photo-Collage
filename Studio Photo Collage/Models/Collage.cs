@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using ColorHelper = Microsoft.Toolkit.Uwp.Helpers.ColorHelper;
 using Windows.UI.Popups;
+using Windows.Storage;
 
 namespace Studio_Photo_Collage.Models
 {
@@ -37,31 +38,20 @@ namespace Studio_Photo_Collage.Models
                 return null;
             }
         }
+        public ScrollViewer SelectedScrollViewer
+        {
+            get => SelectedToggleBtn?.Content as ScrollViewer;
+        }
         public Image SelectedImage
         {
-            get => SelectedToggleBtn?.Content as Image;
+            get => SelectedScrollViewer?.Content as Image;
         }
-        public int SelectedImageNumberInList
+        public int SelectedImageNumberInList 
         {
-            get
-            {
-                var result = -1;
-                var grid = MainGrid as Grid;
-                for (int i = 0; i < grid.Children.Count; i++)
-                {
-                    var gridInGrid = grid.Children[i] as Grid;
-                    var ToggleBtn = gridInGrid.Children[0] as ToggleButton;
-                    if ((bool)ToggleBtn.IsChecked)
-                    {
-                        result = i;
-                    }
-                }
-
-                return result;
-            }
+          get =>  SelectedToggleBtn != null ? (int) SelectedToggleBtn.CommandParameter : -1;
         }
 
-        public Project Project { get; set; }
+        public Project Project { get; }
         public UIElement CollageGrid { get; }
 
         public Collage(Project _proj)
@@ -114,34 +104,10 @@ namespace Studio_Photo_Collage.Models
             if (SelectedToggleBtn != null)
             {
                 var selectedTBtn = this.SelectedToggleBtn;
-                var numberInList = this.SelectedImageNumberInList;
-                var img = new Image();
-                img.Stretch = Windows.UI.Xaml.Media.Stretch.Fill;
-
                 var file = await ImageHelper.OpenFilePicker();
-
                 if (file != null)
                 {
-                    selectedTBtn.Content = GetLoadingRing();
-                    using (var fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read))
-                    {
-                        try
-                        {
-                            var decoder = await BitmapDecoder.CreateAsync(fileStream);
-                            var source = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
-                            await source.SetSourceAsync(fileStream);
-                            selectedTBtn.Content = img;
-                            Project.ImageArr[numberInList] = await ImageHelper.SaveToStringBase64Async(source);
-                            img.Source = source;
-                            
-                        }
-                        catch 
-                        {
-                            selectedTBtn.Content = GetPlusSignIcon();
-                            var messageDialog = new MessageDialog("Image has not right format or it is to big");
-                            await messageDialog.ShowAsync();
-                        }
-                    }
+                    await SetBtnContentAsync(selectedTBtn, file);
                 }
             }
         }
@@ -190,7 +156,7 @@ namespace Studio_Photo_Collage.Models
             toggleBtn.Style = Application.Current.Resources["TemplatesToggleButton"] as Style;
 
             RestoreBtnContentAsync(toggleBtn, numberInList);
-            toggleBtn.CommandParameter = numberInList; // number in PhotoArray
+            toggleBtn.CommandParameter = numberInList;
             toggleBtn.Checked += (o, e) =>
             {
                 var Tbtn = o as ToggleButton;
@@ -214,23 +180,87 @@ namespace Studio_Photo_Collage.Models
                 }
             }
         }
+
         private async void RestoreBtnContentAsync(ToggleButton toggleBtn, int imgNumberInList)
         {
             toggleBtn.Content = GetLoadingRing();
 
             var img = new Image();
-            img.Stretch = Stretch.Fill;
+            img.Stretch = Stretch.UniformToFill;
 
             await ImageHelper.SetImgSourceFromBase64Async(img, Project.ImageArr?[imgNumberInList]);
 
+            var scrollViewer = GetScrollViewer(img.Source as WriteableBitmap);
+            scrollViewer.Content = img;
+
             if (img.Source != null)
             {
-                toggleBtn.Content = img;
+                toggleBtn.Content = scrollViewer;
             }
             else
             {
                 toggleBtn.Content = GetPlusSignIcon();
             }
+        }
+
+        private async Task SetBtnContentAsync(ToggleButton selectedTBtn, StorageFile file)
+        {
+            selectedTBtn.Content = GetLoadingRing();
+            var numberInList = (int)selectedTBtn.CommandParameter;
+
+            using (var fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read))
+            {
+                try
+                {
+                    var decoder = await BitmapDecoder.CreateAsync(fileStream);
+                    var source = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
+
+                    await source.SetSourceAsync(fileStream);
+                    Project.ImageArr[numberInList] = await ImageHelper.SaveToStringBase64Async(source);
+
+                    var img = new Image();
+                    img.Stretch = Windows.UI.Xaml.Media.Stretch.Uniform;
+                    img.Source = source;
+
+                    var scrollViewer = GetScrollViewer(source);
+                    scrollViewer.Content = img;
+
+                    selectedTBtn.Content = scrollViewer;
+
+                }
+                catch
+                {
+                    selectedTBtn.Content = GetPlusSignIcon();
+                    var messageDialog = new MessageDialog("Image has not right format or it's too big");
+                    await messageDialog.ShowAsync();
+                }
+            }
+        }
+
+        private ScrollViewer GetScrollViewer(WriteableBitmap bitmap)
+        {
+            var scrollViewer = new ScrollViewer();
+
+            scrollViewer.ZoomMode = ZoomMode.Enabled;
+
+            scrollViewer.HorizontalContentAlignment = HorizontalAlignment.Stretch;
+            scrollViewer.VerticalContentAlignment = VerticalAlignment.Stretch;
+
+            scrollViewer.HorizontalScrollMode = ScrollMode.Enabled;
+            scrollViewer.VerticalScrollMode = ScrollMode.Enabled;
+
+            scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
+            scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+
+            if(bitmap != null)
+            {
+                var minZoomFactor = bitmap.PixelWidth < bitmap.PixelHeight ?
+               bitmap.PixelWidth * 1f / bitmap.PixelHeight :
+               bitmap.PixelHeight * 1f / bitmap.PixelWidth;
+               scrollViewer.MinZoomFactor = minZoomFactor;
+            }
+            //scrollViewer.Zoom
+            return scrollViewer;
         }
         private FontIcon GetPlusSignIcon()
         {

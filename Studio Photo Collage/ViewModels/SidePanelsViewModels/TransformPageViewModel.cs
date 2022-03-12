@@ -3,6 +3,7 @@ using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using Studio_Photo_Collage.Infrastructure.Messages;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -66,13 +67,13 @@ namespace Studio_Photo_Collage.ViewModels.SidePanels
         public ICommand ZoomInCommand => zoomInCommand
             ?? (zoomInCommand = new RelayCommand(() =>
             {
-                throw new NotImplementedException();
+                Messenger.Send(new ZoomMessage(ZoomType.ZoomIn));
             }));
 
         public ICommand ZoomOut => zoomOutCommand
             ?? (zoomOutCommand = new RelayCommand(() =>
             {
-                throw new NotImplementedException();
+                Messenger.Send(new ZoomMessage(ZoomType.ZoomOut));
             }));
 
 
