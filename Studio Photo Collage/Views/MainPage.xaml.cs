@@ -39,6 +39,10 @@ namespace Studio_Photo_Collage.Views
             VM.LoadPage(InkCanv.InkPresenter);
 
             Window.Current.SetTitleBar(MainTitleBar);
+
+            this.PointerPressed += (o, e) =>
+            {
+            };
         }
 
         private void Save_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
