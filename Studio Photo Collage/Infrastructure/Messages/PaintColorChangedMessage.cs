@@ -8,9 +8,9 @@ using Windows.UI;
 
 namespace Studio_Photo_Collage.Infrastructure.Messages
 {
-    public class PainColorChangedMessage : ValueChangedMessage<Color>
+    public class PaintColorChangedMessage : ValueChangedMessage<Color>
     {
-        public PainColorChangedMessage(Color value) : base(value)
+        public PaintColorChangedMessage(Color value) : base(value)
         {
         }
     }

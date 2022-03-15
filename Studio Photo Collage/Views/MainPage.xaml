@@ -11,10 +11,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    DataContext="{Binding MainPageInstance, Source={StaticResource Locator}}"
     x:Name="Page"
     Background="Gray"
     SizeChanged="Page_SizeChanged">
+    <!--DataContext="{Binding MainPageInstance, Source={StaticResource Locator}}"-->
 
     <Page.Resources>
         <converters:EnumValueConverter x:Key="EnumValueConverter"/>
@@ -110,14 +110,6 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-                <InkCanvas x:Name="InkCanv"
-                       Grid.Column="1" Grid.Row="1"
-                       Visibility="{Binding ElementName=Paint,
-                       Path=IsChecked, 
-                       Converter={StaticResource BooleanToVisibilityConverter}}"
-                       Width="{Binding ElementName=CollagePresenter, Path=Width}" 
-                       Height="{Binding ElementName=CollagePresenter, Path=Height}"/>
-
             <ContentPresenter x:Name="CollagePresenter" 
                               Grid.Column="1" Grid.Row="1"
                               Margin="24"
@@ -129,7 +121,14 @@
                               Margin="-100000,0,0,0"
                               Width="1000" Height="1000"
                               Content="{Binding RenderCollage}"/>
-          
+
+            <InkCanvas x:Name="InkCanv"
+                       Grid.Column="1" Grid.Row="1"
+                       Visibility="{Binding ElementName=Paint,
+                       Path=IsChecked, 
+                       Converter={StaticResource BooleanToVisibilityConverter}}"
+                       Width="{Binding ElementName=CollagePresenter, Path=Width}" 
+                       Height="{Binding ElementName=CollagePresenter, Path=Height}"/>
 
             <usercontroles:CustomInkToolBar x:Name="InkToolbar"
                         VerticalAlignment="Bottom" HorizontalAlignment="Center"
@@ -282,7 +281,7 @@
                 <Frame x:Name="SidePanel" 
                        Visibility="Collapsed"
                        Background="{ThemeResource MainBackgroundColor}"
-                        Height="{Binding ElementName=Page, Path=ActualHeight}"
+                       Height="{Binding ElementName=Page, Path=ActualHeight}"
                        Width="245"/>
             </Popup>
 

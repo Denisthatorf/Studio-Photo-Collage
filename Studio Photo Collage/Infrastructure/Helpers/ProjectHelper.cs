@@ -8,6 +8,7 @@ using Studio_Photo_Collage.Infrastructure.Messages;
 using Studio_Photo_Collage.Models;
 using Studio_Photo_Collage.Views.PopUps;
 using Windows.Storage;
+using Windows.UI.Input.Inking;
 
 namespace Studio_Photo_Collage.Infrastructure.Helpers
 {
@@ -30,10 +31,12 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             var removedProject = projects.Where(x => x == project).FirstOrDefault();
 
             projects.Remove(removedProject);
+            await InkCanvasHelper.DeleteStrokeFileByUid(project.uid.ToString());
+
             WeakReferenceMessenger.Default.Send(new DeleteProjectMessage(removedProject));
         }
 
-        public static async void SaveProjectInJson(Project project)
+        public static async void SaveProject(Project project, InkPresenter inkPresenter)
         {
             var projects = await GetProjectsFromFile();
             if (projects == null)
@@ -52,7 +55,7 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             }
 
             await ApplicationData.Current.LocalFolder.SaveAsync("projects", projects);
-
+            await InkCanvasHelper.SaveStrokesAsync(inkPresenter, project.uid.ToString());
             WeakReferenceMessenger.Default.Send(new ProjectSavedMessage(project));
         }
 

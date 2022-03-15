@@ -10,6 +10,7 @@ using Studio_Photo_Collage.Infrastructure.Messages;
 using Studio_Photo_Collage.Models;
 using Studio_Photo_Collage.Views.PopUps;
 using Windows.Storage;
+using Windows.UI.Xaml.Controls;
 
 namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
 {
@@ -32,12 +33,12 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
             {
                 if (projectCommand == null)
                 {
-                    projectCommand = new RelayCommand<Project>(async (parametr) =>
+                    projectCommand = new RelayCommand<Project>(async (parameter) =>
                     {
                         var dialogResult = await Messenger.Send(new SaveProjectRequestMessage());
                         if (dialogResult != Windows.UI.Xaml.Controls.ContentDialogResult.None)
                         {
-                            Messenger.Send(parametr);
+                            Messenger.Send(parameter);
                         }
                     });
                 }
@@ -55,7 +56,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
                     {
                         if (Projects != null)
                         {
-                            var dialog = new ConfirmDialog();
+                            var dialog = new ConfirmDialog("all");
                             var result = await dialog.ShowAsync();
 
                             if (result.ToString() == "Primary") //yes
@@ -77,11 +78,17 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
             {
                 if (recentCollageDeleteCommand == null)
                 {
-                    recentCollageDeleteCommand = new RelayCommand<Project>((parameter) =>
+                    recentCollageDeleteCommand = new RelayCommand<Project>(async(parameter) =>
                     {
-                        var removedProject = Projects.Where(x => x == parameter).FirstOrDefault();
-                        ProjectHelper.DeleteProject(removedProject);
-                        Projects.Remove(removedProject);
+                        var dialog = new ConfirmDialog("this");
+                        var result = await dialog.ShowAsync();
+
+                        if (result == ContentDialogResult.Primary)
+                        {
+                            var removedProject = Projects.Where(x => x == parameter).FirstOrDefault();
+                            ProjectHelper.DeleteProject(removedProject);
+                            Projects.Remove(removedProject);
+                        }
                     });
                 }
 

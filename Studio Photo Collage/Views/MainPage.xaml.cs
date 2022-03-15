@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.Graphics.Canvas;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Studio_Photo_Collage.Infrastructure.Helpers;
+using Studio_Photo_Collage.ViewModels;
 using Studio_Photo_Collage.Views.PopUps;
 using Windows.Graphics.Display;
 using Windows.Graphics.Imaging;
@@ -24,17 +26,19 @@ using ColorHelper = Microsoft.Toolkit.Uwp.Helpers.ColorHelper;
 
 namespace Studio_Photo_Collage.Views
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MainPage : Page
     {
+        MainPageViewModel VM => Ioc.Default.GetService<MainPageViewModel>();
+
         public Frame RootFrame => SidePanel;
         public MainPage()
         {
             this.InitializeComponent();
+
+            this.DataContext = VM;
+            VM.LoadPage(InkCanv.InkPresenter);
+
             Window.Current.SetTitleBar(MainTitleBar);
-            // PaintFrame.Navigate(typeof(PaintPopUpPage)); 
         }
 
         private void Save_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)

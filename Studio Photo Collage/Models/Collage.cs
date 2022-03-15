@@ -12,11 +12,16 @@ using Microsoft.Toolkit.Uwp.UI.Controls;
 using ColorHelper = Microsoft.Toolkit.Uwp.Helpers.ColorHelper;
 using Windows.UI.Popups;
 using Windows.Storage;
+using System.Collections.Generic;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 
 namespace Studio_Photo_Collage.Models
 {
     public class Collage
     {
+        private Project project;
+        public bool IsSaved { get; set; }
         public UIElement BackgroundGrid => (CollageGrid as Grid).Children[0];
         public UIElement MainGrid => (CollageGrid as Grid).Children[1];
 
@@ -46,20 +51,40 @@ namespace Studio_Photo_Collage.Models
         {
             get => SelectedScrollViewer?.Content as Image;
         }
-        public int SelectedImageNumberInList 
+        public int SelectedImageNumberInList
         {
-          get =>  SelectedToggleBtn != null ? (int) SelectedToggleBtn.CommandParameter : -1;
+            get => SelectedToggleBtn != null ? (int)SelectedToggleBtn.CommandParameter : -1;
         }
 
-        public Project Project { get; }
+        public Project Project
+        {
+            get
+            {
+                IsSaved = false;
+                return project;
+            }
+        }
         public UIElement CollageGrid { get; }
 
         public Collage(Project _proj)
         {
-            Project = _proj;
+            project = _proj;
             CollageGrid = CreateCollage();
         }
         public Collage() { }
+
+        public List<ToggleButton> GetListOfBtns()
+        {
+            var result = new List<ToggleButton>();
+            var grid = MainGrid as Grid;
+            for (int i = 0; i < grid.Children.Count; i++)
+            {
+                var gridInGrid = grid.Children[i] as Grid;
+                var troggleBtn = gridInGrid.Children[0] as ToggleButton;
+                result.Add(troggleBtn);
+            }
+            return result;
+        }
 
         public void UpdateUIAsync()
         {
@@ -99,7 +124,7 @@ namespace Studio_Photo_Collage.Models
                 SelectedToggleBtn.Content = GetPlusSignIcon();
             }
         }
-        public async void SetImgByFilePickerToSelectedBtn()
+        public async Task SetImgByFilePickerToSelectedBtn()
         {
             if (SelectedToggleBtn != null)
             {
@@ -157,12 +182,13 @@ namespace Studio_Photo_Collage.Models
 
             RestoreBtnContentAsync(toggleBtn, numberInList);
             toggleBtn.CommandParameter = numberInList;
-            toggleBtn.Checked += (o, e) =>
+            toggleBtn.Checked += async (o, e) =>
             {
                 var Tbtn = o as ToggleButton;
                 var comPar = (int)Tbtn.CommandParameter;
                 UnCheckedAnothersBtns(comPar);
-                SetImgByFilePickerToSelectedBtn();
+                await SetImgByFilePickerToSelectedBtn();
+                var scroll = Tbtn.Content as ScrollViewer;
             };
             return toggleBtn;
         }
@@ -181,16 +207,16 @@ namespace Studio_Photo_Collage.Models
             }
         }
 
-        private async void RestoreBtnContentAsync(ToggleButton toggleBtn, int imgNumberInList)
+        private async void RestoreBtnContentAsync(ToggleButton toggleBtn, int numberInList)
         {
             toggleBtn.Content = GetLoadingRing();
 
             var img = new Image();
-            img.Stretch = Stretch.UniformToFill;
+            img.Stretch = Stretch.Uniform;
 
-            await ImageHelper.SetImgSourceFromBase64Async(img, Project.ImageArr?[imgNumberInList]);
+            await ImageHelper.SetImgSourceFromBase64Async(img, Project.ImageArr?[numberInList]);
 
-            var scrollViewer = GetScrollViewer(img.Source as WriteableBitmap);
+            var scrollViewer = GetScrollViewer(img.Source as WriteableBitmap, numberInList);
             scrollViewer.Content = img;
 
             if (img.Source != null)
@@ -219,7 +245,7 @@ namespace Studio_Photo_Collage.Models
                     Project.ImageArr[numberInList] = await ImageHelper.SaveToStringBase64Async(source);
 
                     var img = new Image();
-                    img.Stretch = Windows.UI.Xaml.Media.Stretch.Uniform;
+                    img.Stretch = Windows.UI.Xaml.Media.Stretch.UniformToFill;
                     img.Source = source;
 
                     var scrollViewer = GetScrollViewer(source);
@@ -236,8 +262,7 @@ namespace Studio_Photo_Collage.Models
                 }
             }
         }
-
-        private ScrollViewer GetScrollViewer(WriteableBitmap bitmap)
+        private ScrollViewer GetScrollViewer(WriteableBitmap bitmap, int numberInList = -1)
         {
             var scrollViewer = new ScrollViewer();
 
@@ -252,14 +277,69 @@ namespace Studio_Photo_Collage.Models
             scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
             scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
 
-            if(bitmap != null)
+            scrollViewer.Loaded += (ol, el) =>
             {
-                var minZoomFactor = bitmap.PixelWidth < bitmap.PixelHeight ?
-               bitmap.PixelWidth * 1f / bitmap.PixelHeight :
-               bitmap.PixelHeight * 1f / bitmap.PixelWidth;
-               scrollViewer.MinZoomFactor = minZoomFactor;
+
+                var scrollV = ol as ScrollViewer;
+                if (bitmap != null)
+                {
+                    var bitmapRatio = bitmap.PixelWidth * 1f / bitmap.PixelHeight;
+
+                    if(bitmapRatio < 1f)
+                    {
+                        scrollV.MinZoomFactor = scrollV.ActualWidth < scrollV.ActualHeight ?
+                        (float)(scrollV.ActualWidth / bitmap.PixelWidth) :
+                        (float)(scrollV.ActualHeight / bitmap.PixelHeight);
+                    }
+                    else
+                    {
+                        scrollV.MinZoomFactor = scrollV.ActualWidth > scrollV.ActualHeight ?
+                        (float)(scrollV.ActualWidth / bitmap.PixelWidth) :
+                        (float)(scrollV.ActualHeight / bitmap.PixelHeight);
+                    }    
+                }
+                scrollV.RegisterPropertyChangedCallback(ScrollViewer.ZoomFactorProperty, (o, e) =>
+                {
+                    var scroll = o as ScrollViewer;
+                    var btn = scroll.Parent as ToggleButton;
+                    var nInList = (int)btn.CommandParameter;
+                    Project.ZoomsArr[nInList].ZoomFactor = scroll.ZoomFactor;
+                    IsSaved = false;
+                });
+                scrollV.RegisterPropertyChangedCallback(ScrollViewer.HorizontalOffsetProperty, (o, e) =>
+                {
+                    var scroll = o as ScrollViewer;
+                    var btn = scroll.Parent as ToggleButton;
+                    var nInList = (int)btn.CommandParameter;
+                    Project.ZoomsArr[nInList].HorizontalOffset = scroll.HorizontalOffset;
+                    IsSaved = false;
+                });
+                scrollV.RegisterPropertyChangedCallback(ScrollViewer.VerticalOffsetProperty, (o, e) =>
+                {
+                    var scroll = o as ScrollViewer;
+                    var btn = scroll.Parent as ToggleButton;
+                    var nInList = (int)btn.CommandParameter;
+                    Project.ZoomsArr[nInList].VerticalOffset = scroll.VerticalOffset;
+                    IsSaved = false;
+                });
+            };
+
+            if (numberInList == -1)
+            {
+                scrollViewer.Loaded += (o, e) =>
+                {
+                    (o as ScrollViewer).ChangeView(null, null, (o as ScrollViewer).MinZoomFactor);
+                };
             }
-            //scrollViewer.Zoom
+            else
+            {
+                scrollViewer.Loaded += (o, e) =>
+                {
+                    var zoom = Project.ZoomsArr[numberInList];
+                    (o as ScrollViewer).ChangeView(zoom.HorizontalOffset, zoom.VerticalOffset, zoom.ZoomFactor, false);
+                };
+            }
+
             return scrollViewer;
         }
         private FontIcon GetPlusSignIcon()

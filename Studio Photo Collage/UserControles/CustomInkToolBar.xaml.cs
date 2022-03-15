@@ -21,8 +21,6 @@ namespace Studio_Photo_Collage.UserControles
 {
     public sealed partial class CustomInkToolBar : UserControl
     {
-
-
         public InkCanvas InkCanv
         {
             get { return (InkCanvas)GetValue(InkCanvProperty); }
@@ -41,6 +39,8 @@ namespace Studio_Photo_Collage.UserControles
 
             (e.NewValue as InkCanvas).InkPresenter.InputDeviceTypes
                = Windows.UI.Core.CoreInputDeviceTypes.Mouse | Windows.UI.Core.CoreInputDeviceTypes.Pen;
+
+            (e.NewValue as InkCanvas).InkPresenter.InputProcessingConfiguration.Mode = InkInputProcessingMode.None;
         }
 
         public CustomInkToolBar()
@@ -66,11 +66,13 @@ namespace Studio_Photo_Collage.UserControles
         private void RubberAppBarToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             Pen.IsChecked = false;
+            InkCanv.InkPresenter.InputProcessingConfiguration.Mode = InkInputProcessingMode.Erasing;
         }
 
         private void PenAppBarToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             Rubber.IsChecked = false;
+            InkCanv.InkPresenter.InputProcessingConfiguration.Mode = InkInputProcessingMode.Inking;
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

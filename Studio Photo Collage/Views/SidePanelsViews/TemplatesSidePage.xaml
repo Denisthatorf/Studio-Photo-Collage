@@ -34,10 +34,13 @@
         
     </Page.Resources>
 
-    <StackPanel>
-        <TextBlock Style="{StaticResource Header}" Text="Templates"/>
+    <ScrollViewer VerticalScrollBarVisibility="Visible">
+        <StackPanel>
+            <TextBlock Style="{StaticResource Header}" Text="Templates"/>
 
-        <usercontroles:CustomTreeView ItemsSource="{Binding TemplateCollection}" 
+            <usercontroles:CustomTreeView ItemsSource="{Binding TemplateCollection}" 
                                       CommandsForBtns="{Binding TemplateOnMainPageClickCommand}"/>
-    </StackPanel>
+            <Grid Height="100"/>
+        </StackPanel>
+    </ScrollViewer>
 </Page>

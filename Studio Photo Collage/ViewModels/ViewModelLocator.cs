@@ -28,7 +28,7 @@ namespace Studio_Photo_Collage.ViewModels
             services.AddSingleton<PaintPopUpPageViewModel>();
 
             services.AddSingleton<FramesPageViewModel>();
-            services.AddSingleton<BackgroundPageViewModel>();
+            services.AddSingleton(new BackgroundPageViewModel());
             services.AddSingleton<FiltersPageViewModel>();
             services.AddSingleton<RecentPageViewModel>();
             services.AddSingleton<TemplatePageViewModel>();

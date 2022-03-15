@@ -47,8 +47,8 @@
             <Run>
                 Do you really want to remove
             </Run>
-            <Run Text="{x:Bind AllOrThis}"/>
-            <Run>
+            <Run x:Name="AllOrThis"/>
+            <Run x:Name="CollageOrcollageS">
                 collage?
             </Run>
         </TextBlock>

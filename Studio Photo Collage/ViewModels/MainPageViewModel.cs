@@ -12,20 +12,17 @@ using Studio_Photo_Collage.Infrastructure.Services;
 using Studio_Photo_Collage.Models;
 using Studio_Photo_Collage.Views;
 using Studio_Photo_Collage.Views.PopUps;
-using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.Graphics.Imaging;
-using Windows.Graphics.Printing;
 using Windows.Media.Capture;
 using Windows.Storage;
 using Windows.UI;
-using Windows.UI.Core;
+using Windows.UI.Input.Inking;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Printing;
 
 namespace Studio_Photo_Collage.ViewModels
 {
@@ -42,6 +39,7 @@ namespace Studio_Photo_Collage.ViewModels
         private Collage currentCollage;
         private Grid renderCollage;
         private Color paintColor;
+        private InkPresenter inkPresenter;
 
         public Color PaintColor
         {
@@ -53,10 +51,12 @@ namespace Studio_Photo_Collage.ViewModels
         }
         public Collage CurrentCollage
         {
-            get => currentCollage;
+            get
+            {
+                return currentCollage;
+            }
             set => SetProperty(ref currentCollage, value);
         }
-
         public Grid RenderCollage
         {
             get => renderCollage;
@@ -138,7 +138,7 @@ namespace Studio_Photo_Collage.ViewModels
             {
                 if (addImageCommand == null)
                 {
-                    addImageCommand = new RelayCommand(() => CurrentCollage.SetImgByFilePickerToSelectedBtn());
+                    addImageCommand = new RelayCommand(() => _ = CurrentCollage.SetImgByFilePickerToSelectedBtn());
                 }
 
                 return addImageCommand;
@@ -163,6 +163,27 @@ namespace Studio_Photo_Collage.ViewModels
             MessengersRegistration();      
         }
 
+        public void LoadPage(InkPresenter inkPresenter)
+        {
+            this.inkPresenter = inkPresenter;
+        }
+
+        public async void GoBack()
+        {
+            var result = ContentDialogResult.None;
+            if (!CurrentCollage.IsSaved)
+            {
+                result = await SaveProjectBySaveDialogAsync();
+            }
+
+            if (result != ContentDialogResult.None)
+            {
+                CheckBoxesEnum = null;
+                CurrentCollage = null;
+                navigationService.Navigate(typeof(TemplatePage));
+            }
+        }
+
         public async Task<ContentDialogResult> SaveProjectBySaveDialogAsync()
         {
             var dialog = new SaveDialog();
@@ -173,22 +194,10 @@ namespace Studio_Photo_Collage.ViewModels
             if (result == ContentDialogResult.Primary)
             {
                 CurrentCollage.Project.ProjectName = dialog.ProjectName;
-                ProjectHelper.SaveProjectInJson(CurrentCollage.Project);
+                ProjectHelper.SaveProject(CurrentCollage.Project, inkPresenter);
             }
 
             return result;
-        }
-
-        public async void GoBack()
-        {
-            var result = await SaveProjectBySaveDialogAsync();
-
-            if (result != ContentDialogResult.None)
-            {
-                CheckBoxesEnum = null;
-                CurrentCollage = null;
-                navigationService.Navigate(typeof(TemplatePage));
-            }
         }
 
         private async void SaveCollageAsImageBySaveImageDialogAsync()
@@ -248,8 +257,11 @@ namespace Studio_Photo_Collage.ViewModels
             if (result == ContentDialogResult.Primary)
             {
                 CurrentCollage.Project.ProjectName = dialog.ProjectName;
-                ProjectHelper.SaveProjectInJson(CurrentCollage.Project);
+                ProjectHelper.SaveProject(CurrentCollage.Project, inkPresenter);
             }
+
+            var collage = CurrentCollage;
+            collage.IsSaved = true;
         }
 
         private void CheckBoxesEnumValueChange()
@@ -287,9 +299,13 @@ namespace Studio_Photo_Collage.ViewModels
 
         private void MessengersRegistration()
         {
-
-            Messenger.Register<Project>(this, (r, m) =>
-            CurrentCollage = new Collage(m));
+            Messenger.Register<Project>(this, async(r, m) => 
+            {
+                CurrentCollage = new Collage(m);
+                Messenger.Send(new NewCollageBackgroundOpacityMessage(m.BorderOpacity));
+                Messenger.Send(new NewCollageBorderThicknessMessage(m.BorderThickness));
+                await InkCanvasHelper.RestoreStrokesAsync(inkPresenter, m.uid.ToString());
+            });
 
             Messenger.Register<BorderThicknessChangedMessage>(this, (r, m) =>
             {
@@ -305,7 +321,14 @@ namespace Studio_Photo_Collage.ViewModels
 
             Messenger.Register<SaveProjectRequestMessage>(this, (r, m) =>
             {
-                m.Reply(SaveProjectBySaveDialogAsync());
+                if (CurrentCollage.IsSaved)
+                {
+                    m.Reply(ContentDialogResult.Primary);   
+                }
+                else
+                {
+                    m.Reply(SaveProjectBySaveDialogAsync());
+                }
             });
 
             Messenger.Register<ImageBrush>(this, async (r, m) =>
@@ -338,7 +361,7 @@ namespace Studio_Photo_Collage.ViewModels
                         = await ImageHelper.SaveToStringBase64Async(selectedimg.Source);
                 }
             });
-            Messenger.Register<PainColorChangedMessage>(this, (r, m) => PaintColor = m.Value);
+            Messenger.Register<PaintColorChangedMessage>(this, (r, m) => PaintColor = m.Value);
 
             Messenger.Register<ZoomMessage>(this, (r, m) =>
             {
@@ -348,11 +371,22 @@ namespace Studio_Photo_Collage.ViewModels
                 {
                     if (m.Value == ZoomType.ZoomIn)
                     {
-                        scroll.ChangeView(null, null, scroll.ZoomFactor + 0.5f);
+                        var height = scroll.ExtentHeight;
+                        var width = scroll.ExtentWidth;
+                        scroll.ChangeView(width / 2, height / 2, scroll.ZoomFactor + 0.5f);
+
+                        //var vOffset = scroll.VerticalOffset;
+                        //var hOffset = scroll.HorizontalOffset;
+
+                        //var hh = (height - vOffset) / 2  + vOffset;
+                        //var ww = (Width - hOffset) / 2 + hOffset;
+                        //scroll.ChangeView(null, null, scroll.ZoomFactor + 0.5f);
                     }
                     else
                     {
-                        scroll.ChangeView(null, null, scroll.ZoomFactor - 0.5f);
+                        var height = scroll.ExtentHeight;
+                        var width = scroll.ExtentWidth;
+                        scroll.ChangeView(height / 2, width / 2, scroll.ZoomFactor - 0.5f);
                     }
                 }
             });

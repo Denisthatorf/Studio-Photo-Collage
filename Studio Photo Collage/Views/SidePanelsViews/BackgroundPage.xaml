@@ -12,7 +12,9 @@
     d:Width="245"
     d:Height="500">
 
-    <ScrollViewer>
+    <ScrollViewer VerticalScrollBarVisibility="Visible" 
+                  VerticalAlignment="Stretch"
+                  VerticalScrollMode="Enabled">
         <StackPanel>
             <TextBlock Text="Background"  x:Uid="BackgroudHeader"
                        Style="{StaticResource Header}"/>
@@ -64,7 +66,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            
+            <Grid Height="100"></Grid>
         </StackPanel>
     </ScrollViewer>
 </Page>

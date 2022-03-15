@@ -39,11 +39,17 @@ namespace Studio_Photo_Collage.ViewModels
             {
                 if (recentCollageDeleteCommand == null)
                 {
-                    recentCollageDeleteCommand = new RelayCommand<Project>((parameter) =>
+                    recentCollageDeleteCommand = new RelayCommand<Project>(async (parameter) =>
                     {
-                        var removedProject = RecentProjects.Where(x => x.Item1 == parameter).FirstOrDefault();
-                        ProjectHelper.DeleteProject(removedProject?.Item1);
-                        RecentProjects.Remove(removedProject);
+                        var dialog = new ConfirmDialog("this");
+                        var result = await dialog.ShowAsync();
+
+                        if(result == ContentDialogResult.Primary)
+                        {
+                            var removedProject = RecentProjects.Where(x => x.Item1 == parameter).FirstOrDefault();
+                            ProjectHelper.DeleteProject(removedProject?.Item1);
+                            RecentProjects.Remove(removedProject);
+                        }
                     });
                 }
 
@@ -70,7 +76,7 @@ namespace Studio_Photo_Collage.ViewModels
                 {
                     recentCollCloseCommand = new RelayCommand<object>(async (parametr) =>
                     {
-                        var dialog = new ConfirmDialog();
+                        var dialog = new ConfirmDialog("this");
                         var result = await dialog.ShowAsync();
                         if (result.ToString() == "Primary") //yes
                         {

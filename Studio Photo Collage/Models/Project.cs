@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace Studio_Photo_Collage.Models
 {
     [JsonObject(MemberSerialization.Fields)]
-    public class Project
+    public class Project : ICloneable
     {
         [NonSerialized]
         private static readonly Random rnd = new Random();
-        private readonly int uid;
 
+        public readonly int uid;
         public int CountOfPhotos
         {
             get
@@ -37,6 +39,7 @@ namespace Studio_Photo_Collage.Models
         public double BorderThickness { get; set; }
         public double BorderOpacity { get; set; }
         public string[] ImageArr { get; set; }
+        public Zoom[] ZoomsArr { get; set; }
         #endregion
 
         public Project(byte[,] photoArr)
@@ -46,6 +49,12 @@ namespace Studio_Photo_Collage.Models
             BorderOpacity = 1;
             Background = "#ffff00";
             ImageArr = new string[CountOfPhotos];
+
+            ZoomsArr = new Zoom[CountOfPhotos];
+            for (int i = 0; i < ZoomsArr.Length; i++)
+            {
+                ZoomsArr[i] = new Zoom();
+            }
         }
         public Project() { }
 
@@ -103,6 +112,27 @@ namespace Studio_Photo_Collage.Models
         private void OnDeserializingMethod(StreamingContext context)
         {
             DateOfLastEditing = DateTime.Now;
+        }
+        public object Clone()
+        {
+            int row = PhotoArray.GetLength(0);
+            int column = PhotoArray.GetLength(1);
+
+            var cloneArr = new byte[row, column];
+            Array.Copy(PhotoArray, cloneArr, PhotoArray.Length);
+
+            var clone = new Project(cloneArr);
+            clone.ProjectName = ProjectName;
+            clone.DateOfLastEditing = DateOfLastEditing;
+            clone.Background = Background;
+            clone.BorderOpacity = BorderOpacity;
+            clone.BorderThickness = BorderThickness;
+            clone.ImageArr = ImageArr.Select(x => x).ToArray();
+
+            clone.ZoomsArr = new Zoom[CountOfPhotos];
+            Array.Copy(ZoomsArr, clone.ZoomsArr, ZoomsArr.Length);
+
+            return clone;
         }
     }
 }

@@ -74,6 +74,10 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
         public BackgroundPageViewModel()
         {
             Colors = ColorGenerator.GenerateBrushes();
+            Messenger.Register<NewCollageBackgroundOpacityMessage>(this, (r, m) => 
+                BorderOpacity = (int)(m.Value * 100));
+            Messenger.Register<NewCollageBorderThicknessMessage>(this, (r, m) => 
+                BordersThickness = (int)m.Value);
         }
 
         private static async void UploadBackgroundFromPhotoBtnClickMethod()

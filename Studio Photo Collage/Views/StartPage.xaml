@@ -151,8 +151,6 @@
 
                 <ScrollViewer HorizontalScrollMode="Enabled"
                               HorizontalScrollBarVisibility="Auto"
-                              IsHorizontalRailEnabled="True"
-                              IsHorizontalScrollChainingEnabled="True"
                               Width="auto">
                     <ItemsControl x:Name="T1"
                                   ItemsSource="{Binding RecentProjects}" >

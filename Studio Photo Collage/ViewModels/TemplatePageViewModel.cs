@@ -27,7 +27,7 @@ namespace Studio_Photo_Collage.ViewModels
                     templateClickCommand = new RelayCommand<Project>((parameter) =>
                     {
                         navigationService.Navigate(typeof(MainPage));
-                        WeakReferenceMessenger.Default.Send(parameter);
+                        WeakReferenceMessenger.Default.Send(parameter.Clone() as Project);
                     });
                 }
 
@@ -45,7 +45,7 @@ namespace Studio_Photo_Collage.ViewModels
                         var result = await WeakReferenceMessenger.Default.Send(new SaveProjectRequestMessage());
                         if (result != Windows.UI.Xaml.Controls.ContentDialogResult.None)
                         {
-                            WeakReferenceMessenger.Default.Send(parameter);
+                            WeakReferenceMessenger.Default.Send(parameter.Clone() as Project);
                         }
                     });
                 }

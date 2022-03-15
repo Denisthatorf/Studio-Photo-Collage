@@ -22,7 +22,7 @@ namespace Studio_Photo_Collage.ViewModels.PopUps
             {
                 hexValue = value;
                 var color = ColorHelper.FromHsl(value, 1, 0.5);
-                WeakReferenceMessenger.Default.Send(new PainColorChangedMessage(color));
+                WeakReferenceMessenger.Default.Send(new PaintColorChangedMessage(color));
             }
         }
         public int BrushSize
