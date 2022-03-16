@@ -36,7 +36,8 @@
 
     <ScrollViewer VerticalScrollBarVisibility="Visible">
         <StackPanel>
-            <TextBlock Style="{StaticResource Header}" Text="Templates"/>
+            <TextBlock Style="{StaticResource Header}" Text="Templates"
+                       Margin="0,0,0,36"/>
 
             <usercontroles:CustomTreeView ItemsSource="{Binding TemplateCollection}" 
                                       CommandsForBtns="{Binding TemplateOnMainPageClickCommand}"/>

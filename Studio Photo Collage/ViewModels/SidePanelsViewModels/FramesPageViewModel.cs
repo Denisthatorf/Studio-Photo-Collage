@@ -12,6 +12,6 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
             Colors = ColorGenerator.GenerateBrushes();
         }
 
-        public List<SolidColorBrush> Colors { get; set; }
+        public List<SolidColorBrush> Colors { get; }
     }
 }

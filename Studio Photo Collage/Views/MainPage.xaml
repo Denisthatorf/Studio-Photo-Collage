@@ -12,7 +12,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     x:Name="Page"
-    Background="Gray"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     SizeChanged="Page_SizeChanged">
     <!--DataContext="{Binding MainPageInstance, Source={StaticResource Locator}}"-->
 
@@ -83,8 +83,8 @@
             <RowDefinition Height="31"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-
-
+        
+        <controls:TileControl ImageSource="Assets/Pattern.png" Grid.Row="1"/>
 
         <Grid x:Name="MainTitleBar" 
               Background="{ThemeResource MainBackgroundColor}"
@@ -121,6 +121,9 @@
                               Margin="-100000,0,0,0"
                               Width="1000" Height="1000"
                               Content="{Binding RenderCollage}"/>
+
+            <Canvas  Grid.Column="1" Grid.Row="1"
+                     Width="400" Height="400"/>
 
             <InkCanvas x:Name="InkCanv"
                        Grid.Column="1" Grid.Row="1"

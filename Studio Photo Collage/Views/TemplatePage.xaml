@@ -6,10 +6,11 @@
     xmlns:models="using:Studio_Photo_Collage.Models"
     xmlns:converter="using:Studio_Photo_Collage.Infrastructure.Converters"
     xmlns:viewModels="using:Studio_Photo_Collage.ViewModels"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="Gray"
+     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     DataContext="{Binding TemplatePageInstance, Source={StaticResource Locator}}">
 
     <Page.Resources>
@@ -61,6 +62,9 @@
             <RowDefinition Height="31"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
+
+        <controls:TileControl ImageSource="Assets/Pattern.png" Grid.Row="1"/>
+        
         <Grid x:Name="MainTitleBar" 
               Background="{ThemeResource MainBackgroundColor}"
               HorizontalAlignment="Stretch">

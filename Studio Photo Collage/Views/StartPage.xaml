@@ -21,7 +21,7 @@
     </Page.Resources>
 
     <Grid>
-        
+
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="dsd">
@@ -57,6 +57,9 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
+
+
+        <controls:TileControl ImageSource="Assets/Pattern.png"/>
 
         <Grid x:Name="TitleBar" Margin="20,10" Height="32" VerticalAlignment="Top">
             <TextBlock FontSize="12" x:Uid="TitleBarHeaderInStartPage">Studio Collages</TextBlock>
@@ -104,19 +107,20 @@
                                     <Setter Property="Fill" Value="Aquamarine"/>
                                 </Style>
                             </Grid.Resources>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
+                        
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
 
-                            <Rectangle Grid.Column="0" Margin="0,0,0,15"/>
-                            <Rectangle Grid.Column="0" Grid.Row="1"/>
-                            <Rectangle Grid.Column="1" Grid.RowSpan="2" Margin="15,0,0,0"/>
-                        </Grid>
+                        <Image Grid.Column="1" Margin="0,0,0,8" Source="/Assets/start 2.png" Stretch="Uniform"/>
+                        <Image Grid.Column="1" Margin="0,8,0,0" Grid.Row="1"  Source="/Assets/start 3.png"  Stretch="Uniform"/>
+                        <Image Grid.Column="0" Grid.RowSpan="2"  Source="/Assets/start 1.png"  Stretch="Uniform"/>
+                    </Grid>
                         <TextBlock Text="Classic Template" 
                                    x:Uid="ClassicTemplate" x:Name="ClassicTemplateTBox"
                                    HorizontalAlignment="Center"/>
