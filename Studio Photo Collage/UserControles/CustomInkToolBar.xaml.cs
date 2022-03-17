@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Studio_Photo_Collage.Infrastructure.Events;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Input.Inking;
@@ -21,27 +22,8 @@ namespace Studio_Photo_Collage.UserControles
 {
     public sealed partial class CustomInkToolBar : UserControl
     {
-        public InkCanvas InkCanv
-        {
-            get { return (InkCanvas)GetValue(InkCanvProperty); }
-            set { SetValue(InkCanvProperty, value); }
-        }
-
-        public static readonly DependencyProperty InkCanvProperty =
-            DependencyProperty.Register("InkCanv", typeof(InkCanvas), typeof(CustomInkToolBar), new PropertyMetadata(null, OnCanvasChanged));
-
-        private static void OnCanvasChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var inkDrawingAttributes = new InkDrawingAttributes();
-            inkDrawingAttributes.Color = ColorHelper.FromHsl(0, 1, 0.5);
-            inkDrawingAttributes.Size = new Windows.Foundation.Size(2, 2);
-            (e.NewValue as InkCanvas).InkPresenter.UpdateDefaultDrawingAttributes(inkDrawingAttributes);
-
-            (e.NewValue as InkCanvas).InkPresenter.InputDeviceTypes
-               = Windows.UI.Core.CoreInputDeviceTypes.Mouse | Windows.UI.Core.CoreInputDeviceTypes.Pen;
-
-            (e.NewValue as InkCanvas).InkPresenter.InputProcessingConfiguration.Mode = InkInputProcessingMode.None;
-        }
+        public event EventHandler<InkDrawningAttributesChangeEventArgs> InkDrawningAttributesChangedEvent;
+        public event EventHandler<InkInputProcessingModeChangedEventArgs> ModeChangedEvent;
 
         public CustomInkToolBar()
         {
@@ -52,7 +34,7 @@ namespace Studio_Photo_Collage.UserControles
             var inkDrawingAttributes = new InkDrawingAttributes();
             inkDrawingAttributes.Color = ColorHelper.FromHsl(e.NewValue * 3.59, 1, 0.5);
             inkDrawingAttributes.Size = new Windows.Foundation.Size(StrokeSizeSlider.Value, StrokeSizeSlider.Value);
-            InkCanv.InkPresenter.UpdateDefaultDrawingAttributes(inkDrawingAttributes);
+            InkDrawningAttributesChangedEvent?.Invoke(this, new InkDrawningAttributesChangeEventArgs(inkDrawingAttributes));
         }
 
         private void StrokeSizeSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
@@ -60,19 +42,19 @@ namespace Studio_Photo_Collage.UserControles
             var inkDrawingAttributes = new InkDrawingAttributes();
             inkDrawingAttributes.Color = ColorHelper.FromHsl(ColorSlider.Value * 3.59, 1, 0.5);
             inkDrawingAttributes.Size = new Windows.Foundation.Size(e.NewValue, e.NewValue);
-            InkCanv.InkPresenter.UpdateDefaultDrawingAttributes(inkDrawingAttributes);
+            InkDrawningAttributesChangedEvent?.Invoke(this, new InkDrawningAttributesChangeEventArgs(inkDrawingAttributes));
         }
 
         private void RubberAppBarToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             Pen.IsChecked = false;
-            InkCanv.InkPresenter.InputProcessingConfiguration.Mode = InkInputProcessingMode.Erasing;
+            ModeChangedEvent?.Invoke(this, new InkInputProcessingModeChangedEventArgs(InkInputProcessingMode.Erasing));
         }
 
         private void PenAppBarToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             Rubber.IsChecked = false;
-            InkCanv.InkPresenter.InputProcessingConfiguration.Mode = InkInputProcessingMode.Inking;
+            ModeChangedEvent?.Invoke(this, new InkInputProcessingModeChangedEventArgs(InkInputProcessingMode.Inking));
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

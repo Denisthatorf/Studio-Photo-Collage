@@ -36,8 +36,9 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             WeakReferenceMessenger.Default.Send(new DeleteProjectMessage(removedProject));
         }
 
-        public static async void SaveProject(Project project, InkPresenter inkPresenter)
+        public static async void SaveProject(Collage collage)
         {
+            var project = collage.Project;
             var projects = await GetProjectsFromFile();
             if (projects == null)
             {
@@ -55,7 +56,14 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             }
 
             await ApplicationData.Current.LocalFolder.SaveAsync("projects", projects);
-            await InkCanvasHelper.SaveStrokesAsync(inkPresenter, project.uid.ToString());
+
+            var list = collage.GetListInkCanvases();
+            for (int i = 0; i < list.Count; i++)
+            {
+                var ink = list[i];
+                await InkCanvasHelper.SaveStrokesAsync(ink.InkPresenter, string.Concat(project.uid.ToString(), i));
+            }
+
             WeakReferenceMessenger.Default.Send(new ProjectSavedMessage(project));
         }
 

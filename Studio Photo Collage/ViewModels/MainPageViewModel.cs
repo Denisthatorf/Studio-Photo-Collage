@@ -39,7 +39,6 @@ namespace Studio_Photo_Collage.ViewModels
         private Collage currentCollage;
         private Grid renderCollage;
         private Color paintColor;
-        private InkPresenter inkPresenter;
 
         public Color PaintColor
         {
@@ -163,9 +162,38 @@ namespace Studio_Photo_Collage.ViewModels
             MessengersRegistration();      
         }
 
-        public void LoadPage(InkPresenter inkPresenter)
+        public void ActivateInkCanvas()
         {
-            this.inkPresenter = inkPresenter;
+            var inkList = CurrentCollage.GetListInkCanvases();
+            foreach (var ink in inkList)
+            {
+                ink.InkPresenter.InputDeviceTypes 
+                   = Windows.UI.Core.CoreInputDeviceTypes.Mouse | Windows.UI.Core.CoreInputDeviceTypes.Pen;
+            }
+        }
+        public void DeactivateInkCanvas()
+        {
+            var inkList = CurrentCollage.GetListInkCanvases();
+            foreach (var ink in inkList)
+            {
+                ink.InkPresenter.InputDeviceTypes = Windows.UI.Core.CoreInputDeviceTypes.None;
+            }
+        }
+        public void ChangeInkCanvasMode(InkInputProcessingMode mode)
+        {
+            var inkList = CurrentCollage.GetListInkCanvases();
+            foreach (var ink in inkList)
+            {
+                ink.InkPresenter.InputProcessingConfiguration.Mode = mode;
+            }
+        }
+        public void ChangeInkCanvasAttributes(InkDrawingAttributes attributes)
+        {
+            var inkList = CurrentCollage.GetListInkCanvases();
+            foreach (var ink in inkList)
+            {
+                ink.InkPresenter.UpdateDefaultDrawingAttributes(attributes);
+            }
         }
 
         public async void GoBack()
@@ -174,14 +202,17 @@ namespace Studio_Photo_Collage.ViewModels
             if (!CurrentCollage.IsSaved)
             {
                 result = await SaveProjectBySaveDialogAsync();
+                if (result != ContentDialogResult.None)
+                {
+                    CheckBoxesEnum = null;
+                    CurrentCollage = null;
+                    navigationService.Navigate(typeof(TemplatePage));
+                }
             }
-
-            if (result != ContentDialogResult.None)
+            else
             {
-                CheckBoxesEnum = null;
-                CurrentCollage = null;
                 navigationService.Navigate(typeof(TemplatePage));
-            }
+            }         
         }
 
         public async Task<ContentDialogResult> SaveProjectBySaveDialogAsync()
@@ -194,7 +225,7 @@ namespace Studio_Photo_Collage.ViewModels
             if (result == ContentDialogResult.Primary)
             {
                 CurrentCollage.Project.ProjectName = dialog.ProjectName;
-                ProjectHelper.SaveProject(CurrentCollage.Project, inkPresenter);
+                ProjectHelper.SaveProject(CurrentCollage);
             }
 
             return result;
@@ -257,7 +288,7 @@ namespace Studio_Photo_Collage.ViewModels
             if (result == ContentDialogResult.Primary)
             {
                 CurrentCollage.Project.ProjectName = dialog.ProjectName;
-                ProjectHelper.SaveProject(CurrentCollage.Project, inkPresenter);
+               ProjectHelper.SaveProject(CurrentCollage);
             }
 
             var collage = CurrentCollage;
@@ -299,12 +330,11 @@ namespace Studio_Photo_Collage.ViewModels
 
         private void MessengersRegistration()
         {
-            Messenger.Register<Project>(this, async(r, m) => 
+            Messenger.Register<Project>(this, (r, m) => 
             {
                 CurrentCollage = new Collage(m);
                 Messenger.Send(new NewCollageBackgroundOpacityMessage(m.BorderOpacity));
                 Messenger.Send(new NewCollageBorderThicknessMessage(m.BorderThickness));
-                await InkCanvasHelper.RestoreStrokesAsync(inkPresenter, m.uid.ToString());
             });
 
             Messenger.Register<BorderThicknessChangedMessage>(this, (r, m) =>
@@ -389,6 +419,11 @@ namespace Studio_Photo_Collage.ViewModels
                         scroll.ChangeView(height / 2, width / 2, scroll.ZoomFactor - 0.5f);
                     }
                 }
+            });
+
+            Messenger.Register<FrameMessageChanged>(this, (r, m) =>
+            {
+                CurrentCollage.SetFrame(m.Value);
             });
         }
 

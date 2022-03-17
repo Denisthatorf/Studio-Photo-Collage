@@ -15,6 +15,10 @@ using Windows.Storage;
 using System.Collections.Generic;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
+using Windows.UI.Xaml.Markup;
+using Windows.UI.Xaml.Shapes;
+using Windows.Foundation;
+using Windows.UI.Input.Inking;
 
 namespace Studio_Photo_Collage.Models
 {
@@ -24,6 +28,7 @@ namespace Studio_Photo_Collage.Models
         public bool IsSaved { get; set; }
         public UIElement BackgroundGrid => (CollageGrid as Grid).Children[0];
         public UIElement MainGrid => (CollageGrid as Grid).Children[1];
+        public Canvas FrameCanv => (CollageGrid as Grid).Children[2] as Canvas;
 
         public ToggleButton SelectedToggleBtn
         {
@@ -49,7 +54,7 @@ namespace Studio_Photo_Collage.Models
         }
         public Image SelectedImage
         {
-            get => SelectedScrollViewer?.Content as Image;
+            get => (SelectedScrollViewer?.Content as Grid).Children[0] as Image;
         }
         public int SelectedImageNumberInList
         {
@@ -83,6 +88,7 @@ namespace Studio_Photo_Collage.Models
                 var troggleBtn = gridInGrid.Children[0] as ToggleButton;
                 result.Add(troggleBtn);
             }
+
             return result;
         }
 
@@ -136,6 +142,35 @@ namespace Studio_Photo_Collage.Models
                 }
             }
         }
+        public void SetFrame(string pathData)
+        {
+            var pathFromCode = XamlReader.Load($"<Path xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'><Path.Data>{pathData}</Path.Data></Path>") as Path;
+            pathFromCode.Fill = (SolidColorBrush)Application.Current.Resources["CustomBrush"];
+            pathFromCode.VerticalAlignment = VerticalAlignment.Stretch;
+            pathFromCode.HorizontalAlignment = HorizontalAlignment.Stretch;
+            pathFromCode.Stretch = Stretch.Fill;
+            pathFromCode.Width = FrameCanv.ActualWidth;
+            pathFromCode.Height = FrameCanv.ActualHeight;
+
+            Canvas.SetLeft(pathFromCode, 0);
+            Canvas.SetTop(pathFromCode, 0);
+            FrameCanv.Children.Clear();
+            FrameCanv.Children.Add(pathFromCode);
+        }
+        public List<InkCanvas> GetListInkCanvases()
+        {
+            var listInk = new List<InkCanvas>();
+
+            var tbtnList = GetListOfBtns();
+            foreach (var tbtn in tbtnList)
+            {
+                var scrollVewer = tbtn.Content as ScrollViewer;
+                var scrollViwerContent = scrollVewer.Content as Grid;
+                var ink = scrollViwerContent.Children[1] as InkCanvas;
+                listInk.Add(ink);
+            }
+            return listInk;
+        }
 
         #region UIElement creation
         private UIElement CreateCollage()
@@ -146,6 +181,7 @@ namespace Studio_Photo_Collage.Models
             var collageGrid = new Grid();
             var maingird = CollageGenerator.GetGridWith<Grid>(arr);
             var backgroundgrid = new Grid();
+            var frameCanvas = new Canvas();
 
             for (int i = 0; i < maingird.Children.Count; i++)
             {
@@ -169,8 +205,22 @@ namespace Studio_Photo_Collage.Models
 
             backgroundgrid.Opacity = this.Project.BorderOpacity;
 
+            frameCanvas.HorizontalAlignment = HorizontalAlignment.Stretch;
+            frameCanvas.VerticalAlignment = VerticalAlignment.Stretch;
+            frameCanvas.SizeChanged += (o, e) =>
+            {
+                var canv = o as Canvas;
+                if(canv.Children.Count != 0 && canv.Children[0] is Path path)
+                {
+                    path = (o as Canvas).Children[0] as Path;
+                    path.Width = e.NewSize.Width;
+                    path.Height = e.NewSize.Height;
+                }
+            };
+
             collageGrid.Children.Add(backgroundgrid);
             collageGrid.Children.Add(maingird);
+            collageGrid.Children.Add(frameCanvas);
 
             return collageGrid;
         }
@@ -213,14 +263,11 @@ namespace Studio_Photo_Collage.Models
 
             var img = new Image();
             img.Stretch = Stretch.Uniform;
-
             await ImageHelper.SetImgSourceFromBase64Async(img, Project.ImageArr?[numberInList]);
-
-            var scrollViewer = GetScrollViewer(img.Source as WriteableBitmap, numberInList);
-            scrollViewer.Content = img;
 
             if (img.Source != null)
             {
+                var scrollViewer = await GetScrollViewer(img, numberInList);
                 toggleBtn.Content = scrollViewer;
             }
             else
@@ -228,7 +275,6 @@ namespace Studio_Photo_Collage.Models
                 toggleBtn.Content = GetPlusSignIcon();
             }
         }
-
         private async Task SetBtnContentAsync(ToggleButton selectedTBtn, StorageFile file)
         {
             selectedTBtn.Content = GetLoadingRing();
@@ -245,11 +291,10 @@ namespace Studio_Photo_Collage.Models
                     Project.ImageArr[numberInList] = await ImageHelper.SaveToStringBase64Async(source);
 
                     var img = new Image();
-                    img.Stretch = Windows.UI.Xaml.Media.Stretch.UniformToFill;
+                    img.Stretch = Stretch.UniformToFill;
                     img.Source = source;
 
-                    var scrollViewer = GetScrollViewer(source);
-                    scrollViewer.Content = img;
+                    var scrollViewer = await GetScrollViewer(img);
 
                     selectedTBtn.Content = scrollViewer;
 
@@ -262,7 +307,7 @@ namespace Studio_Photo_Collage.Models
                 }
             }
         }
-        private ScrollViewer GetScrollViewer(WriteableBitmap bitmap, int numberInList = -1)
+        private async Task<ScrollViewer> GetScrollViewer(Image img, int numberInList = -1)
         {
             var scrollViewer = new ScrollViewer();
 
@@ -277,6 +322,12 @@ namespace Studio_Photo_Collage.Models
             scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
             scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
 
+            var scrollViewerContent = new Grid();
+            scrollViewerContent.Children.Add(img);
+            scrollViewerContent.Children.Add(await GetInkCanvas(numberInList));
+            scrollViewer.Content = scrollViewerContent;
+           
+            var bitmap = img.Source as WriteableBitmap;
             scrollViewer.Loaded += (ol, el) =>
             {
 
@@ -298,6 +349,7 @@ namespace Studio_Photo_Collage.Models
                         (float)(scrollV.ActualHeight / bitmap.PixelHeight);
                     }    
                 }
+
                 scrollV.RegisterPropertyChangedCallback(ScrollViewer.ZoomFactorProperty, (o, e) =>
                 {
                     var scroll = o as ScrollViewer;
@@ -356,6 +408,16 @@ namespace Studio_Photo_Collage.Models
             load.HorizontalAlignment = HorizontalAlignment.Stretch;
             load.VerticalAlignment = VerticalAlignment.Stretch;
             return load;
+        }
+        private async Task<InkCanvas> GetInkCanvas(int numberInList)
+        {
+            var inkCanv = new InkCanvas();
+            if(numberInList != -1)
+            {
+                await InkCanvasHelper.RestoreStrokesAsync(inkCanv.InkPresenter, string.Concat(Project.uid.ToString(), numberInList));
+            }
+            return inkCanv;
+
         }
         #endregion
     }

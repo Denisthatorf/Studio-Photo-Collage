@@ -34,15 +34,14 @@ namespace Studio_Photo_Collage.Views
         public MainPage()
         {
             this.InitializeComponent();
-
             this.DataContext = VM;
-            VM.LoadPage(InkCanv.InkPresenter);
 
             Window.Current.SetTitleBar(MainTitleBar);
 
-            this.PointerPressed += (o, e) =>
-            {
-            };
+            InkToolbar.InkDrawningAttributesChangedEvent += (o, e) => VM.ChangeInkCanvasAttributes(e.Attributes);
+            InkToolbar.ModeChangedEvent += (o, e) => VM.ChangeInkCanvasMode(e.Mode);
+            Paint.Checked += (o, e) => VM.ActivateInkCanvas();
+            Paint.Unchecked += (o, e) => VM.DeactivateInkCanvas();
         }
 
         private void Save_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
