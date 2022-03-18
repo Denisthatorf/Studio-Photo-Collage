@@ -13,18 +13,19 @@ using ColorHelper = Microsoft.Toolkit.Uwp.Helpers.ColorHelper;
 using Windows.UI.Popups;
 using Windows.Storage;
 using System.Collections.Generic;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Shapes;
-using Windows.Foundation;
-using Windows.UI.Input.Inking;
+using Studio_Photo_Collage.Infrastructure.Events;
+using Lumia.Imaging;
 
 namespace Studio_Photo_Collage.Models
 {
     public class Collage
     {
         private Project project;
+
+        public event EventHandler<SelectedImageChangedEventArg> SelectedImageChanged;
+
         public bool IsSaved { get; set; }
         public UIElement BackgroundGrid => (CollageGrid as Grid).Children[0];
         public UIElement MainGrid => (CollageGrid as Grid).Children[1];
@@ -44,22 +45,13 @@ namespace Studio_Photo_Collage.Models
                         return ToggleBtn;
                     }
                 }
-
                 return null;
             }
         }
-        public ScrollViewer SelectedScrollViewer
-        {
-            get => SelectedToggleBtn?.Content as ScrollViewer;
-        }
-        public Image SelectedImage
-        {
-            get => (SelectedScrollViewer?.Content as Grid).Children[0] as Image;
-        }
-        public int SelectedImageNumberInList
-        {
-            get => SelectedToggleBtn != null ? (int)SelectedToggleBtn.CommandParameter : -1;
-        }
+        public ScrollViewer SelectedScrollViewer => SelectedToggleBtn?.Content as ScrollViewer;
+        public Image SelectedImage => (SelectedScrollViewer?.Content as Grid)?.Children[0] as Image;
+
+        public int SelectedImageNumberInList => SelectedToggleBtn != null ? (int)SelectedToggleBtn.CommandParameter : -1;
 
         public Project Project
         {
@@ -71,9 +63,9 @@ namespace Studio_Photo_Collage.Models
         }
         public UIElement CollageGrid { get; }
 
-        public Collage(Project _proj)
+        public Collage(Project proj)
         {
-            project = _proj;
+            project = proj;
             CollageGrid = CreateCollage();
         }
         public Collage() { }
@@ -90,6 +82,23 @@ namespace Studio_Photo_Collage.Models
             }
 
             return result;
+        }
+        public List<InkCanvas> GetListInkCanvases()
+        {
+            var listInk = new List<InkCanvas>();
+
+            var tbtnList = GetListOfBtns();
+            foreach (var tbtn in tbtnList)
+            {
+                var scrollVewer = tbtn.Content as ScrollViewer;
+                var scrollViwerContent = scrollVewer?.Content as Grid;
+                var ink = scrollViwerContent?.Children[1] as InkCanvas;
+                if (ink != null)
+                {
+                    listInk.Add(ink);
+                }
+            }
+            return listInk;
         }
 
         public void UpdateUIAsync()
@@ -108,7 +117,8 @@ namespace Studio_Photo_Collage.Models
         {
             if (SelectedImage?.Source != null)
             {
-                Project.ImageArr[SelectedImageNumberInList] = await ImageHelper.SaveToStringBase64Async(SelectedImage.Source);
+                Project.ImageInfo[SelectedImageNumberInList].ImageBase64
+                    = await ImageHelper.SaveToStringBase64Async(SelectedImage.Source);
             }
 
             var background = this.BackgroundGrid as Grid;
@@ -157,19 +167,25 @@ namespace Studio_Photo_Collage.Models
             FrameCanv.Children.Clear();
             FrameCanv.Children.Add(pathFromCode);
         }
-        public List<InkCanvas> GetListInkCanvases()
+        public async void ApplyEffectToSelectedImage(List<Type> effectTypes)
         {
-            var listInk = new List<InkCanvas>();
-
-            var tbtnList = GetListOfBtns();
-            foreach (var tbtn in tbtnList)
+            if(SelectedImage?.Source != null)
             {
-                var scrollVewer = tbtn.Content as ScrollViewer;
-                var scrollViwerContent = scrollVewer.Content as Grid;
-                var ink = scrollViwerContent.Children[1] as InkCanvas;
-                listInk.Add(ink);
+                var selectedImage = SelectedImage;
+                var imgNumberInList = SelectedImageNumberInList;
+                var result = (WriteableBitmap)await ImageHelper.FromBase64(Project.ImageInfo[imgNumberInList].ImageBase64Clear);
+
+                foreach (var effectType in effectTypes)
+                {
+                    Project.ImageInfo[imgNumberInList].EffectsTypes.Add(effectType);
+                    var effeсt = (IImageConsumer)Activator.CreateInstance(effectType);
+                    result = await LumiaHelper.SetEffectToWritableBitmap(result, effeсt);
+                }
+
+                selectedImage.Source = result;
+
+                UpdateProjectInfoAsync();
             }
-            return listInk;
         }
 
         #region UIElement creation
@@ -235,11 +251,17 @@ namespace Studio_Photo_Collage.Models
             toggleBtn.Checked += async (o, e) =>
             {
                 var Tbtn = o as ToggleButton;
+
                 var comPar = (int)Tbtn.CommandParameter;
                 UnCheckedAnothersBtns(comPar);
                 await SetImgByFilePickerToSelectedBtn();
-                var scroll = Tbtn.Content as ScrollViewer;
+
+                var clearImageSource = await ImageHelper.FromBase64(Project.ImageInfo[numberInList].ImageBase64Clear);
+                SelectedImageChanged?.Invoke(this, new SelectedImageChangedEventArg(clearImageSource, Project.ImageInfo[numberInList]));
             };
+            toggleBtn.Unchecked += (o, e) =>
+                SelectedImageChanged?.Invoke(this, new SelectedImageChangedEventArg(null, null));
+
             return toggleBtn;
         }
 
@@ -263,7 +285,8 @@ namespace Studio_Photo_Collage.Models
 
             var img = new Image();
             img.Stretch = Stretch.Uniform;
-            await ImageHelper.SetImgSourceFromBase64Async(img, Project.ImageArr?[numberInList]);
+
+            await ImageHelper.SetImgSourceFromBase64Async(img, Project.ImageInfo?[numberInList].ImageBase64);
 
             if (img.Source != null)
             {
@@ -288,7 +311,7 @@ namespace Studio_Photo_Collage.Models
                     var source = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
 
                     await source.SetSourceAsync(fileStream);
-                    Project.ImageArr[numberInList] = await ImageHelper.SaveToStringBase64Async(source);
+                    Project.ImageInfo[numberInList].ImageBase64Clear = await ImageHelper.SaveToStringBase64Async(source);
 
                     var img = new Image();
                     img.Stretch = Stretch.UniformToFill;
@@ -355,7 +378,7 @@ namespace Studio_Photo_Collage.Models
                     var scroll = o as ScrollViewer;
                     var btn = scroll.Parent as ToggleButton;
                     var nInList = (int)btn.CommandParameter;
-                    Project.ZoomsArr[nInList].ZoomFactor = scroll.ZoomFactor;
+                    Project.ImageInfo[nInList].ZoomInfo.ZoomFactor = scroll.ZoomFactor;
                     IsSaved = false;
                 });
                 scrollV.RegisterPropertyChangedCallback(ScrollViewer.HorizontalOffsetProperty, (o, e) =>
@@ -363,7 +386,7 @@ namespace Studio_Photo_Collage.Models
                     var scroll = o as ScrollViewer;
                     var btn = scroll.Parent as ToggleButton;
                     var nInList = (int)btn.CommandParameter;
-                    Project.ZoomsArr[nInList].HorizontalOffset = scroll.HorizontalOffset;
+                    Project.ImageInfo[nInList].ZoomInfo.HorizontalOffset = scroll.HorizontalOffset;
                     IsSaved = false;
                 });
                 scrollV.RegisterPropertyChangedCallback(ScrollViewer.VerticalOffsetProperty, (o, e) =>
@@ -371,7 +394,7 @@ namespace Studio_Photo_Collage.Models
                     var scroll = o as ScrollViewer;
                     var btn = scroll.Parent as ToggleButton;
                     var nInList = (int)btn.CommandParameter;
-                    Project.ZoomsArr[nInList].VerticalOffset = scroll.VerticalOffset;
+                    Project.ImageInfo[nInList].ZoomInfo.VerticalOffset = scroll.VerticalOffset;
                     IsSaved = false;
                 });
             };
@@ -387,7 +410,7 @@ namespace Studio_Photo_Collage.Models
             {
                 scrollViewer.Loaded += (o, e) =>
                 {
-                    var zoom = Project.ZoomsArr[numberInList];
+                    var zoom = Project.ImageInfo[numberInList].ZoomInfo;
                     (o as ScrollViewer).ChangeView(zoom.HorizontalOffset, zoom.VerticalOffset, zoom.ZoomFactor, false);
                 };
             }
@@ -416,6 +439,7 @@ namespace Studio_Photo_Collage.Models
             {
                 await InkCanvasHelper.RestoreStrokesAsync(inkCanv.InkPresenter, string.Concat(Project.uid.ToString(), numberInList));
             }
+
             return inkCanv;
 
         }

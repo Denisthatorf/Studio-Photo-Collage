@@ -30,7 +30,7 @@ namespace Studio_Photo_Collage.Infrastructure.Converters
 
                     var img = new Image();
                     img.Stretch = Windows.UI.Xaml.Media.Stretch.Fill;
-                    await ImageHelper.SetImgSourceFromBase64Async(img, proj.ImageArr[i]);
+                    await ImageHelper.SetImgSourceFromBase64Async(img, proj.ImageInfo[i].ImageBase64);
 
                     gridInGrid.Children.Add(img);
                     gridInGrid.BorderThickness = new Windows.UI.Xaml.Thickness(proj.BorderThickness * (int.Parse(parameter.ToString()) / 480.0));

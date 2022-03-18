@@ -333,6 +333,12 @@ namespace Studio_Photo_Collage.ViewModels
             Messenger.Register<Project>(this, (r, m) => 
             {
                 CurrentCollage = new Collage(m);
+
+                CurrentCollage.SelectedImageChanged += (o, e) =>
+                {
+                    Messenger.Send(new ChangeSelectedImageMessage(e.ImageInfo));
+                };
+
                 Messenger.Send(new NewCollageBackgroundOpacityMessage(m.BorderOpacity));
                 Messenger.Send(new NewCollageBorderThicknessMessage(m.BorderThickness));
             });
@@ -387,10 +393,10 @@ namespace Studio_Photo_Collage.ViewModels
                 {
                     m?.Invoke(image);
 
-                    CurrentCollage.Project.ImageArr[CurrentCollage.SelectedImageNumberInList]
-                        = await ImageHelper.SaveToStringBase64Async(selectedimg.Source);
+                    CurrentCollage.UpdateProjectInfoAsync();
                 }
             });
+
             Messenger.Register<PaintColorChangedMessage>(this, (r, m) => PaintColor = m.Value);
 
             Messenger.Register<ZoomMessage>(this, (r, m) =>
@@ -424,6 +430,11 @@ namespace Studio_Photo_Collage.ViewModels
             Messenger.Register<FrameMessageChanged>(this, (r, m) =>
             {
                 CurrentCollage.SetFrame(m.Value);
+            });
+
+            Messenger.Register<ApplyEffectsMessage>(this, (r, m) =>
+            {
+                CurrentCollage.ApplyEffectToSelectedImage(m.Value);
             });
         }
 

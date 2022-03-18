@@ -130,6 +130,7 @@
     <Compile Include="Infrastructure\Converters\FormatConverter.cs" />
     <Compile Include="Infrastructure\Events\InkDrawningAttributesChangeEventArgs.cs" />
     <Compile Include="Infrastructure\Events\InkInputProcessingModeChangedEventArgs.cs" />
+    <Compile Include="Infrastructure\Events\SelectedImageChangedEventArg.cs" />
     <Compile Include="Infrastructure\Helpers\ColorGenerator.cs" />
     <Compile Include="Infrastructure\Helpers\FiltersHelper.cs" />
     <Compile Include="Infrastructure\Helpers\GroupTemplateSelector.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Infrastructure\Helpers\InkCanvasHelper.cs" />
     <Compile Include="Infrastructure\Helpers\JsonHelper.cs" />
     <Compile Include="Infrastructure\Helpers\ImageHelper.cs" />
+    <Compile Include="Infrastructure\Helpers\LumiaHelper.cs" />
     <Compile Include="Infrastructure\Helpers\PrintHelper.cs" />
     <Compile Include="Infrastructure\Helpers\ProjectHelper.cs" />
     <Compile Include="Infrastructure\Helpers\SavingHeper.cs" />
@@ -144,6 +146,8 @@
     <Compile Include="Infrastructure\Messages\BorderThicknessChangedMessage.cs" />
     <Compile Include="Infrastructure\Messages\BackgroundOpacityChangedMessage.cs" />
     <Compile Include="Infrastructure\Messages\BrushSizeMessage.cs" />
+    <Compile Include="Infrastructure\Messages\ChangeSelectedImageMessage.cs" />
+    <Compile Include="Infrastructure\Messages\ApplyEffectsMessage.cs" />
     <Compile Include="Infrastructure\Messages\FrameMessageChanged.cs" />
     <Compile Include="Infrastructure\Messages\NewCollageBorderThicknessMessage.cs" />
     <Compile Include="Infrastructure\Messages\NewCollageBackgroundOpacityMessage.cs" />
@@ -157,6 +161,8 @@
     <Compile Include="Infrastructure\Services\INavigationService.cs" />
     <Compile Include="Infrastructure\Services\NavigationService.cs" />
     <Compile Include="Models\GroupedTemplates.cs" />
+    <Compile Include="Models\ImageInfo.cs" />
+    <Compile Include="Models\ImageSourceAndEffect.cs" />
     <Compile Include="Models\Project.cs" />
     <Compile Include="Models\Collage.cs" />
     <Compile Include="Models\Zoom.cs" />
@@ -260,6 +266,9 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="LumiaImagingSDK.UWP">
+      <Version>3.0.593</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
       <Version>3.3.3</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

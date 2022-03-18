@@ -71,7 +71,8 @@
                 Icon="Setting"
                 Command="{Binding SettingsCommand}"/>
 
-        <Button x:Name="ClassicTemplate" 
+        <StackPanel VerticalAlignment="Center">
+            <Button x:Name="ClassicTemplate" 
                 HorizontalAlignment="Center" VerticalAlignment="Center"
                 Background="Transparent" BorderBrush="Transparent" 
                 Padding="0" 
@@ -92,35 +93,35 @@
                     <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Opacity="0.1">#b8b8b8</SolidColorBrush>
                     <SolidColorBrush x:Key="ButtonBorderBrushPointerOver">#0000</SolidColorBrush>
                 </Button.Resources>
-                
+
                 <Grid>
-                <Rectangle x:Name="ClassicTempaleBorder"
+                    <Rectangle x:Name="ClassicTempaleBorder"
                         StrokeThickness="1" Stroke="Black" 
                                StrokeDashArray="6 6"
                                Fill="Transparent"/>
-                    
+
                     <StackPanel Margin="26">
-                    <Grid x:Name="ClassicCollage"
+                        <Grid x:Name="ClassicCollage"
                           VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                        <Grid.Resources>
+                            <Grid.Resources>
                                 <Style TargetType="Rectangle">
                                     <Setter Property="Fill" Value="Aquamarine"/>
                                 </Style>
                             </Grid.Resources>
-                        
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
 
-                        <Image Grid.Column="1" Margin="0,0,0,8" Source="/Assets/start 2.png" Stretch="Uniform"/>
-                        <Image Grid.Column="1" Margin="0,8,0,0" Grid.Row="1"  Source="/Assets/start 3.png"  Stretch="Uniform"/>
-                        <Image Grid.Column="0" Grid.RowSpan="2"  Source="/Assets/start 1.png"  Stretch="Uniform"/>
-                    </Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <Image Grid.Column="1" Margin="0,0,0,8" Source="/Assets/start 2.png" Stretch="Uniform"/>
+                            <Image Grid.Column="1" Margin="0,8,0,0" Grid.Row="1"  Source="/Assets/start 3.png"  Stretch="Uniform"/>
+                            <Image Grid.Column="0" Grid.RowSpan="2"  Source="/Assets/start 1.png"  Stretch="Uniform"/>
+                        </Grid>
                         <TextBlock Text="Classic Template" 
                                    x:Uid="ClassicTemplate" x:Name="ClassicTemplateTBox"
                                    HorizontalAlignment="Center"/>
@@ -128,14 +129,15 @@
                 </Grid>
             </Button>
 
-        <TextBlock x:Name="WelcomeTBox"
+            <TextBlock x:Name="WelcomeTBox"
                        HorizontalAlignment="Center" VerticalAlignment="Bottom" 
-                       Margin="50" 
+                       Margin="0,50,0,0" 
                        Visibility="{Binding IsGreetingTextVisible, 
                        Converter={StaticResource BoolToVisibilityConverter}}"
                        FontSize="48"
                        Foreground="{ThemeResource AppBarItemForegroundThemeBrush}" 
                        Text="Welcome to Studio Photo Collages" x:Uid="Greeting" />
+        </StackPanel>
 
         
             <StackPanel 

@@ -38,8 +38,7 @@ namespace Studio_Photo_Collage.Models
         public string Background { get; set; }
         public double BorderThickness { get; set; }
         public double BorderOpacity { get; set; }
-        public string[] ImageArr { get; set; }
-        public Zoom[] ZoomsArr { get; set; }
+        public ImageInfo[] ImageInfo { get; set; }
         #endregion
 
         public Project(byte[,] photoArr)
@@ -48,20 +47,14 @@ namespace Studio_Photo_Collage.Models
             PhotoArray = photoArr;
             BorderOpacity = 1;
             Background = "#ffff00";
-            ImageArr = new string[CountOfPhotos];
 
-            ZoomsArr = new Zoom[CountOfPhotos];
-            for (int i = 0; i < ZoomsArr.Length; i++)
+            ImageInfo = new ImageInfo[CountOfPhotos];
+            for (int i = 0; i < ImageInfo.Length; i++)
             {
-                ZoomsArr[i] = new Zoom();
+                ImageInfo[i] = new ImageInfo();
             }
         }
         public Project() { }
-
-        public override string ToString()
-        {
-            return ProjectName;
-        }
 
         #region Equels overriding
         public override bool Equals(object obj)
@@ -122,16 +115,6 @@ namespace Studio_Photo_Collage.Models
             Array.Copy(PhotoArray, cloneArr, PhotoArray.Length);
 
             var clone = new Project(cloneArr);
-            clone.ProjectName = ProjectName;
-            clone.DateOfLastEditing = DateOfLastEditing;
-            clone.Background = Background;
-            clone.BorderOpacity = BorderOpacity;
-            clone.BorderThickness = BorderThickness;
-            clone.ImageArr = ImageArr.Select(x => x).ToArray();
-
-            clone.ZoomsArr = new Zoom[CountOfPhotos];
-            Array.Copy(ZoomsArr, clone.ZoomsArr, ZoomsArr.Length);
-
             return clone;
         }
     }

@@ -24,11 +24,27 @@
                 Foreground="#FF524D4D" Background="#FFB6B6B6" 
                 Margin="0,0,8,8"/>
             <CheckBox Content="apply to all"/>
-            <muxc:TreeView AutomationProperties.Name="Effects">
-
-            </muxc:TreeView>
-        </StackPanel>
-        
+            <ItemsControl x:Name="Eff" ItemsSource="{Binding Effects}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="0" Margin="0,8,8,0">
+                            <Image Source="{Binding ImageSource}" 
+                                   Stretch="Fill"
+                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                            <CheckBox x:Name="CheckBox"
+                                      IsChecked="{Binding IsActive}"
+                                      HorizontalAlignment="Right" VerticalAlignment="Top"
+                                      CommandParameter="{Binding}"
+                                      Command="{Binding ElementName=Eff, Path=DataContext.ApplyEffectCommand}">
+                                
+                            </CheckBox>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            
+            <Grid Height="100"></Grid>
+        </StackPanel>        
     </ScrollViewer>
     
 </Page>
