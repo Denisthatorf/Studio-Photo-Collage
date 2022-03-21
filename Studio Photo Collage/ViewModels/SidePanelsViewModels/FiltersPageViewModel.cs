@@ -29,6 +29,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
         private ObservableCollection<ImageSourceAndEffect> effects;
         private List<Type> applyingEffects;
         private WriteableBitmap clearImageSource;
+        private bool isChekedApplyToAllCheckBox;
 
         public ObservableCollection<ImageSourceAndEffect> Effects
         {
@@ -42,6 +43,32 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
         }
         public ICommand ApplyEffectCommand => applyEffectCommand ??
             (applyEffectCommand = new RelayCommand<ImageSourceAndEffect>((p) => SetEffect(p)));
+
+        public bool IsChekedApplyToAllCheckBox 
+        {
+            get => isChekedApplyToAllCheckBox; 
+            set
+            {
+                isChekedApplyToAllCheckBox = value;
+                var applyEffectsList = new List<Type>();
+
+                if (value == true)
+                {
+                    applyEffectsList.AddRange(ApplyingEffects);
+                    WeakReferenceMessenger.Default.Send(new ApplyEffectsToAllMessage(applyEffectsList));
+                }
+                else
+                {
+                    WeakReferenceMessenger.Default.Send(new ApplyEffectsToAllMessage(applyEffectsList));
+                    if (clearImageSource != null)
+                    {
+                        applyEffectsList = new List<Type>();
+                        applyEffectsList.AddRange(ApplyingEffects);
+                        WeakReferenceMessenger.Default.Send(new ApplyEffectsMessage(applyEffectsList));
+                    }
+                }
+            }
+        }
 
         public FiltersPageViewModel()
         {
@@ -70,18 +97,27 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
              {
              new AntiqueEffect(),
              new Lumia.Imaging.Compositing.ChromaKeyEffect(),
-             new Lumia.Imaging.Adjustments.BlurEffect(),
-             new Lumia.Imaging.Adjustments.ContrastEffect(),
+             new Lumia.Imaging.Adjustments.BlurEffect(50),
+             new Lumia.Imaging.Adjustments.AutoLevelsEffect(),
+             new Lumia.Imaging.Adjustments.ColorAdjustEffect(0,0,1),
+             new Lumia.Imaging.Adjustments.ColorAdjustEffect(0,1,0),
+             new Lumia.Imaging.Adjustments.ColorAdjustEffect(1 ,0,1),
              new Lumia.Imaging.Adjustments.GrayscaleEffect(),
              new Lumia.Imaging.Adjustments.NoiseEffect(),
+             new Lumia.Imaging.Artistic.AntiqueEffect(),
              new Lumia.Imaging.Artistic.CartoonEffect(),
-             new Lumia.Imaging.Artistic.FogEffect(),
+             new Lumia.Imaging.Artistic.GrayscaleNegativeEffect(),
              new Lumia.Imaging.Artistic.LomoEffect(),
-             new Lumia.Imaging.Artistic.MonoColorEffect(),
+             new Lumia.Imaging.Artistic.MagicPenEffect(),
+             new Lumia.Imaging.Artistic.MilkyEffect(),
+             new Lumia.Imaging.Artistic.MoonlightEffect(),
              new Lumia.Imaging.Artistic.OilyEffect(),
-             new Lumia.Imaging.Artistic.WatercolorEffect(),
-             new Lumia.Imaging.Artistic.WarpingEffect(),
-             new Lumia.Imaging.Artistic.StampEffect()
+             new Lumia.Imaging.Artistic.PaintEffect(),
+             new Lumia.Imaging.Artistic.PosterizeEffect(),
+             new Lumia.Imaging.Artistic.SepiaEffect(),
+             new Lumia.Imaging.Artistic.SketchEffect(),
+             new Lumia.Imaging.Artistic.SolarizeEffect(),
+             new Lumia.Imaging.Artistic.WatercolorEffect()
              };
 
             var wrBitmap = clearImageSource;
@@ -113,7 +149,14 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
             var applyEffectsList = new List<Type>();
             applyEffectsList.AddRange(ApplyingEffects);
 
-            WeakReferenceMessenger.Default.Send(new ApplyEffectsMessage(applyEffectsList));
+           if(IsChekedApplyToAllCheckBox == false)
+           {
+                WeakReferenceMessenger.Default.Send(new ApplyEffectsMessage(applyEffectsList));
+           }
+            else
+            {
+                WeakReferenceMessenger.Default.Send(new ApplyEffectsToAllMessage(applyEffectsList));
+            }
         }
     }
 }

@@ -128,6 +128,7 @@
     <Compile Include="Infrastructure\Converters\FromArrToGridConverter.cs" />
     <Compile Include="Infrastructure\Converters\FromThemeToStringConverter.cs" />
     <Compile Include="Infrastructure\Converters\FormatConverter.cs" />
+    <Compile Include="Infrastructure\Effects\RedColorEffect.cs" />
     <Compile Include="Infrastructure\Events\InkDrawningAttributesChangeEventArgs.cs" />
     <Compile Include="Infrastructure\Events\InkInputProcessingModeChangedEventArgs.cs" />
     <Compile Include="Infrastructure\Events\SelectedImageChangedEventArg.cs" />
@@ -143,6 +144,7 @@
     <Compile Include="Infrastructure\Helpers\ProjectHelper.cs" />
     <Compile Include="Infrastructure\Helpers\SavingHeper.cs" />
     <Compile Include="Infrastructure\Helpers\SettingsStorageExtensions.cs" />
+    <Compile Include="Infrastructure\Messages\ApplyEffectsToAll.cs" />
     <Compile Include="Infrastructure\Messages\BorderThicknessChangedMessage.cs" />
     <Compile Include="Infrastructure\Messages\BackgroundOpacityChangedMessage.cs" />
     <Compile Include="Infrastructure\Messages\BrushSizeMessage.cs" />

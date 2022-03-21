@@ -15,15 +15,17 @@
         <StackPanel>
             <TextBlock Text="Filters" Style="{StaticResource Header}" Margin="0,0,0,24"/>
 
-            <StackPanel Orientation="Horizontal" >
+            <!--<StackPanel Orientation="Horizontal" >
                 <TextBlock Text="Opacity:" Margin="0,0,3,0"/>
                 <TextBlock Text="{Binding ElementName=OpacitySlider, Path=Value}"/>
             </StackPanel>
 
             <Slider x:Name="OpacitySlider"
                 Foreground="#FF524D4D" Background="#FFB6B6B6" 
-                Margin="0,0,8,8"/>
-            <CheckBox Content="apply to all"/>
+                Margin="0,0,8,8"/>-->
+            
+            <CheckBox Content="apply to all"
+                      IsChecked="{Binding IsChekedApplyToAllCheckBox, Mode=TwoWay}"/>
             <ItemsControl x:Name="Eff" ItemsSource="{Binding Effects}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>

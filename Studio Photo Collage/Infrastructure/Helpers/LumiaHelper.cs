@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Lumia.Imaging;
 using Lumia.InteropServices.WindowsRuntime;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Studio_Photo_Collage.Infrastructure.Helpers

@@ -125,6 +125,7 @@ namespace Studio_Photo_Collage.ViewModels
                     deleteImageCommand = new RelayCommand(() =>
                     {
                         CurrentCollage.DeleteSelectedImgFromBtn();
+                        Messenger.Send(new ChangeSelectedImageMessage(null));
                     });
                 }
 
@@ -434,7 +435,11 @@ namespace Studio_Photo_Collage.ViewModels
 
             Messenger.Register<ApplyEffectsMessage>(this, (r, m) =>
             {
-                CurrentCollage.ApplyEffectToSelectedImage(m.Value);
+                CurrentCollage.ApplyEffectToImage(m.Value,
+                    CurrentCollage.SelectedImage, CurrentCollage.SelectedImageNumberInList);
+            });
+            Messenger.Register<ApplyEffectsToAllMessage>(this, (r,m) =>{
+                CurrentCollage.ApplyEffectToAllImageImage(m.Value);
             });
         }
 

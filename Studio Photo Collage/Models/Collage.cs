@@ -100,6 +100,20 @@ namespace Studio_Photo_Collage.Models
             }
             return listInk;
         }
+        public List<Image> GetListOfImagesWithNullIfNoImage()
+        {
+            var imageList = new List<Image>();
+
+            var tbtnList = GetListOfBtns();
+            foreach (var tbtn in tbtnList)
+            {
+                var scrollVewer = tbtn.Content as ScrollViewer;
+                var scrollViwerContent = scrollVewer?.Content as Grid;
+                var image = scrollViwerContent?.Children[0] as Image;
+                imageList.Add(image);
+            }
+            return imageList;
+        }
 
         public void UpdateUIAsync()
         {
@@ -145,10 +159,18 @@ namespace Studio_Photo_Collage.Models
             if (SelectedToggleBtn != null)
             {
                 var selectedTBtn = this.SelectedToggleBtn;
+                var numberInList = (int)selectedTBtn.CommandParameter;
                 var file = await ImageHelper.OpenFilePicker();
                 if (file != null)
                 {
                     await SetBtnContentAsync(selectedTBtn, file);
+                }
+
+                if(Project.ImageInfo[numberInList]?.ImageBase64Clear != null) 
+                {
+
+                    var clearImageSource = await ImageHelper.FromBase64(Project.ImageInfo[numberInList]?.ImageBase64Clear);
+                    SelectedImageChanged?.Invoke(this, new SelectedImageChangedEventArg(clearImageSource, Project.ImageInfo[numberInList]));
                 }
             }
         }
@@ -167,24 +189,29 @@ namespace Studio_Photo_Collage.Models
             FrameCanv.Children.Clear();
             FrameCanv.Children.Add(pathFromCode);
         }
-        public async void ApplyEffectToSelectedImage(List<Type> effectTypes)
+        public async void ApplyEffectToImage(List<Type> effectTypes, Image image, int imgNumberInList)
         {
-            if(SelectedImage?.Source != null)
+            Project.ImageInfo[imgNumberInList].EffectsTypes.AddRange(effectTypes);
+            if (image?.Source != null)
             {
-                var selectedImage = SelectedImage;
-                var imgNumberInList = SelectedImageNumberInList;
                 var result = (WriteableBitmap)await ImageHelper.FromBase64(Project.ImageInfo[imgNumberInList].ImageBase64Clear);
 
                 foreach (var effectType in effectTypes)
                 {
-                    Project.ImageInfo[imgNumberInList].EffectsTypes.Add(effectType);
                     var effeсt = (IImageConsumer)Activator.CreateInstance(effectType);
                     result = await LumiaHelper.SetEffectToWritableBitmap(result, effeсt);
                 }
 
-                selectedImage.Source = result;
-
+                image.Source = result;
                 UpdateProjectInfoAsync();
+            }
+        }
+        public void ApplyEffectToAllImageImage(List<Type> effectTypes)
+        {
+            var images = GetListOfImagesWithNullIfNoImage();
+            for (int i = 0; i < images.Count; i++)
+            {
+                ApplyEffectToImage(effectTypes, images[i], i);
             }
         }
 
@@ -255,9 +282,6 @@ namespace Studio_Photo_Collage.Models
                 var comPar = (int)Tbtn.CommandParameter;
                 UnCheckedAnothersBtns(comPar);
                 await SetImgByFilePickerToSelectedBtn();
-
-                var clearImageSource = await ImageHelper.FromBase64(Project.ImageInfo[numberInList].ImageBase64Clear);
-                SelectedImageChanged?.Invoke(this, new SelectedImageChangedEventArg(clearImageSource, Project.ImageInfo[numberInList]));
             };
             toggleBtn.Unchecked += (o, e) =>
                 SelectedImageChanged?.Invoke(this, new SelectedImageChangedEventArg(null, null));
@@ -316,6 +340,7 @@ namespace Studio_Photo_Collage.Models
                     var img = new Image();
                     img.Stretch = Stretch.UniformToFill;
                     img.Source = source;
+                    ApplyEffectToImage(Project.ImageInfo[numberInList].EffectsTypes, img, numberInList);
 
                     var scrollViewer = await GetScrollViewer(img);
 
@@ -358,19 +383,9 @@ namespace Studio_Photo_Collage.Models
                 if (bitmap != null)
                 {
                     var bitmapRatio = bitmap.PixelWidth * 1f / bitmap.PixelHeight;
-
-                    if(bitmapRatio < 1f)
-                    {
-                        scrollV.MinZoomFactor = scrollV.ActualWidth < scrollV.ActualHeight ?
-                        (float)(scrollV.ActualWidth / bitmap.PixelWidth) :
-                        (float)(scrollV.ActualHeight / bitmap.PixelHeight);
-                    }
-                    else
-                    {
-                        scrollV.MinZoomFactor = scrollV.ActualWidth > scrollV.ActualHeight ?
-                        (float)(scrollV.ActualWidth / bitmap.PixelWidth) :
-                        (float)(scrollV.ActualHeight / bitmap.PixelHeight);
-                    }    
+                    scrollV.MinZoomFactor = scrollV.ActualWidth > scrollV.ActualHeight ?
+                    (float)(scrollV.ActualWidth / bitmap.PixelWidth) :
+                    (float)(scrollV.ActualHeight / bitmap.PixelHeight);
                 }
 
                 scrollV.RegisterPropertyChangedCallback(ScrollViewer.ZoomFactorProperty, (o, e) =>
