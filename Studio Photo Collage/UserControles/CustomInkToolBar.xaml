@@ -10,6 +10,10 @@
 
     <UserControl.Resources>
         <Style TargetType="AppBarToggleButton">
+            <Setter Property="Width" Value="48"/>
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            
             <Setter Property="Template" Value="{StaticResource MenuAppBarToggleButton}"/>
         </Style>
     </UserControl.Resources>
@@ -19,14 +23,16 @@
                         HorizontalAlignment="Center" VerticalAlignment="Bottom"
                         Height="64" Width="380" 
                         Grid.Column="1" Grid.Row="1"
-                        Background="{StaticResource MainBackgroundColor}">
+                        Background="{ThemeResource MainBackgroundColor}">
         <AppBarToggleButton x:Name="Pen" Margin="4,0,0,0" 
+                            Width="48"
                             Checked="PenAppBarToggleButton_Checked"
                             VerticalAlignment="Center" >
             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;"/>
         </AppBarToggleButton>
 
         <AppBarToggleButton x:Name="Rubber" Margin="4,0,0,0"
+                            Width="48"
                             Checked="RubberAppBarToggleButton_Checked"
                             VerticalAlignment="Center">
             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xED60;"/>
@@ -71,7 +77,7 @@
                             Background="Transparent"
                             Style="{StaticResource BlueSliderWithTransparentTrackAccentColor}">
                 <Slider.RenderTransform>
-                    <TranslateTransform X="-6"/>
+                    <TranslateTransform X="-5" Y="3"/>
                 </Slider.RenderTransform>
             </Slider>
 

@@ -1,60 +1,109 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Studio_Photo_Collage.Infrastructure.Helpers;
 using Studio_Photo_Collage.Models;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.UI.Xaml.Shapes;
 using ColorHelper = Microsoft.Toolkit.Uwp.Helpers.ColorHelper;
 
 namespace Studio_Photo_Collage.Infrastructure.Converters
 {
-    public static class ProjectToUIElementAsync
+    public class ProjectToUIElementAsync
     {
-        public static async Task<Grid> Convert(object value, object parameter)
+        public static async Task<Grid> Convert(Project project, int parameter)
         {
-            Grid collage = null;
-            if (value as Project != null && parameter != null)
-            {
 
-                var proj = value as Project;
-                var arr = proj.PhotoArray;
+            Grid collage = null;
+            if (project != null)
+            {
+                var arr = project.PhotoArray;
 
                 collage = new Grid();
                 var mainGrid = CollageGenerator.GetGridWith<Grid>(arr);
                 var backgroundGrid = new Grid();
-
+                var frameCanvas = new Canvas();
                 for (int i = 0; i < mainGrid.Children.Count; i++)
                 {
                     var gridInGrid = mainGrid.Children[i] as Grid;
+                    gridInGrid.BorderThickness = new Windows.UI.Xaml.Thickness(project.BorderThickness * parameter / 480.0);
 
                     var img = new Image();
-                    img.Stretch = Windows.UI.Xaml.Media.Stretch.Fill;
-                    await ImageHelper.SetImgSourceFromBase64Async(img, proj.ImageInfo[i].ImageBase64);
+                    img.Stretch = Windows.UI.Xaml.Media.Stretch.UniformToFill;
+
+                    var info = project.ImageInfo[i];
+                    await SetImageSourceAsync(img, info);
+
+                    var inkCanvas = new InkCanvas();
+                    await InkCanvasHelper.RestoreStrokesAsync(inkCanvas.InkPresenter, project.uid, i);
 
                     gridInGrid.Children.Add(img);
-                    gridInGrid.BorderThickness = new Windows.UI.Xaml.Thickness(proj.BorderThickness * (int.Parse(parameter.ToString()) / 480.0));
+                    gridInGrid.Children.Add(inkCanvas);
+
                 }
 
-                if (proj.Background.Length < 10)
+                if (project.Background.Length < 10)
                 {
-                    backgroundGrid.Background = new SolidColorBrush(ColorHelper.ToColor(proj.Background));
+                    backgroundGrid.Background = new SolidColorBrush(ColorHelper.ToColor(project.Background));
                 }
                 else
                 {
-                    var brush = new ImageBrush();
-                    var source = await ImageHelper.FromBase64(proj.Background);
-                    brush.ImageSource = source;
-                    backgroundGrid.Background = brush;
+                    backgroundGrid.Background = ColorGenerator.GetImageBrushFromString64(project.Background);
                 }
-                backgroundGrid.Opacity = proj.BorderOpacity;
+
+                backgroundGrid.Opacity = project.BorderOpacity;
+
+                frameCanvas.HorizontalAlignment = HorizontalAlignment.Stretch;
+                frameCanvas.VerticalAlignment = VerticalAlignment.Stretch;
+
+                frameCanvas.SizeChanged += (o, e) => SetFrame(project, frameCanvas, int.Parse(parameter.ToString()));
 
                 collage.Children.Add(backgroundGrid);
                 collage.Children.Add(mainGrid);
+                collage.Children.Add(frameCanvas);
                 return collage;
             }
 
             return collage;
+        }
+
+        private static async Task SetImageSourceAsync(Image img, ImageInfo info)
+        {
+            await ImageHelper.SetImgSourceFromBase64Async(img, info.ImageBase64);
+            var wrBitmap = img.Source as WriteableBitmap;
+            if (wrBitmap != null)
+            {
+                var x = (int)(info.ZoomInfo.HorizontalOffset / info.ZoomInfo.ZoomFactor);
+                var y = (int)(info.ZoomInfo.VerticalOffset / info.ZoomInfo.ZoomFactor);
+                var width = (wrBitmap.PixelWidth - x) / info.ZoomInfo.ZoomFactor;
+                var height = (wrBitmap.PixelHeight - y) / info.ZoomInfo.ZoomFactor;
+                img.Source = wrBitmap.Crop(x, y,
+                    (int)width, (int)height);
+            }
+        }
+        private static void SetFrame(Project project, Canvas canv, int parameter)
+        {
+            if (!string.IsNullOrEmpty(project.Frame.PathData))
+            {
+                var path = XamlReader.Load($"<Path xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'><Path.Data>{project.Frame.PathData}</Path.Data></Path>") as Path;
+                path.Fill = new SolidColorBrush(project.Frame.Color.ToColor());
+                path.VerticalAlignment = VerticalAlignment.Stretch;
+                path.HorizontalAlignment = HorizontalAlignment.Stretch;
+                path.Stretch = Stretch.Fill;
+
+                var size = project.Frame.AdditionalSize * (int.Parse(parameter.ToString()) / 480.0);
+                path.Width = canv.ActualWidth + size;
+                path.Height = canv.ActualHeight + size;
+                Canvas.SetLeft(path, -size / 2);
+                Canvas.SetTop(path, -size / 2);
+
+                canv.Children.Add(path);
+            }
         }
     }
 }

@@ -20,12 +20,6 @@
 
     <Page.Resources>
         <converters:FromArrToGridConverter x:Key="FromArrToGridConverter"/>
-        
-        <Style TargetType="Button" BasedOn="{StaticResource TemplatesBtns}">
-            <Setter Property="Width" Value="50"/>
-            <Setter Property="Height" Value="50"/>
-            <Setter Property="Margin" Value="10"/>
-        </Style>
 
         <Style TargetType="Rectangle">
             <Setter Property="Fill" Value="White"/>

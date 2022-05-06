@@ -7,6 +7,7 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using Studio_Photo_Collage.Infrastructure.Events;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Input.Inking;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -15,6 +16,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using ColorHelper = Microsoft.Toolkit.Uwp.Helpers.ColorHelper;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -28,11 +30,25 @@ namespace Studio_Photo_Collage.UserControles
         public CustomInkToolBar()
         {
             this.InitializeComponent();
+            Pen.IsChecked = true;
         }
         private void ColorSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             var inkDrawingAttributes = new InkDrawingAttributes();
-            inkDrawingAttributes.Color = ColorHelper.FromHsl(e.NewValue * 3.59, 1, 0.5);
+
+            if (e.NewValue == 0)
+            {
+                inkDrawingAttributes.Color = Colors.Black;
+            }
+            else if (e.NewValue == 100)
+            {
+                inkDrawingAttributes.Color = Colors.White;
+            }
+            else
+            {
+                inkDrawingAttributes.Color = ColorHelper.FromHsl((100 - e.NewValue) * 3.59, 1, 0.5);
+            }
+
             inkDrawingAttributes.Size = new Windows.Foundation.Size(StrokeSizeSlider.Value, StrokeSizeSlider.Value);
             InkDrawningAttributesChangedEvent?.Invoke(this, new InkDrawningAttributesChangeEventArgs(inkDrawingAttributes));
         }

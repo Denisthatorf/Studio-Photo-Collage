@@ -38,6 +38,8 @@ namespace Studio_Photo_Collage.Models
         public string Background { get; set; }
         public double BorderThickness { get; set; }
         public double BorderOpacity { get; set; }
+        public bool IsFilltersUsedToAllImages { get; set; }
+        public FrameData Frame { get; set; }
         public ImageInfo[] ImageInfo { get; set; }
         #endregion
 
@@ -47,7 +49,7 @@ namespace Studio_Photo_Collage.Models
             PhotoArray = photoArr;
             BorderOpacity = 1;
             Background = "#ffff00";
-
+            Frame = new FrameData();
             ImageInfo = new ImageInfo[CountOfPhotos];
             for (int i = 0; i < ImageInfo.Length; i++)
             {
@@ -101,11 +103,6 @@ namespace Studio_Photo_Collage.Models
         public static bool operator !=(Project first, Project second) => !(first == second);
         #endregion
 
-        [OnSerializing]
-        private void OnDeserializingMethod(StreamingContext context)
-        {
-            DateOfLastEditing = DateTime.Now;
-        }
         public object Clone()
         {
             int row = PhotoArray.GetLength(0);

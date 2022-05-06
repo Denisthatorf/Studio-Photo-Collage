@@ -7,9 +7,9 @@ using Microsoft.Toolkit.Mvvm.Messaging.Messages;
 
 namespace Studio_Photo_Collage.Infrastructure.Messages
 {
-    public class NewCollageBorderThicknessMessage : ValueChangedMessage<double>
+    public class FrameSizeChangedMessage : ValueChangedMessage<int>
     {
-        public NewCollageBorderThicknessMessage(double value) : base(value)
+        public FrameSizeChangedMessage(int value) : base(value)
         {
         }
     }

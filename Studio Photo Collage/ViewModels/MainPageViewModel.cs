@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -19,10 +20,12 @@ using Windows.Media.Capture;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Input.Inking;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.UI.Xaml.Shapes;
 
 namespace Studio_Photo_Collage.ViewModels
 {
@@ -35,6 +38,7 @@ namespace Studio_Photo_Collage.ViewModels
         private ICommand goBackCommand;
         private ICommand addImageCommand;
         private ICommand deleteImageCommand;
+        private ICommand photoCommand;
         private BtnNameEnum? checkBoxesEnum;
         private Collage currentCollage;
         private Grid renderCollage;
@@ -122,9 +126,9 @@ namespace Studio_Photo_Collage.ViewModels
             {
                 if(deleteImageCommand == null)
                 {
-                    deleteImageCommand = new RelayCommand(() =>
+                    deleteImageCommand = new RelayCommand(async() =>
                     {
-                        CurrentCollage.DeleteSelectedImgFromBtn();
+                        await CurrentCollage.DeleteSelectedImgFromBtn();
                         Messenger.Send(new ChangeSelectedImageMessage(null));
                     });
                 }
@@ -138,10 +142,22 @@ namespace Studio_Photo_Collage.ViewModels
             {
                 if (addImageCommand == null)
                 {
-                    addImageCommand = new RelayCommand(() => _ = CurrentCollage.SetImgByFilePickerToSelectedBtn());
+                    addImageCommand = new RelayCommand(() => _ = CurrentCollage.SetImgByFilePickerToSelectedBtnAsync());
                 }
 
                 return addImageCommand;
+            }
+        }
+        public ICommand PhotoCommand
+        {
+            get
+            {
+                if(photoCommand == null)
+                {
+                    photoCommand = new RelayCommand(TakePhoto);
+                }
+
+                return photoCommand;
             }
         }
 
@@ -236,33 +252,43 @@ namespace Studio_Photo_Collage.ViewModels
         {
             var dialog = new SaveImageDialog();
             dialog.NameOfImg = CurrentCollage.Project.ProjectName;
-            var result = await dialog.ShowAsync();
+            await dialog.ShowAsync();
 
             var name = dialog.NameOfImg;
             var format = dialog.Format.ToLower();
             var quality = dialog.Quality;
+            var folder = dialog.Folder;
 
-            if(result != ContentDialogResult.None)
+            if(dialog.Result != ContentDialogResult.None)
             {
-                SaveCollageAsImageAsync(name, format);
+                SaveCollageAsImageAsync(name, format, folder);
             }
         }
 
-        private async void SaveCollageAsImageAsync(string name, string format)
+        private async void SaveCollageAsImageAsync(string name, string format, StorageFolder folder)
         {
-            var collage = await ProjectToUIElementAsync.Convert(CurrentCollage.Project, 1000);
-            collage.Width = 1000;
-            collage.Height = 1000;
-            RenderCollage = collage;
-
+            var btns = CurrentCollage.GetListOfBtns();
+            var scrolles = btns.Select((x) => x.Content as ScrollViewer);
+            scrolles.ToList().ForEach(x => {
+               if(x != null)
+               {
+                    x.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
+                    x.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
+               }
+            });
             var bitmap = new RenderTargetBitmap();
-            await bitmap.RenderAsync(RenderCollage);
+            await bitmap.RenderAsync(CurrentCollage.CollageGrid);
 
             var pixelBuffer = await bitmap.GetPixelsAsync();
             byte[] pixels = pixelBuffer.ToArray();
             var displayInformation = DisplayInformation.GetForCurrentView();
-            var pictureFolder = KnownFolders.SavedPictures;
-            var file = await pictureFolder.CreateFileAsync($"{name}.{format}", CreationCollisionOption.ReplaceExisting);
+            
+            if(folder == null)
+            {
+                folder = KnownFolders.SavedPictures;
+            }
+
+            var file = await folder.CreateFileAsync($"{name}.{format}", CreationCollisionOption.ReplaceExisting);
 
             using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
             {
@@ -278,7 +304,13 @@ namespace Studio_Photo_Collage.ViewModels
                 await encoder.FlushAsync();
             }
 
-            RenderCollage = null;
+            scrolles.ToList().ForEach(x => {
+                if (x != null)
+                {
+                    x.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
+                    x.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+                }
+            });
         }
 
         private async void SaveProjectBySaveProjectDialogAsync()
@@ -305,12 +337,6 @@ namespace Studio_Photo_Collage.ViewModels
                     break;
                 case BtnNameEnum.Settings:
                     ShowSettingDialog();
-                    break;
-                case BtnNameEnum.Photo:
-                    TakePthoto();
-                    break;
-                case BtnNameEnum.Delete:
-                    CurrentCollage.DeleteSelectedImgFromBtn();
                     break;
                 case BtnNameEnum.Print:
                     Print();
@@ -339,9 +365,6 @@ namespace Studio_Photo_Collage.ViewModels
                 {
                     Messenger.Send(new ChangeSelectedImageMessage(e.ImageInfo));
                 };
-
-                Messenger.Send(new NewCollageBackgroundOpacityMessage(m.BorderOpacity));
-                Messenger.Send(new NewCollageBorderThicknessMessage(m.BorderThickness));
             });
 
             Messenger.Register<BorderThicknessChangedMessage>(this, (r, m) =>
@@ -386,7 +409,7 @@ namespace Studio_Photo_Collage.ViewModels
                  project.Background = m.Color.ToString();
              });
 
-            Messenger.Register<Action<Image>>(this, async (r, m) =>
+            Messenger.Register<Action<Image>>(this, (r, m) =>
             {
                 var image = CurrentCollage.SelectedImage;
                 var selectedimg = CurrentCollage.SelectedImage;
@@ -435,21 +458,35 @@ namespace Studio_Photo_Collage.ViewModels
 
             Messenger.Register<ApplyEffectsMessage>(this, (r, m) =>
             {
-                CurrentCollage.ApplyEffectToImage(m.Value,
-                    CurrentCollage.SelectedImage, CurrentCollage.SelectedImageNumberInList);
+                _ = CurrentCollage.ApplyEffectToImage(m.Value,
+                CurrentCollage.SelectedImage, CurrentCollage.SelectedImageNumberInList);
+
+                CurrentCollage.Project.IsFilltersUsedToAllImages = false;
             });
+
             Messenger.Register<ApplyEffectsToAllMessage>(this, (r,m) =>{
                 CurrentCollage.ApplyEffectToAllImageImage(m.Value);
+
+                CurrentCollage.Project.IsFilltersUsedToAllImages = true;
+            });
+
+            Messenger.Register<FrameColorChangedMessege>(this, (r, m) =>
+            {
+                CurrentCollage.SetFrameColor(m.Value);
+            });
+
+            Messenger.Register<FrameSizeChangedMessage>(this, (r, m) =>
+            {
+                CurrentCollage.SetFrameAdditionalSize(m.Value);
             });
         }
 
-        private async void TakePthoto()
+        private async void TakePhoto()
         {
             if (CurrentCollage.SelectedToggleBtn != null)
             {
                 var captureUI = new CameraCaptureUI();
                 captureUI.PhotoSettings.Format = CameraCaptureUIPhotoFormat.Jpeg;
-                captureUI.PhotoSettings.CroppedSizeInPixels = new Size(200, 200);
 
                 var photo = await captureUI.CaptureFileAsync(CameraCaptureUIMode.Photo);
                 if (photo == null)
@@ -459,13 +496,22 @@ namespace Studio_Photo_Collage.ViewModels
 
                 else
                 {
-                    var bitmapImage = new BitmapImage();
-                    using (var photoStream = await photo.OpenAsync(FileAccessMode.Read))
+                    using (var fileStream = await photo.OpenAsync(FileAccessMode.Read))
                     {
-                        bitmapImage.SetSource(photoStream);
-                    }
+                        try
+                        {
+                            var decoder = await BitmapDecoder.CreateAsync(fileStream);
+                            var source = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
 
-                    CurrentCollage.SelectedImage.Source = bitmapImage;
+                            await source.SetSourceAsync(fileStream);
+                            await CurrentCollage.SetImageToSelectedBtnAsync(source);
+                        }
+                        catch
+                        {
+                            var messageDialog = new MessageDialog("Camera error");
+                            await messageDialog.ShowAsync();
+                        }
+                    }
                 }
             }
 
@@ -483,7 +529,7 @@ namespace Studio_Photo_Collage.ViewModels
         {
             var printHelper = new PrintHelper();
 
-            var collage = await ProjectToUIElementAsync.Convert(CurrentCollage.Project, "1000");
+            var collage = await ProjectToUIElementAsync.Convert(CurrentCollage.Project, 400);
             collage.HorizontalAlignment = HorizontalAlignment.Center;
             collage.VerticalAlignment = VerticalAlignment.Center;
 

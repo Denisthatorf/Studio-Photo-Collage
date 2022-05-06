@@ -42,8 +42,8 @@
                 </VisualState>
                 <VisualState >
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowHeight="1000"/>
-                        <AdaptiveTrigger MinWindowWidth="1000"/>
+                        <AdaptiveTrigger MinWindowHeight="1080"/>
+                        <AdaptiveTrigger MinWindowWidth="1080"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <!--<Setter Target="ClassicTemplate.Width" Value="200"/>
@@ -166,8 +166,8 @@
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <usercontroles:BtnWithBluring 
+                        <DataTemplate>
+                            <usercontroles:BtnWithBluring 
                                 x:Name="myButton"
                                 Width="130" Height="130"
                                 Project="{Binding Item1}" 
@@ -176,8 +176,7 @@
                                 Path=DataContext.TemplateClickCommand, Mode=OneWay}"
                                 RemoveProjectCommand="{Binding ElementName=T1, 
                                 Path=DataContext.RecentCollageDeleteOneProjectCommand, Mode=OneWay}"/>
-
-                            </DataTemplate>
+                        </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </ScrollViewer>

@@ -10,10 +10,10 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
 {
     public static class InkCanvasHelper
     {
-        public static async Task SaveStrokesAsync(InkPresenter inkPresenter, string uid)
+        public static async Task SaveStrokesAsync(InkPresenter inkPresenter, int uid, int numberInList)
         {
             var storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            var file = await storageFolder.CreateFileAsync($"{uid}.gif", Windows.Storage.CreationCollisionOption.ReplaceExisting);
+            var file = await storageFolder.CreateFileAsync($"{uid}{numberInList}.gif", Windows.Storage.CreationCollisionOption.ReplaceExisting);
 
             Windows.Storage.CachedFileManager.DeferUpdates(file);
             var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.ReadWrite);
@@ -35,26 +35,24 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
                 // File NOT saved
             }
         }
-        public static async Task RestoreStrokesAsync(InkPresenter inkPresenter, string uid)
+        public static async Task RestoreStrokesAsync(InkPresenter inkPresenter, int uid, int numberInList)
         {
             var storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            var isExist = File.Exists(Path.Combine(storageFolder.Path, $"{uid}.gif"));
+            var isExist = File.Exists(Path.Combine(storageFolder.Path, $"{uid}{numberInList}.gif"));
             if (isExist)
             {
-                var file = await storageFolder.GetFileAsync($"{uid}.gif");
+                var file = await storageFolder.GetFileAsync($"{uid}{numberInList}.gif");
 
                 if (file != null)
                 {
-                    // Open a file stream for reading.
-                    var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
-                    // Read from file.
-                    using (var inputStream = stream.GetInputStreamAt(0))
+                    using (var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read))
                     {
-                        await inkPresenter.StrokeContainer.LoadAsync(inputStream);
+                        using (var inputStream = stream.GetInputStreamAt(0))
+                        {
+                            await inkPresenter.StrokeContainer.LoadAsync(inputStream);
+                        }
                     }
-                    stream.Dispose();
                 }
-                // User selects Cancel and picker returns null.
                 else
                 {
                     // Operation cancelled.
@@ -62,13 +60,13 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             }
         }
 
-        public static async Task DeleteStrokeFileByUid(string uid)
+        public static async Task DeleteStrokeFileByUid(int uid, int numberInList)
         {
             var storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            var isExist = File.Exists(Path.Combine(storageFolder.Path, $"{uid}.gif"));
+            var isExist = File.Exists(Path.Combine(storageFolder.Path, $"{uid}{numberInList}.gif"));
             if (isExist)
             {
-                var file = await storageFolder.GetFileAsync($"{uid}.gif");
+                var file = await storageFolder.GetFileAsync($"{uid}{numberInList}.gif");
                 await file.DeleteAsync();
             }
         }

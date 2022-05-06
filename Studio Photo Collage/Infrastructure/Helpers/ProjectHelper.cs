@@ -31,7 +31,11 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             var removedProject = projects.Where(x => x == project).FirstOrDefault();
 
             projects.Remove(removedProject);
-            await InkCanvasHelper.DeleteStrokeFileByUid(project.uid.ToString());
+
+            for (int i = 0; i < removedProject.CountOfPhotos; i++)
+            {
+                await InkCanvasHelper.DeleteStrokeFileByUid(project.uid, i);
+            }
 
             WeakReferenceMessenger.Default.Send(new DeleteProjectMessage(removedProject));
         }
@@ -39,6 +43,8 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
         public static async void SaveProject(Collage collage)
         {
             var project = collage.Project;
+            project.DateOfLastEditing = DateTime.Now;
+
             var projects = await GetProjectsFromFile();
             if (projects == null)
             {
@@ -61,7 +67,7 @@ namespace Studio_Photo_Collage.Infrastructure.Helpers
             for (int i = 0; i < list.Count; i++)
             {
                 var ink = list[i];
-                await InkCanvasHelper.SaveStrokesAsync(ink.InkPresenter, string.Concat(project.uid.ToString(), i));
+                await InkCanvasHelper.SaveStrokesAsync(ink.InkPresenter, project.uid, i);
             }
 
             WeakReferenceMessenger.Default.Send(new ProjectSavedMessage(project));

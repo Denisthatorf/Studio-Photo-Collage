@@ -105,6 +105,7 @@
                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                         Margin="9"
+                            
                         Command="{Binding ElementName=Template3, 
                         Path=DataContext.TemplateClickCommand}"
                         

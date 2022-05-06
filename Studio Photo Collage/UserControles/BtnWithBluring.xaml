@@ -9,14 +9,79 @@
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:converters="using:Studio_Photo_Collage.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:Windows10version1903="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 8)"
     mc:Ignorable="d">
 
     <UserControl.Resources>
+
         <converters:ProjectToUICollage x:Key="ProjToCollage"/>
+        <Style x:Key="CloseBtnStyle" TargetType="Button">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" Background="{TemplateBinding Background}" BackgroundSizing="{TemplateBinding BackgroundSizing}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" CornerRadius="{TemplateBinding CornerRadius}" Content="{TemplateBinding Content}" ContentTransitions="{TemplateBinding ContentTransitions}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Red"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPointerOver}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPointerOver}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Red"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerDownThemeAnimation Storyboard.TargetName="ContentPresenter"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </ContentPresenter>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
 
     <Grid>
+
         <Button x:Name="Btn" 
                 Background="Transparent" 
                 HorizontalAlignment="Stretch"
@@ -32,18 +97,16 @@
             <ContentPresenter 
                 VerticalAlignment="Stretch"
                 HorizontalAlignment="Stretch"
-                Content="{x:Bind Project, 
-                Converter={StaticResource ProjToCollage},
-                ConverterParameter=120}"/>
+                Content="{x:Bind ConverterParameter=120, Converter={StaticResource ProjToCollage}, Path=Project}"/>
         </Button>
 
 
         <Grid x:Name="Blur" Visibility="Collapsed" 
                           Opacity="0.73" Background="{ThemeResource WhiteInLightAndBlackInDark}">
-            <ui:Effects.Shadow>
-                <media:AttachedCardShadow x:Name="Shadow" Offset="0" CornerRadius="0"/>
-            </ui:Effects.Shadow>
-            
+            <!--<ui:Effects.Shadow>
+                <media:AttachedCardShadow x:Name="Shadow" Offset="0" CornerRadius="0" BlurRadius="140" />
+            </ui:Effects.Shadow>-->
+
             <Interactivity:Interaction.Behaviors>
                 <Core:EventTriggerBehavior EventName="PointerExited">
                     <Core:ChangePropertyAction TargetObject="{Binding ElementName=Blur}" 
@@ -53,21 +116,20 @@
                                                Value="{ThemeResource BlackInLightAndWhiteInDarkColor}" />
                 </Core:EventTriggerBehavior>
                 <Core:EventTriggerBehavior EventName="PointerPressed">
-                    <Core:InvokeCommandAction  Command="{x:Bind MyCommand, 
-                        UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                        CommandParameter="{x:Bind Project}"/>
+                    <Core:InvokeCommandAction  Command="{x:Bind Mode=TwoWay, Path=MyCommand, UpdateSourceTrigger=PropertyChanged}"
+                        CommandParameter="{x:Bind Path=Project}"/>
                 </Core:EventTriggerBehavior>
-                
+
             </Interactivity:Interaction.Behaviors>
-            <Button CommandParameter="{x:Bind Project}"
-                    Command="{x:Bind RemoveProjectCommand, Mode=TwoWay}"
+            <Button Style="{StaticResource CloseBtnStyle}" CommandParameter="{x:Bind Path=Project}"
+                    Command="{x:Bind Mode=TwoWay, Path=RemoveProjectCommand}"
                     HorizontalAlignment="Right" VerticalAlignment="Top">
                 <SymbolIcon Symbol="Cancel"/>
             </Button>
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock FontSize="16" Text="{x:Bind Project.ProjectName}" 
+                <TextBlock FontSize="16" Text="{x:Bind Path=Project.ProjectName}" 
                            HorizontalAlignment="Center"/>
-                <TextBlock FontSize="12" Text="{x:Bind DateOfProject}"
+                <TextBlock FontSize="12" Text="{x:Bind Path=DateOfProject}"
                            HorizontalAlignment="Center"/>
             </StackPanel>
         </Grid>

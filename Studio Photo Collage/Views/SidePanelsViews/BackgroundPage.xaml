@@ -11,7 +11,19 @@
     DataContext="{Binding BackgroundPageInstance, Source={StaticResource Locator}}"
     d:Width="245"
     d:Height="500">
-
+    <Page.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0,0,8,8"/>
+        </Style>
+        <x:Double x:Key="GridViewItemSelectedBorderThemeThickness">2</x:Double>
+        <SolidColorBrush x:Key="GridViewItemBackgroundSelected"
+                         Color="{ThemeResource BlackInLightAndWhiteInDarkColor}"/>
+        <x:Double x:Key="GridViewItemMinWidth">36</x:Double>
+        <x:Double x:Key="GridViewItemMinHeight">36</x:Double>
+    </Page.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Visible" 
                   VerticalAlignment="Stretch"
                   VerticalScrollMode="Enabled">
@@ -23,7 +35,8 @@
                 Command="{Binding UploadBtnCommand}"
                 Background="Transparent" 
                 BorderBrush="{ThemeResource BlackInLightAndWhiteInDark}"
-                Margin="0,15,0,0"/>
+                Margin="0,15,0,0" CornerRadius="0" 
+                    Width="210" Height="36"/>
 
             <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
                 <TextBlock Text="Picture size: " Margin="0,0,5,0"/>
@@ -47,7 +60,7 @@
                     Value="{Binding BorderOpacity, Mode=TwoWay, 
                      UpdateSourceTrigger=PropertyChanged}"/>
 
-            <ItemsControl x:Name="ColorControl" ItemsSource="{Binding Colors}"
+            <!--<ItemsControl x:Name="ColorControl" ItemsSource="{Binding Colors}"
                           Margin="0,8,0,0" Padding="0"
                           ScrollViewer.CanContentRenderOutsideBounds="True"
                           ScrollViewer.VerticalScrollMode="Enabled">
@@ -65,7 +78,24 @@
                                 CommandParameter="{Binding}"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            </ItemsControl>-->
+
+            <GridView  x:Name="ColorControl" ItemsSource="{Binding Colors}"
+                          Margin="0,8,0,0" Padding="0"
+                          ScrollViewer.CanContentRenderOutsideBounds="True"
+                          ScrollViewer.VerticalScrollMode="Enabled"
+                      CanDrag="False"
+                        SelectedIndex="{Binding SelectedColorIndex, 
+                        Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <GridView.ItemTemplate>
+                    <DataTemplate>
+                        <GridViewItem Width="38" Height="38"
+                                      Background="{Binding}" 
+                                      Margin="2"/>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+
             <Grid Height="100"></Grid>
         </StackPanel>
     </ScrollViewer>

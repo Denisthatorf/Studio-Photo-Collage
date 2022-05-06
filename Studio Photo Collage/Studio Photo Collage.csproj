@@ -128,7 +128,6 @@
     <Compile Include="Infrastructure\Converters\FromArrToGridConverter.cs" />
     <Compile Include="Infrastructure\Converters\FromThemeToStringConverter.cs" />
     <Compile Include="Infrastructure\Converters\FormatConverter.cs" />
-    <Compile Include="Infrastructure\Effects\RedColorEffect.cs" />
     <Compile Include="Infrastructure\Events\InkDrawningAttributesChangeEventArgs.cs" />
     <Compile Include="Infrastructure\Events\InkInputProcessingModeChangedEventArgs.cs" />
     <Compile Include="Infrastructure\Events\SelectedImageChangedEventArg.cs" />
@@ -150,9 +149,9 @@
     <Compile Include="Infrastructure\Messages\BrushSizeMessage.cs" />
     <Compile Include="Infrastructure\Messages\ChangeSelectedImageMessage.cs" />
     <Compile Include="Infrastructure\Messages\ApplyEffectsMessage.cs" />
+    <Compile Include="Infrastructure\Messages\FrameColorChangedMessege.cs" />
     <Compile Include="Infrastructure\Messages\FrameMessageChanged.cs" />
-    <Compile Include="Infrastructure\Messages\NewCollageBorderThicknessMessage.cs" />
-    <Compile Include="Infrastructure\Messages\NewCollageBackgroundOpacityMessage.cs" />
+    <Compile Include="Infrastructure\Messages\FrameSizeChangedMessage.cs" />
     <Compile Include="Infrastructure\Messages\ZoomMessage.cs" />
     <Compile Include="Infrastructure\Messages\PaintColorChangedMessage.cs" />
     <Compile Include="Infrastructure\Messages\DeleteAllProjectMessage.cs" />
@@ -162,6 +161,7 @@
     <Compile Include="Infrastructure\Services\SettingServise.cs" />
     <Compile Include="Infrastructure\Services\INavigationService.cs" />
     <Compile Include="Infrastructure\Services\NavigationService.cs" />
+    <Compile Include="Models\FrameData.cs" />
     <Compile Include="Models\GroupedTemplates.cs" />
     <Compile Include="Models\ImageInfo.cs" />
     <Compile Include="Models\ImageSourceAndEffect.cs" />
@@ -182,7 +182,6 @@
       <DependentUpon>CustomTreeViewNode.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\MainPageViewModel.cs" />
-    <Compile Include="ViewModels\PopUpsViewModels\PaintPopUpPageViewModel.cs" />
     <Compile Include="ViewModels\PopUpsViewModels\SettingsDialogViewModel.cs" />
     <Compile Include="ViewModels\SidePanelsViewModels\BackgroundPageViewModel.cs" />
     <Compile Include="ViewModels\SidePanelsViewModels\FiltersPageViewModel.cs" />
@@ -200,9 +199,6 @@
     </Compile>
     <Compile Include="Views\PopUpsViews\LocalFolderDialog.xaml.cs">
       <DependentUpon>LocalFolderDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PopUpsViews\PaintPopUpPage.xaml.cs">
-      <DependentUpon>PaintPopUpPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PopUpsViews\SaveDialog.xaml.cs">
       <DependentUpon>SaveDialog.xaml</DependentUpon>
@@ -367,10 +363,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PopUpsViews\LocalFolderDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PopUpsViews\PaintPopUpPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

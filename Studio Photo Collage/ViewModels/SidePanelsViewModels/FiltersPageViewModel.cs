@@ -1,24 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Lumia.Imaging;
-using Lumia.Imaging.Adjustments;
 using Lumia.Imaging.Artistic;
-using Lumia.Imaging.Compositing;
-using Lumia.InteropServices.WindowsRuntime;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Studio_Photo_Collage.Infrastructure.Helpers;
 using Studio_Photo_Collage.Infrastructure.Messages;
 using Studio_Photo_Collage.Models;
-using Windows.Graphics.Imaging;
-using Windows.Storage;
-using Windows.UI.Popups;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
@@ -30,7 +23,6 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
         private List<Type> applyingEffects;
         private WriteableBitmap clearImageSource;
         private bool isChekedApplyToAllCheckBox;
-
         public ObservableCollection<ImageSourceAndEffect> Effects
         {
             get => effects;
@@ -49,7 +41,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
             get => isChekedApplyToAllCheckBox; 
             set
             {
-                isChekedApplyToAllCheckBox = value;
+                SetProperty(ref isChekedApplyToAllCheckBox, value);
                 var applyEffectsList = new List<Type>();
 
                 if (value == true)
@@ -60,7 +52,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
                 else
                 {
                     WeakReferenceMessenger.Default.Send(new ApplyEffectsToAllMessage(applyEffectsList));
-                    if (clearImageSource != null)
+                    if(applyingEffects.Count > 0)
                     {
                         applyEffectsList = new List<Type>();
                         applyEffectsList.AddRange(ApplyingEffects);
@@ -69,7 +61,6 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
                 }
             }
         }
-
         public FiltersPageViewModel()
         {
             effects = new ObservableCollection<ImageSourceAndEffect>();
@@ -77,31 +68,35 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
             WeakReferenceMessenger.Default.Register<ChangeSelectedImageMessage>(this, async (r, m) =>
             {
                 Effects.Clear();
-
                 ApplyingEffects.Clear();
+                clearImageSource = null;
 
                 if(m.Value != null)
                 {
+                    OnPropertyChanged(nameof(IsChekedApplyToAllCheckBox));
                     ApplyingEffects.AddRange(m.Value.EffectsTypes);
+
                     clearImageSource = await ImageHelper.FromBase64(m.Value.ImageBase64Clear) as WriteableBitmap;
-                    SetImageWithFiltersAsync();
+                    await SetImageWithFiltersAsync();
                 }
+            });
+            WeakReferenceMessenger.Default.Register<Project>(this, (r, m) =>
+            {
+                isChekedApplyToAllCheckBox = m.IsFilltersUsedToAllImages;
             });
         }
 
-        private async void SetImageWithFiltersAsync()
+        private async Task SetImageWithFiltersAsync()
         {
-            //var resultList = new ObservableCollection<ImageSourceAndEffect>();
 
             var effects = new List<IImageConsumer>()
              {
-             new AntiqueEffect(),
              new Lumia.Imaging.Compositing.ChromaKeyEffect(),
              new Lumia.Imaging.Adjustments.BlurEffect(50),
              new Lumia.Imaging.Adjustments.AutoLevelsEffect(),
              new Lumia.Imaging.Adjustments.ColorAdjustEffect(0,0,1),
              new Lumia.Imaging.Adjustments.ColorAdjustEffect(0,1,0),
-             new Lumia.Imaging.Adjustments.ColorAdjustEffect(1 ,0,1),
+             new Lumia.Imaging.Adjustments.ColorAdjustEffect(1,0,1),
              new Lumia.Imaging.Adjustments.GrayscaleEffect(),
              new Lumia.Imaging.Adjustments.NoiseEffect(),
              new Lumia.Imaging.Artistic.AntiqueEffect(),
@@ -111,28 +106,46 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
              new Lumia.Imaging.Artistic.MagicPenEffect(),
              new Lumia.Imaging.Artistic.MilkyEffect(),
              new Lumia.Imaging.Artistic.MoonlightEffect(),
-             new Lumia.Imaging.Artistic.OilyEffect(),
-             new Lumia.Imaging.Artistic.PaintEffect(),
              new Lumia.Imaging.Artistic.PosterizeEffect(),
              new Lumia.Imaging.Artistic.SepiaEffect(),
              new Lumia.Imaging.Artistic.SketchEffect(),
              new Lumia.Imaging.Artistic.SolarizeEffect(),
-             new Lumia.Imaging.Artistic.WatercolorEffect()
+             new Lumia.Imaging.Artistic.WatercolorEffect(),
+             new Lumia.Imaging.Artistic.OilyEffect(),
+             new Lumia.Imaging.Artistic.PaintEffect()
              };
 
             var wrBitmap = clearImageSource;
-
+            var usedImageSourcesAndEffects = new List<ImageSourceAndEffect>();
             foreach (var effect in effects)
-             {
-                 if (wrBitmap != null && effect != null)
-                 {
-                    var writeableBitmap = await LumiaHelper.SetEffectToWritableBitmap(wrBitmap, effect);
+            {
+                if (clearImageSource != wrBitmap)
+                {
+                    if (clearImageSource == null)
+                    {
+                        Effects.Clear();
+                    }
+                    else
+                    {
+                        foreach (var imageSAndEffect in usedImageSourcesAndEffects)
+                        {
+                            Effects.Remove(imageSAndEffect);
+                        }
+                    }
 
-                    bool isActive = ApplyingEffects.Contains(effect.GetType());
-                    var imageSourceAndEffect = new ImageSourceAndEffect(writeableBitmap, effect.GetType(), isActive);
-                    Effects.Add(imageSourceAndEffect);
-                 }
-             }
+                    break;
+                }
+
+                if (wrBitmap != null && effect != null)
+                {
+                   var writeableBitmap = await LumiaHelper.SetEffectToWritableBitmap(wrBitmap, effect);
+
+                   bool isActive = ApplyingEffects.Contains(effect.GetType());
+                   var imageSourceAndEffect = new ImageSourceAndEffect(writeableBitmap, effect.GetType(), isActive);
+                    usedImageSourcesAndEffects.Add(imageSourceAndEffect);
+                   Effects.Add(imageSourceAndEffect);
+                }
+            }
         }
 
         private void SetEffect(ImageSourceAndEffect effect)

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Studio_Photo_Collage.Infrastructure.Helpers;
 using Studio_Photo_Collage.Infrastructure.Messages;
+using Studio_Photo_Collage.Models;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.UI.Xaml.Media;
@@ -19,6 +22,7 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
         private ICommand colorBtnCommand;
         private int bordersThickness;
         private int borderOpacity;
+        private int selectedColorIndex;
 
         public ICommand UploadBtnCommand
         {
@@ -29,23 +33,11 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
                     uploadBtnCommand = new RelayCommand(() =>
                     {
                         UploadBackgroundFromPhotoBtnClickMethod();
+                        SelectedColorIndex = -1;
                     });
                 }
 
                 return uploadBtnCommand;
-            }
-        }
-
-        public ICommand ColorBtnCommand
-        {
-            get
-            {
-                if (colorBtnCommand == null)
-                {
-                    colorBtnCommand = new RelayCommand<SolidColorBrush>((parametr) => Messenger.Send(parametr));
-                }
-
-                return colorBtnCommand;
             }
         }
 
@@ -58,7 +50,6 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
                 Messenger.Send(new BorderThicknessChangedMessage(value));
             }
         }
-
         public int BorderOpacity
         {
             get => borderOpacity;
@@ -71,13 +62,32 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
 
         public List<SolidColorBrush> Colors { get; set; }
 
+        public int SelectedColorIndex
+        {
+            get => selectedColorIndex;
+            set
+            {
+                SetProperty(ref selectedColorIndex, value);
+                if(value > 0)
+                {
+                    Messenger.Send(Colors[value]);
+                }
+            }
+        }
         public BackgroundPageViewModel()
         {
             Colors = ColorGenerator.GenerateBrushes();
-            Messenger.Register<NewCollageBackgroundOpacityMessage>(this, (r, m) => 
-                BorderOpacity = (int)(m.Value * 100));
-            Messenger.Register<NewCollageBorderThicknessMessage>(this, (r, m) => 
-                BordersThickness = (int)m.Value);
+
+            Messenger.Register<Project>(this, (r, m) =>
+            {
+                BorderOpacity = (int)(m.BorderOpacity * 100);
+                BordersThickness = (int)m.BorderThickness;
+
+                SelectedColorIndex = Colors
+                    .IndexOf(Colors
+                    .Where(x => x.Color == m.Background.ToColor())
+                    .FirstOrDefault());
+            });
         }
 
         private static async void UploadBackgroundFromPhotoBtnClickMethod()

@@ -17,12 +17,16 @@ using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Shapes;
 using Studio_Photo_Collage.Infrastructure.Events;
 using Lumia.Imaging;
+using System.Linq;
+using Microsoft.Toolkit.Uwp.Helpers;
 
 namespace Studio_Photo_Collage.Models
 {
     public class Collage
     {
-        private Project project;
+        private const float MAIN_SIZE = 480;
+        private readonly Project project;
+        private float r => (float)((CollageGrid as Grid).ActualWidth / MAIN_SIZE);
 
         public event EventHandler<SelectedImageChangedEventArg> SelectedImageChanged;
 
@@ -117,15 +121,15 @@ namespace Studio_Photo_Collage.Models
 
         public void UpdateUIAsync()
         {
-            var grid = this.MainGrid as Grid;
+            var grid = MainGrid as Grid;
             for (int i = 0; i < grid.Children.Count; i++)
             {
                 var gridInsideOfGrid = grid.Children[i] as Grid;
-                gridInsideOfGrid.BorderThickness = new Thickness(Project.BorderThickness);
+                gridInsideOfGrid.BorderThickness = new Thickness(Project.BorderThickness * r);
             }
 
-            var background = this.BackgroundGrid as Grid;
-            background.Opacity = this.Project.BorderOpacity;
+            var background = BackgroundGrid as Grid;
+            background.Opacity = Project.BorderOpacity;
         }
         public async void UpdateProjectInfoAsync()
         {
@@ -147,14 +151,15 @@ namespace Studio_Photo_Collage.Models
             }
         }
 
-        public void DeleteSelectedImgFromBtn()
+        public async Task DeleteSelectedImgFromBtn()
         {
             if(SelectedToggleBtn != null)
             {
+                await InkCanvasHelper.DeleteStrokeFileByUid(Project.uid, SelectedImageNumberInList);
                 SelectedToggleBtn.Content = GetPlusSignIcon();
             }
         }
-        public async Task SetImgByFilePickerToSelectedBtn()
+        public async Task SetImgByFilePickerToSelectedBtnAsync()
         {
             if (SelectedToggleBtn != null)
             {
@@ -163,35 +168,117 @@ namespace Studio_Photo_Collage.Models
                 var file = await ImageHelper.OpenFilePicker();
                 if (file != null)
                 {
-                    await SetBtnContentAsync(selectedTBtn, file);
+                    selectedTBtn.Content = GetLoadingRing();
+
+                    using (var fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read))
+                    {
+                        try
+                        {
+                            var decoder = await BitmapDecoder.CreateAsync(fileStream);
+                            var source = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
+
+                            await source.SetSourceAsync(fileStream);
+                            await SetImageToSelectedBtnAsync(source);
+                        }
+                        catch
+                        {
+                            selectedTBtn.Content = GetPlusSignIcon();
+                            var messageDialog = new MessageDialog("Image has not right format or it's too big");
+                            await messageDialog.ShowAsync();
+                        }
+                    }
                 }
 
-                if(Project.ImageInfo[numberInList]?.ImageBase64Clear != null) 
+                var clearImageInfo = Project.ImageInfo[numberInList]?.ImageBase64Clear;
+                if (clearImageInfo != null) 
                 {
-
-                    var clearImageSource = await ImageHelper.FromBase64(Project.ImageInfo[numberInList]?.ImageBase64Clear);
+                    var clearImageSource = await ImageHelper.FromBase64(clearImageInfo);
                     SelectedImageChanged?.Invoke(this, new SelectedImageChangedEventArg(clearImageSource, Project.ImageInfo[numberInList]));
                 }
             }
         }
+        public async Task SetImageToSelectedBtnAsync(ImageSource source)
+        {
+            await DeleteSelectedImgFromBtn();
+
+            var selectedTBtn = SelectedToggleBtn;
+            var numberInList = (int)selectedTBtn.CommandParameter;
+            Project.ImageInfo[numberInList].ImageBase64Clear = await ImageHelper.SaveToStringBase64Async(source);
+
+            var img = new Image();
+            img.Stretch = Stretch.UniformToFill;
+            img.Source = source;
+
+            if(Project.IsFilltersUsedToAllImages == true)
+            {
+                var effects = new List<Type>();
+                effects.AddRange(Project.ImageInfo[numberInList].EffectsTypes);
+                await ApplyEffectToImage(effects, img, numberInList);
+            }
+            else
+            {
+                Project.ImageInfo[numberInList].EffectsTypes.Clear();
+            }
+
+            var scrollViewer = await GetScrollViewer(img);
+            selectedTBtn.Content = scrollViewer;
+
+            //if (Project.ImageInfo[numberInList]?.ImageBase64Clear != null)
+            //{
+            //    var clearImageSource = await ImageHelper.FromBase64(Project.ImageInfo[numberInList]?.ImageBase64Clear);
+            //    SelectedImageChanged?.Invoke(this, new SelectedImageChangedEventArg(clearImageSource, Project.ImageInfo[numberInList]));
+            //}
+        }
+
         public void SetFrame(string pathData)
         {
-            var pathFromCode = XamlReader.Load($"<Path xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'><Path.Data>{pathData}</Path.Data></Path>") as Path;
-            pathFromCode.Fill = (SolidColorBrush)Application.Current.Resources["CustomBrush"];
-            pathFromCode.VerticalAlignment = VerticalAlignment.Stretch;
-            pathFromCode.HorizontalAlignment = HorizontalAlignment.Stretch;
-            pathFromCode.Stretch = Stretch.Fill;
-            pathFromCode.Width = FrameCanv.ActualWidth;
-            pathFromCode.Height = FrameCanv.ActualHeight;
-
-            Canvas.SetLeft(pathFromCode, 0);
-            Canvas.SetTop(pathFromCode, 0);
             FrameCanv.Children.Clear();
-            FrameCanv.Children.Add(pathFromCode);
+            if (!string.IsNullOrEmpty(pathData))
+            {
+                var pathFromCode = XamlReader.Load($"<Path xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'><Path.Data>{pathData}</Path.Data></Path>") as Path;
+                pathFromCode.Fill = new SolidColorBrush(Project.Frame.Color.ToColor());
+                pathFromCode.VerticalAlignment = VerticalAlignment.Stretch;
+                pathFromCode.HorizontalAlignment = HorizontalAlignment.Stretch;
+                pathFromCode.Stretch = Stretch.Fill;
+                //pathFromCode.Width = FrameCanv.ActualWidth;
+                //pathFromCode.Height = FrameCanv.ActualHeight;
+
+                Canvas.SetLeft(pathFromCode, 0);
+                Canvas.SetTop(pathFromCode, 0);
+                FrameCanv.Children.Add(pathFromCode);
+
+                Project.Frame.PathData = pathData;
+                SetFrameAdditionalSize(Project.Frame.AdditionalSize);
+                SetFrameColor(new SolidColorBrush(Project.Frame.Color.ToColor()));
+            }
         }
-        public async void ApplyEffectToImage(List<Type> effectTypes, Image image, int imgNumberInList)
+        public void SetFrameAdditionalSize(int size)
         {
-            Project.ImageInfo[imgNumberInList].EffectsTypes.AddRange(effectTypes);
+            var canv = FrameCanv;
+            var path = canv.Children[0] as Path;
+            path.Width = canv.ActualWidth + size;
+            path.Height = canv.ActualHeight + size;
+            Canvas.SetLeft(path, -size / 2);
+            Canvas.SetTop(path, -size / 2);
+
+            Project.Frame.AdditionalSize = size;
+        }
+        public void SetFrameColor(SolidColorBrush color)
+        {
+            var path = (FrameCanv.Children[0] as Path);
+            if(path != null)
+            {
+                path.Fill = color;
+                Project.Frame.Color = color.Color.ToString();
+            }
+        }
+
+        public async Task ApplyEffectToImage(List<Type> effectTypes, Image image, int imgNumberInList)
+        {
+            var effects = Project.ImageInfo[imgNumberInList].EffectsTypes;
+            effects.Clear();
+            effects.AddRange(effectTypes);
+
             if (image?.Source != null)
             {
                 var result = (WriteableBitmap)await ImageHelper.FromBase64(Project.ImageInfo[imgNumberInList].ImageBase64Clear);
@@ -203,16 +290,18 @@ namespace Studio_Photo_Collage.Models
                 }
 
                 image.Source = result;
-                UpdateProjectInfoAsync();
+
+                Project.ImageInfo[imgNumberInList].ImageBase64 = await ImageHelper.SaveToStringBase64Async(result);
             }
         }
-        public void ApplyEffectToAllImageImage(List<Type> effectTypes)
+        public async void ApplyEffectToAllImageImage(List<Type> effectTypes)
         {
             var images = GetListOfImagesWithNullIfNoImage();
             for (int i = 0; i < images.Count; i++)
             {
-                ApplyEffectToImage(effectTypes, images[i], i);
+                await ApplyEffectToImage(effectTypes, images[i], i);
             }
+
         }
 
         #region UIElement creation
@@ -237,7 +326,7 @@ namespace Studio_Photo_Collage.Models
                 borderGridInGrid.Children.Add(btn); ;
             }
 
-            if(Project.Background.Length < 10)
+            if (Project.Background.Length < 10)
             {
                 backgroundgrid.Background = new SolidColorBrush(ColorHelper.ToColor(Project.Background));
             }
@@ -253,19 +342,55 @@ namespace Studio_Photo_Collage.Models
             frameCanvas.SizeChanged += (o, e) =>
             {
                 var canv = o as Canvas;
-                if(canv.Children.Count != 0 && canv.Children[0] is Path path)
+                if (canv.Children.Count != 0 && canv.Children[0] is Path path)
                 {
-                    path = (o as Canvas).Children[0] as Path;
-                    path.Width = e.NewSize.Width;
-                    path.Height = e.NewSize.Height;
+                    path = canv.Children[0] as Path;
+                    SetFrameAdditionalSize(Project.Frame.AdditionalSize);
                 }
             };
+
+            frameCanvas.IsHitTestVisible = false;
+            frameCanvas.IsTapEnabled = false;
+
+            void SetFrameFirstTime(object o, SizeChangedEventArgs e) {
+                SetFrame(Project.Frame.PathData);
+                frameCanvas.SizeChanged -= SetFrameFirstTime;
+            };
+            frameCanvas.SizeChanged += SetFrameFirstTime;
 
             collageGrid.Children.Add(backgroundgrid);
             collageGrid.Children.Add(maingird);
             collageGrid.Children.Add(frameCanvas);
 
+            collageGrid.SizeChanged += CollageGridSizeChanged; 
             return collageGrid;
+        }
+
+        private void CollageGridSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var r = (float)((CollageGrid as Grid).ActualWidth / 480);
+            var btns = GetListOfBtns();
+            var scrolls = btns.Select(x => x.Content as ScrollViewer).ToList();
+
+            for (int i = 0; i < scrolls.Count; i++)
+            {
+                var scroll = scrolls[i];
+                if(scroll != null)
+                {
+                    var imageInfo = Project.ImageInfo[i];
+                    var horizontalOffsetForSaving = Project.ImageInfo[i].ZoomInfo.HorizontalOffset;
+                    var verticallOffsetForSaving = Project.ImageInfo[i].ZoomInfo.VerticalOffset;
+                    var zoomFactorForSaving = Project.ImageInfo[i].ZoomInfo.ZoomFactor;
+
+                    scroll.ChangeView(
+                        horizontalOffsetForSaving * r,
+                        verticallOffsetForSaving * r, 
+                        zoomFactorForSaving * r, 
+                        false);
+                }
+            }
+
+            UpdateUIAsync();
         }
 
         private ToggleButton GetToggleBtnWithImg(int numberInList)
@@ -281,24 +406,41 @@ namespace Studio_Photo_Collage.Models
 
                 var comPar = (int)Tbtn.CommandParameter;
                 UnCheckedAnothersBtns(comPar);
-                await SetImgByFilePickerToSelectedBtn();
+
+                if(Tbtn.Content is ScrollViewer scroll)
+                {
+                    var clearImageInfo = Project.ImageInfo[numberInList]?.ImageBase64Clear;
+                    if (clearImageInfo != null)
+                    {
+                        var clearImageSource = await ImageHelper.FromBase64(clearImageInfo);
+                        SelectedImageChanged?.Invoke(this, new SelectedImageChangedEventArg(clearImageSource, Project.ImageInfo[numberInList]));
+                    }
+                }
+                else
+                {
+                    await SetImgByFilePickerToSelectedBtnAsync();
+                }
             };
             toggleBtn.Unchecked += (o, e) =>
-                SelectedImageChanged?.Invoke(this, new SelectedImageChangedEventArg(null, null));
+            {
+                var tBtns = GetListOfBtns();
+                if (!tBtns.Any(x => x.IsChecked == true))
+                {
+                    SelectedImageChanged?.Invoke(this, new SelectedImageChangedEventArg(null, null));
+                }
+            };
 
             return toggleBtn;
         }
-
         private void UnCheckedAnothersBtns(int numberInList)
         {
+            var tBtns = GetListOfBtns();
             var grid = MainGrid as Grid;
-            for (int i = 0; i < grid.Children.Count; i++)
+            foreach (var tBtn in tBtns)
             {
-                if (i != numberInList)
+                if ((int)tBtn.CommandParameter != numberInList)
                 {
-                    var gridInGrid = grid.Children[i] as Grid;
-                    var ToggleBtn = gridInGrid.Children[0] as ToggleButton;
-                    ToggleBtn.IsChecked = false;
+                    tBtn.IsChecked = false;
                 }
             }
         }
@@ -310,7 +452,7 @@ namespace Studio_Photo_Collage.Models
             var img = new Image();
             img.Stretch = Stretch.Uniform;
 
-            await ImageHelper.SetImgSourceFromBase64Async(img, Project.ImageInfo?[numberInList].ImageBase64);
+            await ImageHelper.SetImgSourceFromBase64Async(img, Project.ImageInfo[numberInList].ImageBase64);
 
             if (img.Source != null)
             {
@@ -322,44 +464,16 @@ namespace Studio_Photo_Collage.Models
                 toggleBtn.Content = GetPlusSignIcon();
             }
         }
-        private async Task SetBtnContentAsync(ToggleButton selectedTBtn, StorageFile file)
-        {
-            selectedTBtn.Content = GetLoadingRing();
-            var numberInList = (int)selectedTBtn.CommandParameter;
 
-            using (var fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read))
-            {
-                try
-                {
-                    var decoder = await BitmapDecoder.CreateAsync(fileStream);
-                    var source = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
-
-                    await source.SetSourceAsync(fileStream);
-                    Project.ImageInfo[numberInList].ImageBase64Clear = await ImageHelper.SaveToStringBase64Async(source);
-
-                    var img = new Image();
-                    img.Stretch = Stretch.UniformToFill;
-                    img.Source = source;
-                    ApplyEffectToImage(Project.ImageInfo[numberInList].EffectsTypes, img, numberInList);
-
-                    var scrollViewer = await GetScrollViewer(img);
-
-                    selectedTBtn.Content = scrollViewer;
-
-                }
-                catch
-                {
-                    selectedTBtn.Content = GetPlusSignIcon();
-                    var messageDialog = new MessageDialog("Image has not right format or it's too big");
-                    await messageDialog.ShowAsync();
-                }
-            }
-        }
         private async Task<ScrollViewer> GetScrollViewer(Image img, int numberInList = -1)
         {
+            img.Stretch = Stretch.Uniform;
             var scrollViewer = new ScrollViewer();
 
             scrollViewer.ZoomMode = ZoomMode.Enabled;
+
+            scrollViewer.HorizontalContentAlignment = HorizontalAlignment.Stretch;
+            scrollViewer.VerticalContentAlignment = VerticalAlignment.Stretch;
 
             scrollViewer.HorizontalContentAlignment = HorizontalAlignment.Stretch;
             scrollViewer.VerticalContentAlignment = VerticalAlignment.Stretch;
@@ -380,20 +494,14 @@ namespace Studio_Photo_Collage.Models
             {
 
                 var scrollV = ol as ScrollViewer;
-                if (bitmap != null)
-                {
-                    var bitmapRatio = bitmap.PixelWidth * 1f / bitmap.PixelHeight;
-                    scrollV.MinZoomFactor = scrollV.ActualWidth > scrollV.ActualHeight ?
-                    (float)(scrollV.ActualWidth / bitmap.PixelWidth) :
-                    (float)(scrollV.ActualHeight / bitmap.PixelHeight);
-                }
+                SetScrollViewMinZoomFactor(scrollV, bitmap);
 
                 scrollV.RegisterPropertyChangedCallback(ScrollViewer.ZoomFactorProperty, (o, e) =>
                 {
                     var scroll = o as ScrollViewer;
                     var btn = scroll.Parent as ToggleButton;
                     var nInList = (int)btn.CommandParameter;
-                    Project.ImageInfo[nInList].ZoomInfo.ZoomFactor = scroll.ZoomFactor;
+                    Project.ImageInfo[nInList].ZoomInfo.ZoomFactor = scroll.ZoomFactor / r;
                     IsSaved = false;
                 });
                 scrollV.RegisterPropertyChangedCallback(ScrollViewer.HorizontalOffsetProperty, (o, e) =>
@@ -401,7 +509,7 @@ namespace Studio_Photo_Collage.Models
                     var scroll = o as ScrollViewer;
                     var btn = scroll.Parent as ToggleButton;
                     var nInList = (int)btn.CommandParameter;
-                    Project.ImageInfo[nInList].ZoomInfo.HorizontalOffset = scroll.HorizontalOffset;
+                    Project.ImageInfo[nInList].ZoomInfo.HorizontalOffset = scroll.HorizontalOffset / r;
                     IsSaved = false;
                 });
                 scrollV.RegisterPropertyChangedCallback(ScrollViewer.VerticalOffsetProperty, (o, e) =>
@@ -409,9 +517,10 @@ namespace Studio_Photo_Collage.Models
                     var scroll = o as ScrollViewer;
                     var btn = scroll.Parent as ToggleButton;
                     var nInList = (int)btn.CommandParameter;
-                    Project.ImageInfo[nInList].ZoomInfo.VerticalOffset = scroll.VerticalOffset;
+                    Project.ImageInfo[nInList].ZoomInfo.VerticalOffset = scroll.VerticalOffset / r;
                     IsSaved = false;
                 });
+                scrollV.SizeChanged += (o, e) => SetScrollViewMinZoomFactor(scrollV, bitmap);
             };
 
             if (numberInList == -1)
@@ -426,37 +535,85 @@ namespace Studio_Photo_Collage.Models
                 scrollViewer.Loaded += (o, e) =>
                 {
                     var zoom = Project.ImageInfo[numberInList].ZoomInfo;
-                    (o as ScrollViewer).ChangeView(zoom.HorizontalOffset, zoom.VerticalOffset, zoom.ZoomFactor, false);
+                    scrollViewer.ChangeView(zoom.HorizontalOffset * r, zoom.VerticalOffset * r, zoom.ZoomFactor * r, false);
                 };
             }
 
             return scrollViewer;
         }
-        private FontIcon GetPlusSignIcon()
+        private void SetScrollViewMinZoomFactor(ScrollViewer scrollV, WriteableBitmap bitmap)
+        {
+            /*if (scrollRatio < 2)
+            {
+                scrollV.MinZoomFactor = (float)(1 / bitmapRatio / scrollRatio);
+
+            }
+            else if (scrollRatio > 2)
+            {
+                scrollV.MinZoomFactor = scrollV.ActualWidth > scrollV.ActualHeight ?
+                    (float)(scrollV.ActualWidth / bitmap.PixelWidth) :
+                    (float)(scrollV.ActualHeight / bitmap.PixelHeight);
+            }*/
+
+            if (bitmap != null)
+            {
+                var bitmapRatio = (float)(bitmap.PixelWidth * 1.0 / bitmap.PixelHeight);
+                var scrollRatio = (float)(scrollV.ActualWidth * 1.0 / scrollV.ActualHeight);
+
+                if (bitmapRatio < 1f)
+                {
+                    if (scrollRatio < 1f)
+                    {
+                        scrollRatio = (float)(scrollV.ActualHeight * 1.0 / scrollV.ActualWidth);
+                        scrollV.MinZoomFactor = bitmapRatio * scrollRatio;
+                    }
+                    else if (scrollRatio > 1f)
+                    {
+                        scrollV.MinZoomFactor = bitmapRatio * scrollRatio;
+                    }
+                }
+                else if (bitmapRatio > 1f)
+                {
+                   if(scrollRatio < 1f)
+                   {
+                        scrollV.MinZoomFactor = bitmapRatio * scrollRatio;
+                   }
+                   else if (scrollRatio > 1f)
+                   {
+                        bitmapRatio = (float)(bitmap.PixelHeight * 1.0 / bitmap.PixelWidth);
+                        scrollRatio = (float)(scrollV.ActualHeight * 1.0 / scrollV.ActualWidth);
+                        scrollV.MinZoomFactor = bitmapRatio * scrollRatio;
+                   }
+                }
+            }
+        }
+
+        private async Task<InkCanvas> GetInkCanvas(int numberInList)
+        {
+            var inkCanv = new InkCanvas();
+            if (numberInList != -1)
+            {
+                await InkCanvasHelper.RestoreStrokesAsync(inkCanv.InkPresenter, Project.uid, numberInList);
+            }
+            return inkCanv;
+        }
+        private static FontIcon GetPlusSignIcon()
         {
             var icon = new FontIcon();
             icon.FontFamily = new FontFamily("Segoe MDL2 Assets");
             icon.Glyph = "\xE710";
             return icon;
         }
-        private Loading GetLoadingRing()
+        private static Loading GetLoadingRing()
         {
-            var load = new Loading() { IsLoading = true };
-            load.Content = new ProgressRing() { IsActive = true };
-            load.HorizontalAlignment = HorizontalAlignment.Stretch;
-            load.VerticalAlignment = VerticalAlignment.Stretch;
-            return load;
-        }
-        private async Task<InkCanvas> GetInkCanvas(int numberInList)
-        {
-            var inkCanv = new InkCanvas();
-            if(numberInList != -1)
+            var load = new Loading()
             {
-                await InkCanvasHelper.RestoreStrokesAsync(inkCanv.InkPresenter, string.Concat(Project.uid.ToString(), numberInList));
-            }
-
-            return inkCanv;
-
+                IsLoading = true,
+                Content = new ProgressRing() { IsActive = true },
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch
+            };
+            return load;
         }
         #endregion
     }

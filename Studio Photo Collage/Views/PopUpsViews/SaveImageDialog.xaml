@@ -6,8 +6,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    PrimaryButtonText="Save"
-    SecondaryButtonText="Save as"
     Style="{StaticResource ContentDialog}"
     d:Width="360" d:Height="400">
     <ContentDialog.Resources>
@@ -396,23 +394,11 @@
         </Style>
     </ContentDialog.Resources>
     
-    <ContentDialog.PrimaryButtonStyle>
-        <Style TargetType="Button">
-            <Setter Property="Background" Value="{ThemeResource CustomBrush}"/>
-            <Setter Property="Foreground" Value="White"/>
-        </Style>
-    </ContentDialog.PrimaryButtonStyle>
-    <ContentDialog.SecondaryButtonStyle>
-        <Style TargetType="Button">
-            <Setter Property="Background" Value="{ThemeResource CustomBrush}"/>
-            <Setter Property="Foreground" Value="White"/>
-        </Style>
-    </ContentDialog.SecondaryButtonStyle>
     <StackPanel>
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Save" FontSize="20"/>
             <Button Style="{StaticResource CloseButton}" Margin="238,0,0,0" 
-                    Click="CloseBtnClicked" >
+                    Click="Button_Click" >
                 <SymbolIcon Symbol="Cancel"/>
             </Button>
         </StackPanel>
@@ -440,7 +426,6 @@
         </ComboBox>
         <TextBlock Text="Quality" Margin="0,12,0,0"/>
         <ComboBox x:Name="QualityCBox" Margin="0,8,0,0"
-                  Header="Quality"
                   HorizontalAlignment="Stretch" SelectedIndex="0" 
                   CornerRadius="0"
                   BorderBrush="{ThemeResource BlackInLightAndWhiteInDark}"
@@ -453,5 +438,33 @@
             </Run>
             <Run x:Name="PhotoSize" />
         </TextBlock>
+
+        <StackPanel Orientation="Horizontal"
+                    Margin="0,21,0,0">
+            <Button Content="Save"
+                    Click="ContentDialogPrimaryButtonClick">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Width" Value="154"/>
+                        <Setter Property="Height" Value="32"/>
+                        <Setter Property="Background" Value="{ThemeResource CustomBrush}"/>
+                        <Setter Property="Foreground" Value="White"/>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <Button Margin="4,0,0,0"
+                    Content="Save as"
+                    Click="ContentDialogSecondaryButtonClick">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Width" Value="154"/>
+                        <Setter Property="Height" Value="32"/>
+                        <Setter Property="Background" Value="{ThemeResource CustomBrush}"/>
+                        <Setter Property="Foreground" Value="White"/>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </StackPanel>
     </StackPanel>
 </ContentDialog>

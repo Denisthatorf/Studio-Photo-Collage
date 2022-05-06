@@ -49,6 +49,10 @@ namespace Studio_Photo_Collage.ViewModels
                             var removedProject = RecentProjects.Where(x => x.Item1 == parameter).FirstOrDefault();
                             ProjectHelper.DeleteProject(removedProject?.Item1);
                             RecentProjects.Remove(removedProject);
+                            if(RecentProjects.Count < 0)
+                            {
+                                IsRecentCollagesOpen = false;
+                            }
                         }
                     });
                 }
@@ -185,7 +189,10 @@ namespace Studio_Photo_Collage.ViewModels
             Messenger.Register<DeleteProjectMessage>(this, (r, m) =>
              {
                  var index = RecentProjects.IndexOf(RecentProjects.Where(x => x.Item1 == m.Value).FirstOrDefault());
-                 RecentProjects.RemoveAt(index);
+                 if(index != -1)
+                 {
+                     RecentProjects.RemoveAt(index);
+                 }
              });
         }
 

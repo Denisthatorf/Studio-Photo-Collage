@@ -102,9 +102,14 @@ namespace Studio_Photo_Collage.ViewModels.SidePanelsViewModels
 
             Messenger.Register<ProjectSavedMessage>(this, (r, m) =>
             {
-                if (!Projects.Contains(m.Value))
+                var index = Projects.IndexOf(m.Value);
+                if (index == -1)
                 {
                     Projects.Add(m.Value);
+                }
+                else
+                {
+                    Projects[index] = m.Value;
                 }
             });
             Messenger.Register<DeleteProjectMessage>(this, (r, m) =>

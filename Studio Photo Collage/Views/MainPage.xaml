@@ -130,19 +130,21 @@
                         Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
             <Grid x:Name="LeftBar" Grid.Row="1">
-            <StackPanel Background="{ThemeResource MainBackgroundColor}">
-                <AppBarToggleButton x:Name="AddFile" 
+            <StackPanel Background="{ThemeResource MainBackgroundColor}"
+                        Width="48">
+                <!--<AppBarToggleButton x:Name="AddFile" 
                                     IsChecked="{Binding CheckBoxesEnum, 
                                     Converter={StaticResource EnumValueConverter},
                                     ConverterParameter=AddFile , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <Canvas Width="48" Height="48" Canvas.Left="0" Canvas.Top="0">
                             <Path Width="48" Height="48" Stretch="Fill" Fill="{ThemeResource BlackInLightAndWhiteInDark}" Data="F1 M 2617.31,554.386L 2415.54,554.386L 2415.54,523.063L 2584.77,523.063L 2584.77,223.078L 2472.77,223.078L 2467.35,87.2893L 2248.58,87.2893L 2248.58,352.554L 2216.94,352.554L 2216.94,54.7842L 2224.34,54.7842C 2314.84,54.7842 2405.34,54.8245 2495.85,54.6743C 2500.78,54.6663 2503.9,56.0415 2506.97,59.9934C 2542.51,105.785 2578.29,151.396 2613.85,197.174C 2615.71,199.575 2617.16,203.054 2617.17,206.034C 2617.33,320.632 2617.31,435.232 2617.31,549.831L 2617.31,554.386 Z M 2501.42,105.33L 2500.14,106.027L 2503.64,190.343L 2567.86,190.343L 2501.42,105.33 Z M 2233.11,405.418L 2265.01,405.418L 2265.01,499.743L 2364.6,499.743L 2364.6,531.963L 2265.52,531.963L 2265.52,629.334L 2233.36,629.334L 2233.36,532.476L 2138.67,532.476L 2138.67,500.262L 2233.11,500.262L 2233.11,405.418 Z "/>
                         </Canvas>
-                    </AppBarToggleButton>
+                    </AppBarToggleButton>-->
                 <AppBarToggleButton  x:Name="Resents" 
                                         IsChecked="{Binding CheckBoxesEnum, 
                                         Converter={StaticResource EnumValueConverter},
-                                        ConverterParameter=Resents , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                        ConverterParameter=Resents , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Width="48">
                     <AppBarToggleButton.Icon>
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE777;"/>
 
@@ -151,13 +153,14 @@
                 <AppBarToggleButton  x:Name="Print" 
                                         IsChecked="{Binding CheckBoxesEnum, 
                                         Converter={StaticResource EnumValueConverter},
-                                        ConverterParameter=Print, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                        ConverterParameter=Print, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="48">
                     <AppBarToggleButton.Icon>
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE749;"/>
                     </AppBarToggleButton.Icon>
                 </AppBarToggleButton>
                 <AppBarButton  x:Name="Save"
-                               PointerEntered="Save_PointerEntered">
+                               PointerEntered="Save_PointerEntered"
+                               Width="48">
                     <AppBarButton.Icon>
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74E;"/>
                     </AppBarButton.Icon>
@@ -172,6 +175,7 @@
             </StackPanel>
 
             <AppBarToggleButton x:Name="Settings" 
+                                Width="48"
                                      IsChecked="{Binding CheckBoxesEnum, 
                                      Converter={StaticResource EnumValueConverter},
                                      ConverterParameter=Settings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -227,14 +231,12 @@
                                       Data="M72.4 559V72.5H579.3V559H72.4ZM103.4 528H548.2V500L285.2 324.5L103.4 468.2V528ZM548.3 462.7V375.6L461.4 314.8L403 365.9L548.3 462.7ZM548.3 103.5H103.4V428.6L283.7 286.2L376.3 348L459.3 275.3L548.3 337.6V103.5V103.5ZM248.3 911V631.5H0V0H651.7V279.5H900V911H248.3ZM620.7 31.1H31V600.5H620.7V31.1ZM351.7 631.5V807.5H796.5V383H651.7V631.5H351.7ZM869 310.6H651.7V352H827.6V838.6H320.7V631.6H279.3V880.1H869V310.6ZM212.1 269.2C175 269.2 144.9 239 144.9 201.9C144.9 164.8 175.1 134.6 212.1 134.6C249.2 134.6 279.3 164.8 279.3 201.9C279.3 239 249.1 269.2 212.1 269.2ZM212.1 165.6C192.1 165.6 175.9 181.9 175.9 201.8C175.9 221.8 192.1 238 212.1 238C232.1 238 248.3 221.7 248.3 201.8C248.3 181.9 232 165.6 212.1 165.6ZM346.6 186.3V155.2H491.4V186.3H346.6ZM315.5 248.5V217.4H356.9V248.5H315.5ZM377.6 248.5V217.4H419V248.5H377.6Z" />
                             </Canvas>
                         </AppBarToggleButton>
-                    <AppBarToggleButton x:Name="Photo" 
-                                             IsChecked="{Binding CheckBoxesEnum, 
-                                            Converter={StaticResource EnumValueConverter},
-                                            ConverterParameter=Photo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                        <AppBarToggleButton.Icon>
+                    <AppBarButton x:Name="Photo" 
+                                  Command="{Binding PhotoCommand}">
+                        <AppBarButton.Icon>
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE722;"/>
-                        </AppBarToggleButton.Icon>
-                    </AppBarToggleButton>
+                        </AppBarButton.Icon>
+                    </AppBarButton>
                     <AppBarButton x:Name="Add" 
                                   Command="{Binding AddImageCommand}">
                         <AppBarButton.Icon>
@@ -268,30 +270,15 @@
                 <ColumnDefinition/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            
+
                 <Popup  Grid.Column="1" IsOpen="True" Width="245" Grid.RowSpan="2"
                     VerticalAlignment="Stretch">
-                <Frame x:Name="SidePanel" 
+                    <Frame x:Name="SidePanel" 
                        Visibility="Collapsed"
                        Background="{ThemeResource MainBackgroundColor}"
                        Height="{Binding ElementName=Page, Path=ActualHeight}"
                        Width="245"/>
-            </Popup>
-
-            <!--<Popup IsOpen="{Binding ElementName=Settings, Path=IsChecked}" 
-                   HorizontalAlignment="Center" VerticalAlignment="Center"
-                   Width="343" Height="467" 
-                   Grid.Row="1" Grid.ColumnSpan="2">
-                    <Frame BorderBrush="Black" BorderThickness="1" 
-                       Content="{Binding SettingsFrame}"/>
-                </Popup>-->
-
-            <!--<Popup IsOpen="{Binding ElementName=Paint, Path=IsChecked}"
-                   Width="380" Height="64"
-                   VerticalAlignment="Bottom" HorizontalAlignment="Center" 
-                       Grid.Row="1"  Grid.ColumnSpan="2">
-                    <Frame x:Name="PaintFrame"/>
-                </Popup>-->
+                </Popup>
             </Grid>
 
     </Grid>

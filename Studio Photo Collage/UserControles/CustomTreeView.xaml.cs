@@ -27,7 +27,7 @@ namespace Studio_Photo_Collage.UserControles
         public IEnumerable ItemsSource
         {
             get { return (IEnumerable)GetValue(ItemsSourceProperty); }
-            set { SetValue(ItemsSourceProperty, value);  }
+            set { SetValue(ItemsSourceProperty, value); }
         }
 
         public static readonly DependencyProperty ItemsSourceProperty =
@@ -43,16 +43,26 @@ namespace Studio_Photo_Collage.UserControles
         // Using a DependencyProperty as the backing store for CommandsForBtns.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CommandsForBtnsProperty =
             DependencyProperty.Register("CommandsForBtns", typeof(ICommand), typeof(CustomTreeView), new PropertyMetadata(null));
+        private DataTemplate nodeItemsDataTemplate;
 
         public DataTemplate NodeItemsDataTemplate
         {
-            get { return (DataTemplate)GetValue(NodeItemsDataTemplateProperty); }
-            set { SetValue(NodeItemsDataTemplateProperty, value); }
+            get => nodeItemsDataTemplate;
+            set 
+            {
+                nodeItemsDataTemplate = value;
+                
+            }
         }
+        /* public DataTemplate NodeItemsDataTemplate
+         {
+             get { return (DataTemplate)GetValue(NodeItemsDataTemplateProperty); }
+             set { SetValue(NodeItemsDataTemplateProperty, value); }
+         }
 
-        // Using a DependencyProperty as the backing store for NodeItemsDataTemplate.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty NodeItemsDataTemplateProperty =
-            DependencyProperty.Register("NodeItemsDataTemplate", typeof(DataTemplate), typeof(CustomTreeView), new PropertyMetadata(null));
+         // Using a DependencyProperty as the backing store for NodeItemsDataTemplate.  This enables animation, styling, binding, etc...
+         public static readonly DependencyProperty NodeItemsDataTemplateProperty =
+             DependencyProperty.Register("NodeItemsDataTemplate", typeof(DataTemplate), typeof(CustomTreeView), new PropertyMetadata(null));*/
 
         public CustomTreeView()
         {

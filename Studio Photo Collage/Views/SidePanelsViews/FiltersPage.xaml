@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Studio_Photo_Collage.Views.SidePanelsViews"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -37,15 +38,15 @@
                                       IsChecked="{Binding IsActive}"
                                       HorizontalAlignment="Right" VerticalAlignment="Top"
                                       CommandParameter="{Binding}"
-                                      Command="{Binding ElementName=Eff, Path=DataContext.ApplyEffectCommand}">
-                                
-                            </CheckBox>
+                                      Command="{Binding ElementName=Eff,
+                                      Path=DataContext.ApplyEffectCommand}"/>
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            
-            <Grid Height="100"></Grid>
+
+            <Grid Height="100">
+            </Grid>
         </StackPanel>        
     </ScrollViewer>
     

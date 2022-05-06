@@ -16,6 +16,7 @@
         <converters:FromArrToGridConverter x:Key="FromArrToGridConverter"/>
 
         <Thickness x:Key="GridViewItemRevealBorderThemeThickness">0</Thickness>
+        <SolidColorBrush x:Key="TemplateBackground" Color="#5e5d5d" Opacity="0.3"/>
 
         <Style TargetType="Rectangle">
             <Setter Property="Fill" Value="White"/>
@@ -44,8 +45,9 @@
                                     <GridView.ItemTemplate>
                                         <DataTemplate x:DataType="models:Project">
                                             <Button x:Name="Btn"
+                                            Background="{StaticResource TemplateBackground}"
                                             Style="{StaticResource TemplatesBtns}"
-                                            Height="50" Width="50" Margin="9"
+                                            Height="63" Width="63" Margin="4"
                                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                             HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                                             Content="{Binding PhotoArray,

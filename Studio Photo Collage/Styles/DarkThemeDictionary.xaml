@@ -1,20 +1,29 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:Windows10version1903="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 8)">
 
-    <SolidColorBrush x:Key="MainBackgroundColor" Opacity="0.6">#1f1f1f</SolidColorBrush>
-    <SolidColorBrush x:Key="PopUpsBackground" Opacity="0.9">#1f1f1f</SolidColorBrush>
+    <!--<SolidColorBrush x:Key="MainBackgroundColor" Opacity="0.6">#1f1f1f</SolidColorBrush>-->
+    <!--<SolidColorBrush x:Key="PopUpsBackground" Opacity="0.9">#1f1f1f</SolidColorBrush>-->
 
     <SolidColorBrush x:Key="BlackInLightAndWhiteInDark" Color="White"/>
     <Color x:Key="BlackInLightAndWhiteInDarkColor">White</Color>
     <SolidColorBrush x:Key="WhiteInLightAndBlackInDark" Color="Black"/>
 
     <SolidColorBrush x:Key="NoConfirmPopUpBtnBrush" Color="#555453"/>
+
+    <SolidColorBrush x:Key="TemplateToggleBtnBackground" Color="#3c3c3c"/>
     
-    <!--<AcrylicBrush x:Key="MainBackgroundColor"
+    <AcrylicBrush x:Key="MainBackgroundColor"
             BackgroundSource="HostBackdrop"
             TintColor="#1f1f1f"
-            TintOpacity="0.6"
-            TintLuminosityOpacity="0.9"
-            FallbackColor="#232324"/>-->
+            TintOpacity="1"
+            Windows10version1903:TintLuminosityOpacity="1"
+            FallbackColor="#232324"/>
+
+    <AcrylicBrush x:Key="PopUpsBackground"
+            BackgroundSource="HostBackdrop"
+            TintColor="#1f1f1f"
+            TintOpacity="1"
+            Windows10version1903:TintLuminosityOpacity="1"
+            FallbackColor="#1f1f1f"/>
 </ResourceDictionary>
